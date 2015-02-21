@@ -55,5 +55,39 @@ enum MglBoolEnum {
   
 };
 
+/*
+ * The Floating point numbers 
+ */
+typedef float  MglFloat;
+typedef double MglDouble;
+
+/**
+ * @brief Determines if the two floats are effectively equal within the
+ * thresholds of floating point accuracry
+ *
+ * @param a double to compare
+ * @param b other double to compare
+ *
+ * @return MglTrue is they are withing +/- of EOL_EPSILON of each other.
+ * MglFalse otherwise.
+ */
+MglBool mgl_equals(MglDouble a, MglDouble b);
+
+
+/**
+ * @brief random macro taken from Id Software's Quake 2 Source.
+ * This macro exposes the more random bits from the rand() function
+ * @return a random float between 0 and 1.0
+ */
+#define mgl_random()  ((rand () & 0x7fff) / ((MglFloat)0x7fff))
+
+/**
+ * @brief random macro taken from Id Software's Quake 2 Source.
+ * This macro exposes the more random bits from the rand() function
+ * @return a random float between -1.0 and 1.0
+ */
+#define mgl_crandom() (2.0 * (random() - 0.5))
+
+
 
 #endif
