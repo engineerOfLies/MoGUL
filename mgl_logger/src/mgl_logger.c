@@ -302,7 +302,8 @@ static int _mgl_logger_thread_function(void *ptr)
   /*empty queue*/
   while(logMessage)
   {
-    _mgl_logger_free_message(logMessage);
+    _mgl_logger_message_write(logMessage->level,logMessage->message,logMessage->args);
+    _mgl_logger_free_message(logMessage);/*write all the logs that are queued up*/
     logMessage = g_async_queue_pop (_mgl_logger_message_queue);
   }
   /*unreference it for cleanup*/
