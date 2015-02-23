@@ -33,14 +33,14 @@
  */
 
 typedef enum mglDictTypes {
-  mglDictVoid,   /**<custom data*/
-  mglDictInt,
-  mglDictUint,
-  mglDictFloat,
-  mglDictString, /**<GString*/
-  mglDictList,   /**<GList of something*/
-  mglDictHash,   /**<GHashTable of something*/
-  mglDictCustom0 /**<for user defined types.  MGL will not use Custom0 or after.*/
+  MGL_DICT_VOID,   /**<custom data*/
+  MGL_DICT_INT,
+  MGL_DICT_UINT,
+  MGL_DICT_FLOAT,
+  MGL_DICT_STRING, /**<GString*/
+  MGL_DICT_LIST,   /**<GList of something*/
+  MGL_DICT_HASH,   /**<GHashTable of something*/
+  MGL_DICT_CUSTOM0 /**<for user defined types.  MGL will not use Custom0 or after.*/
 }MglDictTypes;
 
 typedef void (*MglDictFree)(void *data);

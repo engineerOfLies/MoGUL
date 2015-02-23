@@ -1,6 +1,5 @@
 #ifndef __MGL_TYPES_H__
 #define __MGL_TYPES_H__
-
 /**
  * mgl_types
  * @license The MIT License (MIT)
