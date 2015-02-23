@@ -47,6 +47,10 @@ typedef Sint64   MglSI64;
 typedef MglSI32  MglInt;
 typedef MglUI32  MglUint;
 
+
+/**
+ * @purpose boolean support
+ */
 typedef MglUI8   MglBool;
 
 enum MglBoolEnum {
@@ -54,6 +58,33 @@ enum MglBoolEnum {
   MglFalse = 0
   
 };
+
+/**
+* @brief converts a string represention of true/false to the value
+* accepts "true", "TRUE" and "True" / "false", "FALSE" and "False"
+* @param truth the string to check for "true" or "false"
+* @return MglTrue if "true" or MglFalse if "false",-1 if nothing
+*/
+MglInt mgl_bool_from_string(char * truth);
+
+/**
+* @brief checks if a string says "true"
+* accepts "true", "TRUE" and "True"
+* @param truth the string to check for "true"
+* @return MglTrue if "true" or MglFalse if anything else
+*/
+MglUint mgl_true_from_string(char * truth);
+
+/**
+* @brief checks if a string says "false"
+* accepts "false", "FALSE" and "False"
+* @param truth the string to check for "false"
+* @return MglFalse if "false" MglTrue otherwise
+*/
+MglUint mgl_false_from_string(char * truth);
+
+char *mgl_string_from_bool(MglBool b);
+
 
 /*
  * The Floating point numbers 
@@ -88,6 +119,15 @@ MglBool mgl_equals(MglDouble a, MglDouble b);
  */
 #define mgl_crandom() (2.0 * (random() - 0.5))
 
+/**
+ * basic operations
+ */
+#ifndef MIN
+#define MIN(a,b)          (a<=b?a:b)
+#endif
 
+#ifndef MAX
+#define MAX(a,b)          (a>=b?a:b)
+#endif
 
 #endif
