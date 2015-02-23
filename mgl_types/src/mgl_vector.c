@@ -1,11 +1,6 @@
 #include "mgl_vector.h"
 #include <math.h>
 
-MglBool mgl_equals(MglDouble a, MglDouble b)
-{
-  return (fabs(a-b) < MGL_EPSILON)?MglTrue:MglFalse;
-}
-
 MglVec2D mgl_vec2d(MglDouble x, MglDouble y)
 {
   MglVec2D vec;
@@ -189,9 +184,6 @@ MglVec2D *mgl_vec2d_new()
   vec = (MglVec2D *)malloc(sizeof(MglVec2D));
   if (vec == NULL)
   {
-    mgl_logger_message(
-      MGL_LOG_ERROR,
-      "mgl_types:failed to allocate a new vector!\n");
     return NULL;
   }
   mgl_vec2d_clear((*vec));
@@ -204,9 +196,6 @@ MglVec3D *mgl_vec3d_new()
   vec = (MglVec3D *)malloc(sizeof(MglVec3D));
   if (vec == NULL)
   {
-    mgl_logger_message(
-      MGL_LOG_ERROR,
-      "mgl_types:failed to allocate a new vector!\n");
     return NULL;
   }
   mgl_vec3d_clear((*vec));
@@ -219,9 +208,6 @@ MglVec4D *mgl_vec4d_new()
   vec = (MglVec4D *)malloc(sizeof(MglVec4D));
   if (vec == NULL)
   {
-    mgl_logger_message(
-      MGL_LOG_ERROR,
-      "mgl_types:failed to allocate a new vector!\n");
     return NULL;
   }
   mgl_vec4d_clear((*vec));
