@@ -67,6 +67,13 @@ void mgl_logger_set_stdout_echo(MglBool enable);
 void mgl_logger_set_log_file(const char *filepath);
 
 /**
+ * @brief enable or disable thread based logging.
+ * 
+ * @param enable MglTrue to enable thread logging, MglFalse to disable it
+ */
+void mgl_logger_enable_thread_logging(MglBool enable);
+
+/**
  * @brief log a message at the specified warning levels.  It will ignore warning
  * levels below the threshold.
  *
