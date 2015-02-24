@@ -32,8 +32,42 @@ static void _mgl_logger_launch_thread();
 static int _mgl_logger_thread_function(void *ptr);
 static void _mgl_logger_push_message(char *message, MglLogLevel level);
 static void _mgl_logger_close_thread();
+static void _mgl_logger_open_log_file();
 
 /*function definitions*/
+
+void mgl_logger_init()
+{
+  if (_mgl_logger_initialized)
+  {
+    return;
+  }
+  if (strlen(_mgl_logger_filename) <= 0)
+  {
+    sprintf(_mgl_logger_filename,"mgl_logger.log");
+  }
+  _mgl_logger_open_log_file();
+  _mgl_logger_initialized = MglTrue;
+  atexit(mgl_logger_deinit);
+}
+
+void mgl_logger_deinit(void)
+{
+  if (_mgl_logger_enable_threading)
+  {
+    _mgl_logger_close_thread();
+    if (_mgl_logger_message_queue)
+    {
+      g_async_queue_unref (_mgl_logger_message_queue);
+    }
+  }
+  else if ((_mgl_logger_file != NULL)&&(_mgl_logger_file != stdout))
+  {
+    fclose(_mgl_logger_file);
+    _mgl_logger_file = NULL;
+  }
+}
+
 void mgl_logger_info(char *msg,...)
 {
   char * buffer;
@@ -173,36 +207,13 @@ static void _mgl_logger_message_write(MglLogLevel level,char *msg)
   fprintf(_mgl_logger_file,"%s\n",msg);
 }
 
-void mgl_logger_init()
+static void _mgl_logger_open_log_file()
 {
-  if (strlen(_mgl_logger_filename) <= 0)
-  {
-  	sprintf(_mgl_logger_filename,"mgl_logger.log");
-  }
   _mgl_logger_file = fopen(_mgl_logger_filename, "w");
   if (_mgl_logger_file == NULL)
   {
     fprintf(stderr,"unable to open log file.");
     return;
-  }
-  _mgl_logger_initialized = MglTrue;
-  atexit(mgl_logger_deinit);
-}
-
-void mgl_logger_deinit(void)
-{
-  if (_mgl_logger_enable_threading)
-  {
-    _mgl_logger_close_thread();
-    if (_mgl_logger_message_queue)
-    {
-      g_async_queue_unref (_mgl_logger_message_queue);
-    }
-  }
-  else if ((_mgl_logger_file != NULL)&&(_mgl_logger_file != stdout))
-  {
-    fclose(_mgl_logger_file);
-    _mgl_logger_file = NULL;
   }
 }
 
@@ -243,6 +254,10 @@ void mgl_logger_enable_thread_logging(MglBool enable)
   {
     /*close thread*/
     _mgl_logger_close_thread();
+    if (_mgl_logger_file == NULL)
+    {
+      _mgl_logger_open_log_file();
+    }
   }
   _mgl_logger_enable_threading = enable;
 }
