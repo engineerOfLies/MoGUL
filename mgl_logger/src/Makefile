@@ -15,17 +15,21 @@ OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 #
 
 # Linux
-PROJECT = mgl_types
+PROJECT = mgl_logger
 CC      = gcc
 #CC      = clang
+MGL_LIBS = 
+MGL_STATIC_LIBS = libmgl_types.a
+MGL_LIB_PATH = ../../libs
+
 INC_PATHS = ../include ../../mgl_types/include
-INC_DIR =$(foreach d, $(INC_PATHS), -I$d)
-LIB_DIR = ../../libs
+INC_PARAMS =$(foreach d, $(INC_PATHS), -I$d)
+
 GLIB_CFLAGS = `pkg-config --cflags glib-2.0`
 GLIB_LDFLAGS = `pkg-config --libs glib-2.0`
-SDL_CFLAGS = `sdl2-config --cflags` $(INC_DIR)
+SDL_CFLAGS = `sdl2-config --cflags` $(INC_PARAMS)
 SDL_LDFLAGS = `sdl2-config --libs` -lglib-2.0
-LFLAGS = -g -shared -Wl,-soname,lib$(PROJECT).so.1 -o $(LIB_DIR)/lib$(PROJECT).so.1.0.1
+LFLAGS = -g -shared -Wl,-soname,lib$(PROJECT).so.1 -o $(MGL_LIB_PATH)/lib$(PROJECT).so.1.0.1
 CFLAGS = -g  -fPIC -Wall -pedantic -Wno-unknown-pragmas 
 # -fgnu89-inline 
 # -std=gnu99 
@@ -38,7 +42,7 @@ DOXYGEN = doxygen
 #
 
 $(PROJECT): $(OBJECTS)
-	$(CC) $(OBJECTS) $(LFLAGS) $(SDL_LDFLAGS) $(GLIB_LDFLAGS)
+	$(CC) $(OBJECTS) $(LFLAGS) $(SDL_LDFLAGS) $(GLIB_LDFLAGS) $(MGL_LDFLAGS)
 
 docs:
 	$(DOXYGEN) doxygen.cfg
@@ -56,17 +60,17 @@ depend:
 	@touch makefile.dep
 	@-rm makefile.dep
 	@echo Creating dependencies.
-	@for i in *.c; do $(CC) $(INC) -MM $(INC_DIR) $$i; done > makefile.dep
+	@for i in *.c; do $(CC) $(INC) -MM $(INC_PARAMS) $$i; done > makefile.dep
 	@echo Done.
 
 clean:
-	rm *.o $(LIB_DIR)/lib$(PROJECT).a
+	rm *.o $(MGL_LIB_PATH)/lib$(PROJECT).a
 
 count:
 	wc -l *.c $(foreach d, $(INC_PATHS), $d/*.h) makefile
 
 static:
-	ar rcs $(LIB_DIR)/lib$(PROJECT).a $(OBJECTS)
+	ar rcs $(MGL_LIB_PATH)/lib$(PROJECT).a $(OBJECTS)
 
 #
 # Dependencies.

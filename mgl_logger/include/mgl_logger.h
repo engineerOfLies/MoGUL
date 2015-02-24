@@ -74,14 +74,12 @@ void mgl_logger_set_log_file(const char *filepath);
 void mgl_logger_enable_thread_logging(MglBool enable);
 
 /**
- * @brief log a message at the specified warning levels.  It will ignore warning
- * levels below the threshold.
+ * @brief log a message regardless of warning levels.
  *
- * @param level the warning level to log this at.
  * @param msg the warning message to log.
  * @param .... this function uses the printf convention
  */
-void mgl_logger_message(MglLogLevel level,char *msg,...);
+void mgl_logger_message(char *msg,...);
 
 /**
  * @brief log a message at the info warning level.  It will ignore warning
