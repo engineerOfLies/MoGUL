@@ -197,7 +197,6 @@ static void _mgl_logger_message_write(MglLogLevel level,char *msg)
   {
     fprintf(stderr,"mgl_logger: no log file found! Redirecting logs to stdout\n");
     _mgl_logger_file = stdout;
-    return;
   }
   if ((_mgl_logger_stdout_echo == MglTrue) &&
       (_mgl_logger_file != stdout))
@@ -335,7 +334,6 @@ static int _mgl_logger_thread_function(void *ptr)
     logMessage = g_async_queue_pop (_mgl_logger_message_queue);
     if (!logMessage)
     {
-      SDL_Delay(5);
       continue;
     }
     if (logMessage->close)
@@ -349,7 +347,10 @@ static int _mgl_logger_thread_function(void *ptr)
   /*empty queue*/
   while(logMessage)
   {
-    _mgl_logger_message_write(logMessage->level,logMessage->message);
+    if (!logMessage->close)
+    {
+      _mgl_logger_message_write(logMessage->level,logMessage->message);
+    }
     _mgl_logger_free_message(logMessage);/*write all the logs that are queued up*/
     logMessage = g_async_queue_pop (_mgl_logger_message_queue);
   }

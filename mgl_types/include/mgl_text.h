@@ -34,25 +34,25 @@
  * @brief 16 character buffer used for short tags
  */
 typedef char MglWord[16];
-#define EOLWORDLEN   16
-#define mgl_word_cmp(a,b) (strncmp(a,b,EOLWORDLEN))
-#define mgl_word_cpy(dst,src) (strncpy(dst,src,EOLWORDLEN))
-#define mgl_word_clear(a)  (memset(a,0,sizeof(char)*EOLWORDLEN))
+#define MGLWORDLEN   16
+#define mgl_word_cmp(a,b) (strncmp(a,b,MGLWORDLEN))
+#define mgl_word_cpy(dst,src) (strncpy(dst,src,MGLWORDLEN))
+#define mgl_word_clear(a)  (memset(a,0,sizeof(char)*MGLWORDLEN))
 /**
  * @brief 128 character buffer used for statements
  */
 typedef char MglLine[128];
-#define EOLLINELEN   128
-#define mgl_line_cmp(a,b) (strncmp(a,b,EOLLINELEN))
-#define mgl_line_cpy(dst,src) (strncpy(dst,src,EOLLINELEN))
-#define mgl_line_clear(a)  (memset(a,0,sizeof(char)*EOLLINELEN))
+#define MGLLINELEN   128
+#define mgl_line_cmp(a,b) (strncmp(a,b,MGLLINELEN))
+#define mgl_line_cpy(dst,src) (strncpy(dst,src,MGLLINELEN))
+#define mgl_line_clear(a)  (memset(a,0,sizeof(char)*MGLLINELEN))
 /**
  * @brief 512 character buffer used for text blocks
  */
 typedef char MglText[512];
-#define EOLTEXTLEN   512
-#define mgl_text_cmp(a,b) (strncmp(a,b,EOLTEXTLEN))
-#define mgl_text_cpy(dst,src) (strncpy(dst,src,EOLTEXTLEN))
-#define mgl_text_clear(a)  (memset(a,0,sizeof(char)*EOLTEXTLEN))
+#define MGLTEXTLEN   512
+#define mgl_text_cmp(a,b) (strncmp(a,b,MGLTEXTLEN))
+#define mgl_text_cpy(dst,src) (strncpy(dst,src,MGLTEXTLEN))
+#define mgl_text_clear(a)  (memset(a,0,sizeof(char)*MGLTEXTLEN))
 
 #endif
