@@ -23,6 +23,7 @@
 
 #include "mgl_types.h"
 #include "mgl_text.h"
+#include <glib.h>
 
 /**
  * @purpose this resource manager will handle all of the boilerplate code
@@ -31,16 +32,17 @@
 
 typedef struct
 {
-  MglBool   _initialized;
-  MglLine   name;
-  MglUint   _data_count;
-  MglUint   _data_max;
-  MglUint   _data_size;
-  MglBool   _data_unique;
-  MglUint   _data_id_pool;/**<increments with every allocated resource.*/
-  char *    _data_list;   /**<character buffer of data*/
-  void (*data_delete)(void *data);
-  MglBool (*data_load)(char *filename,void *data);
+  MglBool      _initialized;/**<true after setup, if false, don't touch*/
+  MglLine      name;        /**<name of the resource manager, used in debugging*/
+  MglUint      _data_count; /**<how many resources are currently alive*/
+  MglUint      _data_max;   /**<hard limit on the number of resources that can be managed*/
+  MglUint      _data_size;  /**<size of the data resource being managed*/
+  MglBool      _data_unique;/**<if true, duplicates are not allowed, if false, subsequent requests for the same resource will be given a reference to an existing element*/
+  unsigned long int _data_id_pool;/**<increments with every allocated resource.*/
+  GHashTable * _data_hash;   /**<hash from unique id to resource*/
+  char       * _data_list;   /**<character buffer of data*/
+  void (*data_delete)(void *data);/**<function pointer to the delete function for the resource*/
+  MglBool (*data_load)(char *filename,void *data);/**<function pointer to the loading function*/
 }MglResourceManager;
 
 /*All resources managed by this system must contain this header structure.*/
@@ -49,14 +51,21 @@ typedef struct
   MglUint refCount;
   MglLine filename;
   MglUint index;
-  MglUint id;       /**<unique identifier.  In case of a memory re-use it can be
+  unsigned long int id;/**<unique identifier.  In case of a memory re-use it can be
                         compared with expected for validity*/
   MglUint timeFree; /**<time when free was called on resource.  Oldest get reclaimed first*/
   MglUint underflowprot;
 }MglResourceHeader;
 
-MglResourceManager *mgl_resource_manager_new();
-
+/**
+ * @brief initializes the resource manager for a type of resource
+ * @param managerName the name this resource manager should be known as
+ * @param max the maximum number of elements you expect to use in this manager
+ * @param dataSize the sizeof() of the data you intend to keep track of with this resource manager
+ * @param dataUnique set to true if the resource elements should be kept unique, false if you allow multiple references to the same resource
+ * @param data_delete provide the function to be called when a resource is deleted.  It should take a pointer to the data that will be deleted.
+ * @param data_load provide the function to be called when a resource is loaded from file.  This should take a pointer to a filename and a pointer to the allocated data
+ */
 MglResourceManager * mgl_resource_manager_init(
     MglLine managerName,
     MglUint max,
@@ -129,12 +138,12 @@ MglUint mgl_resource_manager_get_element_count(MglResourceManager *manager);
 MglInt mgl_resource_element_get_index(MglResourceManager *manager,void *element);
 
 /**
-* @brief returns the index of the element passed.
+* @brief returns the id of the element passed.
 * @param manager the resource manager to check
 * @param data the resource data pointer to check
 * @return the unsigned integer id of the element, or -1 on error
 */
-MglInt mgl_resource_element_get_id(MglResourceManager *manager,void *element);
+unsigned long int mgl_resource_element_get_id(MglResourceManager *manager,void *element);
 
 /**
  * @brief iterates through the resource list
@@ -158,8 +167,31 @@ void * mgl_resource_get_next_data(MglResourceManager *manager,void *data);
  */
 MglBool mgl_resource_element_id_valid(MglResourceManager *manager,void *element,MglUint id);
 
+
+/**
+ * @brief find out how many references there are to an element.  For a unique resource this should always be 1 or 0
+ * @param manager the resource manager for which this element is a member
+ * @param element the element in question
+ * @return the reference count for the element in question
+ */
 MglUint mgl_resource_element_get_refcount(MglResourceManager *manager,void *element);
+
+/**
+ * @brief retreive the filename associated with the data element
+ * @param filename output parameter, this will be changed to the filename associated with the element
+ * @param manager the resource manager for which this element is a member
+ * @param element the element in question
+ */
 void mgl_resource_element_get_filename(MglLine filename, MglResourceManager *manager,void *element);
+
+/**
+ * @brief given an unique identifier, get a pointer to the data if it is still active
+ * @param manager the resource manager for which to search
+ * @param id the unique id to search by
+ * @return NULL if not found or no longer valid, a valid pointer to element data otherwise
+ */
+void * mgl_resource_get_data_by_id(MglResourceManager *manager,unsigned long int id);
+
 
 #endif
 

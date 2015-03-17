@@ -16,6 +16,12 @@ static void *mgl_resource_get_data_by_header(MglResourceHeader *resource);
 static MglResourceHeader *mgl_resource_get_header_by_data(void *data);
 static MglResourceHeader * mgl_resource_get_next_element(MglResourceManager *manager,MglResourceHeader *element);
 static MglBool mgl_resource_validate_header_range(MglResourceManager *manager,MglResourceHeader *element);
+static MglResourceManager *mgl_resource_manager_new();
+
+static MglBool mgl_resource_initialize_hash(MglResourceManager *manager);
+static MglBool mgl_resource_hash_element(MglResourceManager *manager,MglResourceHeader *element);
+static MglBool mgl_resource_hash_clear_element(MglResourceManager *manager,MglResourceHeader *element);
+
 
 MglResourceHeader *mgl_resource_get_header_by_index(MglResourceManager *manager,MglUint i)
 {
@@ -91,7 +97,7 @@ void mgl_resource_manager_free(MglResourceManager **manager_pp)
   *manager_pp = NULL;
 }
 
-MglResourceManager *mgl_resource_manager_new()
+static MglResourceManager *mgl_resource_manager_new()
 {
   MglResourceManager *manager = NULL;
   manager = (MglResourceManager *)malloc(sizeof(MglResourceManager));
@@ -147,6 +153,7 @@ MglResourceManager * mgl_resource_manager_init(
     element->refCount = 0;
     element->timeFree = 0;
   }
+  mgl_resource_initialize_hash(manager);
   manager->_initialized = MglTrue;
   return manager;
 }
@@ -275,6 +282,7 @@ void * mgl_resource_new_element(MglResourceManager *manager)
     element->id = manager->_data_id_pool++;
     element->refCount = 1;
     manager->_data_count++;
+    mgl_resource_hash_element(manager,element);
     return mgl_resource_get_data_by_header(element);
   }
 
@@ -390,6 +398,7 @@ void mgl_resource_delete_element(MglResourceManager *manager,MglResourceHeader *
     manager->data_delete(&element[1]);
   }
   index = element->index;
+  mgl_resource_hash_clear_element(manager,element);
   memset(element,0,manager->_data_size);
   element->index = index;
 }
@@ -415,7 +424,7 @@ MglBool mgl_resource_element_id_valid(MglResourceManager *manager,void *element,
   return MglFalse;
 }
 
-MglInt mgl_resource_element_get_id(MglResourceManager *manager,void *element)
+unsigned long int mgl_resource_element_get_id(MglResourceManager *manager,void *element)
 {
   MglResourceHeader *header;
   if (!manager)
@@ -530,6 +539,54 @@ MglBool mgl_resource_validate_header_range(MglResourceManager *manager,MglResour
     return MglFalse;
   }
   return MglTrue;
+}
+
+static MglBool mgl_resource_hash_element(MglResourceManager *manager,MglResourceHeader *element)
+{
+  void *data = NULL;
+  if (!manager)return MglFalse;
+  if (!element)return MglFalse;
+  data = (void *)(element+1);
+  g_hash_table_insert (manager->_data_hash,
+                       (gpointer)element->id,
+                       (gpointer)data);
+  return MglTrue;
+}
+
+static MglBool mgl_resource_hash_clear_element(MglResourceManager *manager,MglResourceHeader *element)
+{
+  if (!manager)return MglFalse;
+  if (!element)return MglFalse;
+  g_hash_table_insert (manager->_data_hash,
+                       (gpointer)element->id,
+                       (gpointer)NULL);
+  return MglTrue;
+}
+
+static MglBool mgl_resource_initialize_hash(MglResourceManager *manager)
+{
+  if (!manager)return MglFalse;
+  if (manager->_data_hash != NULL)
+  {
+    mgl_logger_warn(
+      "mgl_resource: hash already initialized.\n");
+    return MglFalse;
+  }
+  manager->_data_hash = g_hash_table_new(g_direct_hash, g_direct_equal);
+  return MglTrue;
+}
+
+void * mgl_resource_get_data_by_id(MglResourceManager *manager,unsigned long int id)
+{
+  if (!manager)return NULL;
+  if (!manager->_data_hash)
+  {
+    mgl_logger_warn(
+      "mgl_resource: hash not setup.\n");
+    return NULL;
+  }
+  return g_hash_table_lookup (manager->_data_hash,
+                              (gconstpointer)id);
 }
 /*eol@eof*/
 
