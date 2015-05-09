@@ -209,63 +209,63 @@ MglDict *mgl_dict_new_float_scaler(MglFloat value)
 MglDict *mgl_dict_new_bool(MglBool n)
 {
   MglLine text;
-  snprintf(text,EOLLINELEN,"%s",mgl_string_from_bool(n));
+  snprintf(text,MGLLINELEN,"%s",mgl_string_from_bool(n));
   return mgl_dict_new_string(text);
 }
 
 MglDict *mgl_dict_new_int(MglInt n)
 {
   MglLine text;
-  snprintf(text,EOLLINELEN,"%i",n);
+  snprintf(text,MGLLINELEN,"%i",n);
   return mgl_dict_new_string(text);
 }
 
 MglDict *mgl_dict_new_uint(MglInt n)
 {
   MglLine text;
-  snprintf(text,EOLLINELEN,"%u",n);
+  snprintf(text,MGLLINELEN,"%u",n);
   return mgl_dict_new_string(text);
 }
 
 MglDict *mgl_dict_new_float(MglFloat n)
 {
   MglLine text;
-  snprintf(text,EOLLINELEN,"%f",n);
+  snprintf(text,MGLLINELEN,"%f",n);
   return mgl_dict_new_string(text);
 }
 
 MglDict *mgl_dict_new_vec2d(MglVec2D n)
 {
   MglLine text;
-  snprintf(text,EOLLINELEN,"%f,%f",n.x,n.y);
+  snprintf(text,MGLLINELEN,"%f,%f",n.x,n.y);
   return mgl_dict_new_string(text);
 }
 
 MglDict *mgl_dict_new_vec3d(MglVec3D n)
 {
   MglLine text;
-  snprintf(text,EOLLINELEN,"%f,%f,%f",n.x,n.y,n.z);
+  snprintf(text,MGLLINELEN,"%f,%f,%f",n.x,n.y,n.z);
   return mgl_dict_new_string(text);
 }
 
 MglDict *mgl_dict_new_vec4d(MglVec4D n)
 {
   MglLine text;
-  snprintf(text,EOLLINELEN,"%f,%f,%f,%f",n.x,n.y,n.z,n.w);
+  snprintf(text,MGLLINELEN,"%f,%f,%f,%f",n.x,n.y,n.z,n.w);
   return mgl_dict_new_string(text);
 }
 
 MglDict *mgl_dict_new_rect(MglRect n)
 {
   MglLine text;
-  snprintf(text,EOLLINELEN,"%i,%i,%i,%i",n.x,n.y,n.w,n.h);
+  snprintf(text,MGLLINELEN,"%i,%i,%i,%i",n.x,n.y,n.w,n.h);
   return mgl_dict_new_string(text);
 }
 
 MglDict *mgl_dict_new_rectf(MglRectFloat n)
 {
   MglLine text;
-  snprintf(text,EOLLINELEN,"%f,%f,%f,%f",n.x,n.y,n.w,n.h);
+  snprintf(text,MGLLINELEN,"%f,%f,%f,%f",n.x,n.y,n.w,n.h);
   return mgl_dict_new_string(text);
 }
 
