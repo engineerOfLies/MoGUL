@@ -671,9 +671,9 @@ void mgl_dict_print_link(MglDict *link,MglUint depth,MglBool listStart)
   }
 }
 
-void mgl_dict_print(MglDict *chain)
+void mgl_dict_print(const MglDict *chain)
 {
-  mgl_dict_print_link(chain,0,MglFalse);
+  mgl_dict_print_link((MglDict *)chain,0,MglFalse);
 }
 
 /*eol@eof*/

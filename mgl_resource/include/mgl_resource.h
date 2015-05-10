@@ -30,32 +30,7 @@
  *          that goes into loading and managing a resource
  */
 
-typedef struct
-{
-  MglBool      _initialized;/**<true after setup, if false, don't touch*/
-  MglLine      name;        /**<name of the resource manager, used in debugging*/
-  MglUint      _data_count; /**<how many resources are currently alive*/
-  MglUint      _data_max;   /**<hard limit on the number of resources that can be managed*/
-  MglUint      _data_size;  /**<size of the data resource being managed*/
-  MglBool      _data_unique;/**<if true, duplicates are not allowed, if false, subsequent requests for the same resource will be given a reference to an existing element*/
-  unsigned long int _data_id_pool;/**<increments with every allocated resource.*/
-  GHashTable * _data_hash;   /**<hash from unique id to resource*/
-  char       * _data_list;   /**<character buffer of data*/
-  void (*data_delete)(void *data);/**<function pointer to the delete function for the resource*/
-  MglBool (*data_load)(char *filename,void *data);/**<function pointer to the loading function*/
-}MglResourceManager;
-
-/*All resources managed by this system must contain this header structure.*/
-typedef struct
-{
-  MglUint refCount;
-  MglLine filename;
-  MglUint index;
-  unsigned long int id;/**<unique identifier.  In case of a memory re-use it can be
-                        compared with expected for validity*/
-  MglUint timeFree; /**<time when free was called on resource.  Oldest get reclaimed first*/
-  MglUint underflowprot;
-}MglResourceHeader;
+typedef struct MglResourceManager_S MglResourceManager;
 
 /**
  * @brief initializes the resource manager for a type of resource
@@ -114,7 +89,7 @@ void mgl_resource_manager_clean(MglResourceManager *manager);
 void mgl_resource_manager_clear(MglResourceManager *manager);
 
 /**
- * @brief Allocated and loads a resource from file.  Calls the manager's data load
+ * @brief Allocates and loads a resource from file.  Calls the manager's data load
  * function pointer.
  * @param manager to load a resource for
  * @param filename the file to load the resource from

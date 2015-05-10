@@ -22,6 +22,7 @@
  */
 
 #include "mgl_types.h"
+#include "mgl_text.h"
 #include "mgl_vector.h"
 #include "mgl_rect.h"
 #include <glib.h>
@@ -231,7 +232,7 @@ void mgl_dict_list_clear(MglDict *list);
 /**
  * @brief prints to terminal the dict specified
  */
-void mgl_dict_print(MglDict *chain);
+void mgl_dict_print(const MglDict *chain);
 
 /**
 * @brief convenience function when working with GString types.

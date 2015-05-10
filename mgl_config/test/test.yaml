@@ -1,0 +1,9 @@
+#comment
+hash :
+  key1 : "value"
+  key2 : 3
+list :
+ - "text1"
+ - "text2"
+ - "text3"
+ 
