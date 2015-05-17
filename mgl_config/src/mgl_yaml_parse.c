@@ -21,12 +21,13 @@ MglDict *mgl_yaml_parse(char* filename)
   file = fopen(filename,"r");
   if (!file)
   {
+    mgl_logger_error("failed to open input file for parsing: %s",filename);
     return NULL;
   }
     
   yaml_parser_set_input_file(&parser, file);
   
-  data = mgl_dict_new();
+  data = mgl_dict_new_hash();
   mgl_config_parse_tier(&parser, data);
 
   yaml_parser_delete(&parser);
@@ -58,6 +59,10 @@ void mgl_config_parse_sequence(yaml_parser_t *parser, MglDict *chain)
       case YAML_STREAM_END_EVENT:
         done = 1;
         /* terminate the while loop, see below */
+        break;
+      case YAML_STREAM_START_EVENT:
+      case YAML_DOCUMENT_START_EVENT:
+        /*ignored*/
         break;
       default:
         mgl_logger_info( "mgl_config: unhandled YAML event %d\n", event.type);

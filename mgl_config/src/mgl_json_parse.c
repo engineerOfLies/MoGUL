@@ -7,6 +7,8 @@ MglDict *mgl_json_convert(json_t *json);
 MglDict *mgl_json_hash_convert(json_t *json);
 MglDict *mgl_json_list_convert(json_t *json);
 
+void mgl_json_log_error(json_error_t *er);
+
 MglDict *mgl_json_parse(char *filename)
 {
   MglDict *data;
@@ -17,6 +19,7 @@ MglDict *mgl_json_parse(char *filename)
   if (json == NULL)
   {
     mgl_logger_info("mgl_json_parse: failed to load file %s as json\n", filename);
+    mgl_json_log_error(&jer);
     return NULL;
   }
   data = mgl_json_convert(json);
@@ -24,6 +27,7 @@ MglDict *mgl_json_parse(char *filename)
   if (data == NULL)
   {
     mgl_logger_info("mgl_json_parse: failed to parse file %s as json\n", filename);
+    mgl_json_log_error(&jer);
   }
   return data;
 }
@@ -92,6 +96,12 @@ MglDict *mgl_json_hash_convert(json_t *json)
     mgl_dict_hash_insert(data,key,mgl_json_convert(value));
   }
   return data;
+}
+
+void mgl_json_log_error(json_error_t *er)
+{
+  if (!er)return;
+  mgl_logger_error("json error: %s in %s at %i:%i",er->text,er->source,er->line,er->column);
 }
 
 /*eol@eof*/
