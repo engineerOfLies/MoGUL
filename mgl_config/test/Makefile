@@ -19,9 +19,9 @@ PROJECT = mgl_config_test
 CC      = gcc
 #CC	= clang
 MGL_LIBS = 
-MGL_STATIC_LIBS = libmgl_config.a libmgl_logger.a
+MGL_STATIC_LIBS = libmgl_config.a libmgl_logger.a libmgl_resource.a libmgl_types.a
 MGL_LIB_PATH = ../../libs
-MGL_LDFLAGS = -L$(MGL_LIB_PATH) $(MGL_LIB_PATH)/$(MGL_STATIC_LIBS)
+MGL_LDFLAGS = -L$(MGL_LIB_PATH) $(foreach d, $(MGL_STATIC_LIBS),$(MGL_LIB_PATH)/$d)
 
 MGL_INC_PATHS = ../include ../../mgl_types/include
 MGL_CFLAGS = $(foreach d, $(MGL_INC_PATHS), -I$d)
@@ -30,7 +30,7 @@ GLIB_CFLAGS = `pkg-config --cflags glib-2.0`
 GLIB_LDFLAGS = `pkg-config --libs glib-2.0`
 
 SDL_CFLAGS = `sdl2-config --cflags`
-SDL_LDFLAGS = `sdl2-config --libs`  -lyaml -lm
+SDL_LDFLAGS = `sdl2-config --libs`  -lyaml -ljansson -lm
 
 LFLAGS = -g  -o ../$(PROJECT)
 CFLAGS = -g $(MGL_CFLAGS) -Wall -pedantic -std=gnu99 -fgnu89-inline -Wno-unknown-pragmas 

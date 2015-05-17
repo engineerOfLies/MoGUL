@@ -1,5 +1,6 @@
 #include "mgl_text.h"
 #include "mgl_types.h"
+#include "mgl_rect.h"
 #include "mgl_dict.h"
 
 #include <glib/gstring.h>

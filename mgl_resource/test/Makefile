@@ -22,7 +22,6 @@ MGL_LIBS =
 MGL_STATIC_LIBS = libmgl_resource.a libmgl_logger.a
 MGL_LIB_PATH = ../../libs
 MGL_LDFLAGS = -L$(MGL_LIB_PATH) $(foreach d, $(MGL_STATIC_LIBS),$(MGL_LIB_PATH)/$d)
-#MGL_LDFLAGS = -L$(MGL_LIB_PATH) $(MGL_LIB_PATH)/$(MGL_STATIC_LIBS)
 
 MGL_INC_PATHS = ../include ../../mgl_types/include
 MGL_CFLAGS = $(foreach d, $(MGL_INC_PATHS), -I$d)
