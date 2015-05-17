@@ -30,7 +30,7 @@ GLIB_LDFLAGS = `pkg-config --libs glib-2.0`
 SDL_CFLAGS = `sdl2-config --cflags` $(INC_PARAMS)
 SDL_LDFLAGS = `sdl2-config --libs` -lglib-2.0
 LFLAGS = -g -shared -Wl,-soname,lib$(PROJECT).so.1 -o $(MGL_LIB_PATH)/lib$(PROJECT).so.1.0.1
-CFLAGS = -g  -fPIC -Wall -pedantic -Wno-unknown-pragmas
+CFLAGS = -g  -fPIC -Wall -pedantic -Wno-unknown-pragmas -Wno-variadic-macros
 # -fgnu89-inline 
 # -std=gnu99 
 # -ffast-math for relase version
