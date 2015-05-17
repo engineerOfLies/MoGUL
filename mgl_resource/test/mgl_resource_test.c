@@ -27,7 +27,7 @@ int main(int argc,char *argv[])
     return 0;
   }
   fprintf(stdout,"mgl_resource_test begin\n");
-/*  manager = mgl_resource_manager_init(
+  manager = mgl_resource_manager_init(
     "test manager",
     10,
     sizeof(TestElement),
@@ -37,12 +37,12 @@ int main(int argc,char *argv[])
   );
   
   for (i = 1;i < argc;++i)
-  {*/
-    /*grab "filenames" from command line*//*
+  {
+    /*grab "filenames" from command line*/
     fprintf(stdout,"adding resource: %s\n",argv[i]);
     mgl_resource_manager_load_resource(manager,argv[i]);
   }
-  */
+  fprintf(stdout,"resource manage has %i elements\n",mgl_resource_manager_get_element_count(manager));
   fprintf(stdout,"freeing resource manager...\n");
   
   fprintf(stdout,"mgl_resource_test end\n");
