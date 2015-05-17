@@ -23,7 +23,7 @@ MGL_STATIC_LIBS = libmgl_config.a libmgl_logger.a libmgl_resource.a libmgl_types
 MGL_LIB_PATH = ../../libs
 MGL_LDFLAGS = -L$(MGL_LIB_PATH) $(foreach d, $(MGL_STATIC_LIBS),$(MGL_LIB_PATH)/$d)
 
-MGL_INC_PATHS = ../include ../../mgl_types/include
+MGL_INC_PATHS = ../include ../../mgl_types/include ../../mgl_logger/include
 MGL_CFLAGS = $(foreach d, $(MGL_INC_PATHS), -I$d)
 
 GLIB_CFLAGS = `pkg-config --cflags glib-2.0`

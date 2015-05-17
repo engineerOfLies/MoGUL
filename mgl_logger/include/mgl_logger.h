@@ -79,7 +79,8 @@ void mgl_logger_enable_thread_logging(MglBool enable);
  * @param msg the warning message to log.
  * @param .... this function uses the printf convention
  */
-void mgl_logger_message(char *msg,...);
+#define mgl_logger_message(...) m_mgl_logger_message(__FILE__,__LINE__,__VA_ARGS__)
+void m_mgl_logger_message(char *f,int l,char *msg,...);
 
 /**
  * @brief log a message at the info warning level.  It will ignore warning
@@ -88,7 +89,8 @@ void mgl_logger_message(char *msg,...);
  * @param msg the warning message to log.
  * @param .... this function uses the printf convention
  */
-void mgl_logger_info(char *msg,...);
+#define mgl_logger_info(...) _mgl_logger_info(__FILE__,__LINE__,__VA_ARGS__)
+void _mgl_logger_info(char *f,int l,char *msg,...);
 
 /**
  * @brief log a message at the trace warning level.  It will ignore warning
@@ -97,7 +99,8 @@ void mgl_logger_info(char *msg,...);
  * @param msg the warning message to log.
  * @param .... this function uses the printf convention
  */
-void mgl_logger_trace(char *msg,...);
+#define mgl_logger_trace(...) _mgl_logger_trace(__FILE__,__LINE__,__VA_ARGS__)
+void _mgl_logger_trace(char *f,int l,char *msg,...);
 
 /**
  * @brief log a message at the "warning" warning level.  It will ignore warning
@@ -106,7 +109,8 @@ void mgl_logger_trace(char *msg,...);
  * @param msg the warning message to log.
  * @param .... this function uses the printf convention
  */
-void mgl_logger_warn(char *msg,...);
+#define mgl_logger_warn(...) _mgl_logger_warn(__FILE__,__LINE__,__VA_ARGS__)
+void _mgl_logger_warn(char *f,int l,char *msg,...);
 
 /**
  * @brief log a message at the error warning level.  It will ignore warning
@@ -115,7 +119,8 @@ void mgl_logger_warn(char *msg,...);
  * @param msg the warning message to log.
  * @param .... this function uses the printf convention
  */
-void mgl_logger_error(char *msg,...);
+#define mgl_logger_error(...) _mgl_logger_error(__FILE__,__LINE__,__VA_ARGS__)
+void _mgl_logger_error(char *f,int l,char *msg,...);
 
 /**
  * @brief log a message at the debug warning level.  It will ignore warning
@@ -124,7 +129,8 @@ void mgl_logger_error(char *msg,...);
  * @param msg the warning message to log.
  * @param .... this function uses the printf convention
  */
-void mgl_logger_debug(char *msg,...);
+#define mgl_logger_debug(...) _mgl_logger_debug(__FILE__,__LINE__,__VA_ARGS__)
+void _mgl_logger_debug(char *f,int l,char *msg,...);
 
 /**
  * @brief log a message at the fatal warning level.  It will ignore warning
@@ -133,7 +139,8 @@ void mgl_logger_debug(char *msg,...);
  * @param msg the warning message to log.
  * @param .... this function uses the printf convention
  */
-void mgl_logger_fatal(char *msg,...);
+#define mgl_logger_fatal(...) _mgl_logger_fatal(__FILE__,__LINE__,__VA_ARGS__)
+void _mgl_logger_fatal(char *f,int l,char *msg,...);
 
 #endif
 

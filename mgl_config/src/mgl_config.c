@@ -1,5 +1,6 @@
 #include "mgl_config.h"
 #include "mgl_resource.h"
+#include "mgl_logger.h"
 #include "mgl_yaml_parse.h"
 #include "mgl_json_parse.h"
 

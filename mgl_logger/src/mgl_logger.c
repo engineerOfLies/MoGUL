@@ -68,7 +68,7 @@ void mgl_logger_deinit(void)
   }
 }
 
-void mgl_logger_info(char *msg,...)
+void _mgl_logger_info(char *f,int l,char *msg,...)
 {
   char * buffer;
   char * message;
@@ -76,7 +76,7 @@ void mgl_logger_info(char *msg,...)
   va_start(ap,msg);
   g_vasprintf (&buffer,msg,ap);
   va_end(ap);
-  message = g_strdup_printf("INFO %s",buffer);
+  message = g_strdup_printf("INFO %s:%i: %s",f,l,buffer);
   _mgl_logger_message(
     MGL_LOG_INFO,
     message);
@@ -84,7 +84,7 @@ void mgl_logger_info(char *msg,...)
   g_free(message);
 }
 
-void mgl_logger_trace(char *msg,...)
+void _mgl_logger_trace(char *f,int l,char *msg,...)
 {
   char * buffer;
   char * message;
@@ -92,7 +92,7 @@ void mgl_logger_trace(char *msg,...)
   va_start(ap,msg);
   g_vasprintf (&buffer,msg,ap);
   va_end(ap);
-  message = g_strdup_printf("TRACE %s",buffer);
+  message = g_strdup_printf("TRACE %s:%i: %s",f,l,buffer);
   _mgl_logger_message(
     MGL_LOG_TRACE,
     message);
@@ -101,7 +101,7 @@ void mgl_logger_trace(char *msg,...)
 }
 
 
-void mgl_logger_warn(char *msg,...)
+void _mgl_logger_warn(char *f,int l,char *msg,...)
 {
   char * buffer;
   char * message;
@@ -109,7 +109,7 @@ void mgl_logger_warn(char *msg,...)
   va_start(ap,msg);
   g_vasprintf (&buffer,msg,ap);
   va_end(ap);
-  message = g_strdup_printf("WARN %s",buffer);
+  message = g_strdup_printf("WARN %s:%i: %s",f,l,buffer);
   _mgl_logger_message(
     MGL_LOG_WARN,
     message);
@@ -117,7 +117,7 @@ void mgl_logger_warn(char *msg,...)
   g_free(message);
 }
 
-void mgl_logger_error(char *msg,...)
+void _mgl_logger_error(char *f,int l,char *msg,...)
 {
   char * buffer;
   char * message;
@@ -125,7 +125,7 @@ void mgl_logger_error(char *msg,...)
   va_start(ap,msg);
   g_vasprintf (&buffer,msg,ap);
   va_end(ap);
-  message = g_strdup_printf("ERROR %s",buffer);
+  message = g_strdup_printf("ERROR %s:%i: %s",f,l,buffer);
   _mgl_logger_message(
     MGL_LOG_ERROR,
     message);
@@ -134,7 +134,7 @@ void mgl_logger_error(char *msg,...)
   
 }
 
-void mgl_logger_debug(char *msg,...)
+void _mgl_logger_debug(char *f,int l,char *msg,...)
 {
   char * buffer;
   char * message;
@@ -142,7 +142,7 @@ void mgl_logger_debug(char *msg,...)
   va_start(ap,msg);
   g_vasprintf (&buffer,msg,ap);
   va_end(ap);
-  message = g_strdup_printf("DEBUG %s",buffer);
+  message = g_strdup_printf("DEBUG %s:%i: %s",f,l,buffer);
   _mgl_logger_message(
     MGL_LOG_DEBUG,
     message);
@@ -150,7 +150,7 @@ void mgl_logger_debug(char *msg,...)
   g_free(message);
 }
 
-void mgl_logger_fatal(char *msg,...)
+void _mgl_logger_fatal(char *f,int l,char *msg,...)
 {
   char * buffer;
   char * message;
@@ -158,7 +158,7 @@ void mgl_logger_fatal(char *msg,...)
   va_start(ap,msg);
   g_vasprintf (&buffer,msg,ap);
   va_end(ap);
-  message = g_strdup_printf("FATAL %s",buffer);
+  message = g_strdup_printf("FATAL %s:%i: %s",f,l,buffer);
   _mgl_logger_message(
     MGL_LOG_FATAL,
     message);
@@ -166,15 +166,20 @@ void mgl_logger_fatal(char *msg,...)
   g_free(message);
 }
 
-void mgl_logger_message(char *msg,...)
+void m_mgl_logger_message(char *f,int l,char *msg,...)
 {
+  char * message;
   char * buffer;
   va_list ap;
   va_start(ap,msg);
   g_vasprintf (&buffer,msg,ap);
   va_end(ap);
-  _mgl_logger_message(MGL_LOG_ALL,buffer);
+  message = g_strdup_printf("%s:%i: %s",f,l,buffer);
+  _mgl_logger_message(
+    MGL_LOG_ALL,
+    message);
   g_free(buffer);
+  g_free(message);
 }
 
 static void _mgl_logger_message(MglLogLevel level,char *msg)
