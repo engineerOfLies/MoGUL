@@ -22,6 +22,8 @@
  */
 #include <mgl_types.h>
 
+#define GOTHERE printf("GOT HERE: %s:%i\n",__FILE__,__LINE__)
+
 typedef enum _mgl_log_levels {
   MGL_LOG_NONE  = 0,
   MGL_LOG_FATAL = 1,
