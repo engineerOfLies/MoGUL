@@ -14,8 +14,9 @@ int main(int argc,char *argv[])
 {
   init_all();
   int done = 0;
-  Uint8 *keys = NULL;
+  const Uint8 *keys = NULL;
   char *confFile = NULL;
+  MglVec3D bgcolor = {0,0,0};
   if (((argc == 2) && (strcmp(argv[1],"-h")==0))||(argc < 2))
   {
       fprintf(stdout,"usage:\n");
@@ -27,15 +28,21 @@ int main(int argc,char *argv[])
 
   if (mgl_graphics_init_by_config(confFile) != 0)
   {
-      mgl_logger_info("failed to load grpahics, exiting...");
+      mgl_logger_info("failed to load graphics, exiting...");
       return 0;
   }
-  
+
   while (!done)
   {
+    bgcolor.x = ((int)bgcolor.x + 1)%256;
+    bgcolor.y = ((int)bgcolor.y + 1)%256;
+    bgcolor.z = ((int)bgcolor.z + 1)%256;
+    mgl_graphics_set_bgcolor(bgcolor);
+    mgl_graphics_clear_screen();
     SDL_PumpEvents();
     keys = SDL_GetKeyboardState(NULL);
     if (keys[SDL_SCANCODE_ESCAPE])done = 1;
+    mgl_grahics_next_frame();
   }
   
   mgl_logger_message("mgl_graphics_test end\n");
