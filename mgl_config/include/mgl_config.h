@@ -52,6 +52,7 @@ void mgl_config_free(MglConfig **config);
  * @param config the config loaded.
  * @return a pointer to the config file's data as a dictionary.
  */
-const MglDict *mgl_config_get_dictionary(const MglConfig *config);
+MglDict *mgl_config_get_dictionary(MglConfig *config);
+
 
 #endif

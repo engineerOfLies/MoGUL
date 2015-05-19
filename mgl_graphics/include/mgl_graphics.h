@@ -21,7 +21,31 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
  */
+#include "mgl_types.h"
+/**
+ * @brief initializes the mgl sub systems and sets up the video system based on the parameters passed
+ *
+ * @param windowName the name for the main game window
+ * @param width the screen width, if -1 defaults to system width 
+ * @param height the screen height, if -1 defaults to system 
+ * @param fullscreen if true, initialize in fullscreen mode, otherwise you get windowed mode
+ * @return 0 on success, otherwise an error.  See the logs for info
+ */
 
-void mgl_graphics_init();
+void mgl_graphics_init(
+    char *windowName,
+    MglInt width,
+    MglInt height,
+    MglBool fullscreen
+);
 
+/**
+ * @brief Initialize the graphics system with the config file specified
+ * Uses the config file loaded to initialize the graphics system.  If the file fails to load,
+ * the graphics system will not initialize
+ * 
+ * @param configFile the file path to the config file to loaded.  Must be supported by mgl_config
+ * @return 0 on success, otherwise an error.  See the logs for info
+ */
+int mgl_graphics_init_by_config(char *configFile);
 #endif

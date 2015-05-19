@@ -70,9 +70,9 @@ void mgl_config_delete(void *data)
   mgl_dict_free(&config->_dictionary);
 }
 
-const MglDict *mgl_config_get_dictionary(const MglConfig *config)
+MglDict *mgl_config_get_dictionary(MglConfig *config)
 {
   if (!config)return NULL;
-  return (const MglDict *)config->_dictionary;
+  return config->_dictionary;
 }
 /*eol@eof*/
