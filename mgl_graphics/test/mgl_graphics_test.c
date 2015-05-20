@@ -1,3 +1,4 @@
+#include "mgl_shapes.h"
 #include "mgl_graphics.h"
 #include "mgl_config.h"
 #include "mgl_dict.h"
@@ -16,7 +17,10 @@ int main(int argc,char *argv[])
   int done = 0;
   const Uint8 *keys = NULL;
   char *confFile = NULL;
-  MglVec3D bgcolor = {0,0,0};
+  MglUint sw,sh;
+  MglInt dx = 1 ,dy = 1;
+  MglVec4D color = {0,255,0,255};
+  MglVec2D position = {0,0};
   if (((argc == 2) && (strcmp(argv[1],"-h")==0))||(argc < 2))
   {
       fprintf(stdout,"usage:\n");
@@ -32,13 +36,19 @@ int main(int argc,char *argv[])
       return 0;
   }
 
+  mgl_graphics_get_screen_resolution(&sw,&sh);
   while (!done)
   {
-    bgcolor.x = ((int)bgcolor.x + 1)%256;
-    bgcolor.y = ((int)bgcolor.y + 1)%256;
-    bgcolor.z = ((int)bgcolor.z + 1)%256;
-    mgl_graphics_set_bgcolor(bgcolor);
     mgl_graphics_clear_screen();
+    
+    position.x += dx * 0.3;
+    position.y += dy * 0.3;
+    if (position.x > sw)dx = -1;
+    if (position.x <= 0)dx = 1;
+    if (position.y > sh)dy = -1;
+    if (position.y <= 0)dy = 1;
+    mgl_draw_pixel(position,color);
+
     SDL_PumpEvents();
     keys = SDL_GetKeyboardState(NULL);
     if (keys[SDL_SCANCODE_ESCAPE])done = 1;

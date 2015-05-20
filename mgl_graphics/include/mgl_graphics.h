@@ -23,6 +23,12 @@
  */
 #include "mgl_types.h"
 #include "mgl_vector.h"
+
+/**
+ * @purpose mgl_graphics initializes and configures rendering pipleline and provides an interface to 
+ * do basic drawing and frame timing.
+ */
+
 /**
  * @brief initializes the mgl sub systems and sets up the video system based on the parameters passed
  *
@@ -92,4 +98,32 @@ void mgl_graphics_clear_screen();
  * @param bgcolor the color vector (r,g,b)
  */
 void mgl_graphics_set_bgcolor(MglVec3D bgcolor);
+
+/**
+ * @brief convert a component color vector (r,g,b,a) to the SDL color expected by the surface provided
+ * 
+ * @param surface the surface that the color will be made compatable for
+ * @param color the component vector where x=>r, y=>g, z=>b, w=>a.
+ * @return an SDL color that will work with the surface provided
+ */
+MglUint mgl_graphics_vec_to_surface_color(SDL_Surface *surface,MglVec4D color);
+
+/**
+ * @brief convert a component color vector (r,g,b,a) to the SDL color expected by the loaded screen surface
+ * 
+ * @param color the component vector where x=>r, y=>g, z=>b, w=>a.
+ * @return an SDL color that will work with the screen surface
+ */
+MglUint mgl_graphics_vec_to_screen_color(MglVec4D color);
+
+/**
+ * @brief get the currect render screen surface resolution
+ * 
+ * @param w [output] if provided, this will be populated with the screen's width
+ * @param h [output] if provided, this will be populated with the screen's height
+ * 
+ * @return 0 on success, other on error
+ */
+MglInt mgl_graphics_get_screen_resolution(MglUint *w,MglUint *h);
+
 #endif

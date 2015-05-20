@@ -181,6 +181,11 @@ SDL_Texture *mgl_graphics_get_screen_texture()
     return __mgl_graphics_texture;
 }
 
+SDL_Surface *mgl_graphics_get_screen_surface()
+{
+    return __mgl_graphics_surface;
+}
+
 void mgl_graphics_set_frame_delay(MglUint frameDelay)
 {
     __mgl_graphics_frame_delay = frameDelay;
@@ -229,5 +234,36 @@ void mgl_graphics_set_bgcolor(MglVec3D bgcolor)
     __mgl_graphics_background_color = SDL_MapRGB(__mgl_graphics_surface->format, bgcolor.x,bgcolor.y,bgcolor.z);
 }
 
+MglUint mgl_graphics_vec_to_screen_color(MglVec4D color)
+{
+    if (!__mgl_graphics_surface)
+    {
+        mgl_logger_warn("mgl_graphics_vec_to_screen_color: no screen surface loaded");
+        return 0;
+    }
+    return mgl_graphics_vec_to_surface_color(__mgl_graphics_surface,color);
+}
+
+MglUint mgl_graphics_vec_to_surface_color(SDL_Surface *surface,MglVec4D color)
+{
+    if (!surface)
+    {
+        mgl_logger_warn("mgl_graphics_vec_to_surface_color: no surface provided");
+        return 0;
+    }
+    return SDL_MapRGBA(surface->format, color.x,color.y,color.z,color.w);
+}
+
+MglInt mgl_graphics_get_screen_resolution(MglUint *w,MglUint *h)
+{
+    if (!__mgl_graphics_surface)
+    {
+        mgl_logger_warn("mgl_graphics_get_screen_resolution: no screen surface loaded");
+        return -1;
+    }
+    if (w)*w = __mgl_graphics_surface->w;
+    if (h)*h = __mgl_graphics_surface->h;
+    return 0;
+}
 
 /*eol@eof*/
