@@ -19,6 +19,7 @@ static MglUint __mgl_graphics_then = 0;
 static MglUI32 __mgl_graphics_background_color = 0;
 
 /*color mask*/
+static MglInt __mgl_bitdepth;
 static MglUint __mgl_rmask;
 static MglUint __mgl_gmask;
 static MglUint __mgl_bmask;
@@ -36,7 +37,6 @@ void mgl_graphics_init(
     MglBool fullscreen
 )
 {
-    MglInt bitDepth = 32;
     MglUint flags = 0;
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
@@ -94,14 +94,14 @@ void mgl_graphics_init(
     }
     
     SDL_PixelFormatEnumToMasks(SDL_PIXELFORMAT_ARGB8888,
-                                    &bitDepth,
+                                    &__mgl_bitdepth,
                                     &__mgl_rmask,
                                     &__mgl_gmask,
                                     &__mgl_bmask,
                                     &__mgl_amask);
 
     
-    __mgl_graphics_surface = SDL_CreateRGBSurface(0, renderWidth, renderHeight, bitDepth,
+    __mgl_graphics_surface = SDL_CreateRGBSurface(0, renderWidth, renderHeight, __mgl_bitdepth,
                                         __mgl_rmask,
                                     __mgl_gmask,
                                     __mgl_bmask,
@@ -265,5 +265,31 @@ MglInt mgl_graphics_get_screen_resolution(MglUint *w,MglUint *h)
     if (h)*h = __mgl_graphics_surface->h;
     return 0;
 }
+
+SDL_Surface *mgl_graphics_create_surface(MglUint w,MglUint h)
+{
+    SDL_Surface *surface;
+    surface = SDL_CreateRGBSurface(0, w, h, __mgl_bitdepth,
+                                        __mgl_rmask,
+                                    __mgl_gmask,
+                                    __mgl_bmask,
+                                    __mgl_amask);
+    return surface;
+}
+
+void mgl_graphics_blit_surface_to_screen(SDL_Surface *surface,const MglRect * srcRect,const MglRect * dstRect)
+{
+    if (!surface)return;
+    if (!__mgl_graphics_surface)
+    {
+        mgl_logger_warn("mgl_graphis_blit_surface_to_screen: no screen surface loaded");
+        return;
+    }
+    SDL_BlitSurface(surface,
+                    srcRect,
+                    __mgl_graphics_surface,
+                    (SDL_Rect *)dstRect);
+}
+
 
 /*eol@eof*/

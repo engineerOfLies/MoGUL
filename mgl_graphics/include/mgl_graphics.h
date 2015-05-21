@@ -23,6 +23,8 @@
  */
 #include "mgl_types.h"
 #include "mgl_vector.h"
+#include "mgl_rect.h"
+#include <SDL.h>
 
 /**
  * @purpose mgl_graphics initializes and configures rendering pipleline and provides an interface to 
@@ -68,6 +70,23 @@ int mgl_graphics_init_by_config(char *configFile);
  * @return NULL on error, or a pointer to the sdl surface that will be copied to the screen on next render
  */
 SDL_Surface *mgl_graphics_get_screen_surface();
+
+/**
+ * @brief create a new SDL surface that is compatable with the screen surface
+ * It should be freed with SDL_FreeSurface
+ * @param w the width for the new surface
+ * @param h the height for the new surface
+ * @return NULL on error or a newly created SDL Surface.
+ */
+SDL_Surface *mgl_graphics_create_surface(MglUint w,MglUint h);
+
+/**
+ * @brief copy one surface on the current screen surface
+ * @param surface the source of the copy
+ * @param srcRect the clip rectangle for the source surface
+ * @param dstRect the clip rectangle for the destination surface (the sceen)
+ */
+void mgl_graphics_blit_surface_to_screen(SDL_Surface *surface,const MglRect * srcRect,const MglRect * dstRect);
 
 /**
  * @brief renders the contents of the screen buffer to the physical screen.  Internally waits to 
