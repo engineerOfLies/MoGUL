@@ -1,0 +1,301 @@
+#include "mgl_draw.h"
+#include "mgl_graphics.h"
+#include "mgl_logger.h"
+
+void mgl_draw_pixel(MglVec2D point,MglVec4D color)
+{
+    SDL_Surface *surface;
+    surface = mgl_graphics_get_screen_surface();
+    mgl_draw_pixel_to_surface(surface,point,color);
+}
+
+void mgl_draw_pixel_to_surface(SDL_Surface *surface,MglVec2D point,MglVec4D color)
+{
+    MglUint drawColor = 0;
+    MglRect pixel = {0,0,1,1};
+    if (!surface)
+    {
+        mgl_logger_warn("mgl_draw_pixel_to_surface: no surface provided");
+        return;
+    }
+    pixel.x = point.x;
+    pixel.y = point.y;
+    drawColor = mgl_graphics_vec_to_surface_color(surface,color);
+    SDL_FillRect(surface,
+                 &pixel,
+                 drawColor);
+}
+
+void mgl_draw_solid_rect(MglRect rect, MglVec4D color)
+{
+  SDL_Surface *surface;
+  surface = mgl_graphics_get_screen_surface();
+  mgl_draw_solid_rect_to_surface(surface,rect, color);
+}
+
+void mgl_draw_solid_rect_to_surface(SDL_Surface *surface,MglRect rect, MglVec4D color)
+{
+  MglUint drawColor = 0;
+  if (!surface)
+  {
+    mgl_logger_warn("mgl_draw_solid_rect_to_surface: no surface provided");
+    return;
+  }
+  drawColor = mgl_graphics_vec_to_surface_color(surface,color);
+  SDL_FillRect(surface,
+               &rect,
+               drawColor);
+}
+
+void mgl_draw_rect(MglRect rect, MglVec4D color)
+{
+  SDL_Surface *surface;
+  surface = mgl_graphics_get_screen_surface();
+  mgl_draw_rect_to_surface(surface,rect, color);
+}
+
+void mgl_draw_rect_to_surface(SDL_Surface *surface,MglRect rect, MglVec4D color)
+{
+  MglUint drawColor = 0;
+  MglRect drawRect = {0,0,0,0};
+  if (!surface)
+  {
+    mgl_logger_warn("mgl_draw_rect_to_surface: no surface provided");
+    return;
+  }
+  drawColor = mgl_graphics_vec_to_surface_color(surface,color);
+  /*top*/
+  mgl_rect_set(&drawRect,rect.x,rect.y,rect.w,1);
+  SDL_FillRect(surface,
+               &drawRect,
+               drawColor);
+  /*bottom*/
+  mgl_rect_set(&drawRect,rect.x,rect.y+rect.h,rect.w,1);
+  SDL_FillRect(surface,
+               &drawRect,
+               drawColor);
+  /*left*/
+  mgl_rect_set(&drawRect,rect.x,rect.y,1,rect.h);
+  SDL_FillRect(surface,
+               &drawRect,
+               drawColor);
+  /*right*/
+  mgl_rect_set(&drawRect,rect.x+rect.w,rect.y,1,rect.h);
+  SDL_FillRect(surface,
+               &drawRect,
+               drawColor);
+}
+
+void mgl_draw_line(MglVec2D p1,MglVec2D p2,MglVec4D color)
+{
+  SDL_Surface *surface;
+  surface = mgl_graphics_get_screen_surface();
+  mgl_draw_line_to_surface(surface,p1,p2,color);
+}
+
+void mgl_draw_line_to_surface(SDL_Surface *surface,MglVec2D p1,MglVec2D p2,MglVec4D color)
+{
+  int deltax,deltay;
+  int x,y,curpixel;
+  int den,num,numadd,numpixels;
+  int xinc1,xinc2,yinc1,yinc2;
+  if (!surface)
+  {
+    mgl_logger_warn("mgl_draw_line_to_surface: no surface provided");
+    return;
+  }
+  deltax = fabs(p2.x - p1.x);
+  deltay = fabs(p2.y - p1.y);
+  x = p1.x;
+  y = p1.y;
+  
+  if (p2.x >= p1.x)
+  {
+    xinc1 = 1;
+    xinc2 = 1;
+  }
+  else
+  {
+    xinc1 = -1;
+    xinc2 = -1;
+  }
+  
+  if (p2.y >= p1.y)
+  {
+    yinc1 = 1;
+    yinc2 = 1;
+  }
+  else
+  {
+    yinc1 = -1;
+    yinc2 = -1;
+  }
+  
+  if (deltax >= deltay)
+  {
+    xinc1 = 0;
+    yinc2 = 0;
+    den = deltax;
+    num = deltax >> 1;
+    numadd = deltay;
+    numpixels = deltax;
+  }
+  else
+  {
+    xinc2 = 0;
+    yinc1 = 0;
+    den = deltay;
+    num = deltay >> 1;
+    numadd = deltax;
+    numpixels = deltay;
+  }
+  
+  for (curpixel = 0; curpixel <= numpixels; curpixel++)
+  {
+    mgl_draw_pixel(mgl_vec2d(x,y),color);
+    num += numadd;
+    if (num >= den)
+    {
+      num -= den;
+      x += xinc1;
+      y += yinc1;
+    }
+    x += xinc2;
+    y += yinc2;
+  }
+}
+
+/*
+ * credit circle drawing algorith:
+ * http://groups.csail.mit.edu/graphics/classes/6.837/F98/Lecture6/circle.html
+ */
+
+static void mgl_draw_circle_points(SDL_Surface *surface,MglVec2D center, MglVec2D point, MglVec4D color)
+{  
+  if (point.x == 0)
+  {
+    mgl_draw_pixel_to_surface(surface,mgl_vec2d(center.x, center.y + point.y),color);
+    mgl_draw_pixel_to_surface(surface,mgl_vec2d(center.x, center.y - point.y),color);
+    mgl_draw_pixel_to_surface(surface,mgl_vec2d(center.x + point.y, center.y),color);
+    mgl_draw_pixel_to_surface(surface,mgl_vec2d(center.x - point.y, center.y),color);
+  }
+  else if (point.x == point.y)
+  {
+    mgl_draw_pixel_to_surface(surface,mgl_vec2d(center.x + point.x, center.y + point.y),color);
+    mgl_draw_pixel_to_surface(surface,mgl_vec2d(center.x - point.x, center.y + point.y),color);
+    mgl_draw_pixel_to_surface(surface,mgl_vec2d(center.x + point.x, center.y - point.y),color);
+    mgl_draw_pixel_to_surface(surface,mgl_vec2d(center.x - point.x, center.y - point.y),color);
+  }
+  else if (point.x < point.y)
+  {
+    mgl_draw_pixel_to_surface(surface,mgl_vec2d(center.x + point.x, center.y + point.y),color);
+    mgl_draw_pixel_to_surface(surface,mgl_vec2d(center.x - point.x, center.y + point.y),color);
+    mgl_draw_pixel_to_surface(surface,mgl_vec2d(center.x + point.x, center.y - point.y),color);
+    mgl_draw_pixel_to_surface(surface,mgl_vec2d(center.x - point.x, center.y - point.y),color);
+    mgl_draw_pixel_to_surface(surface,mgl_vec2d(center.x + point.y, center.y + point.x),color);
+    mgl_draw_pixel_to_surface(surface,mgl_vec2d(center.x - point.y, center.y + point.x),color);
+    mgl_draw_pixel_to_surface(surface,mgl_vec2d(center.x + point.y, center.y - point.x),color);
+    mgl_draw_pixel_to_surface(surface,mgl_vec2d(center.x - point.y, center.y - point.x),color);
+  }
+}
+
+void mgl_draw_circle(MglVec2D center, int radius, MglVec4D color)
+{
+  SDL_Surface *surface;
+  surface = mgl_graphics_get_screen_surface();
+  mgl_draw_circle_to_surface(surface,center, radius, color);
+}
+
+void mgl_draw_circle_to_surface(SDL_Surface *surface,MglVec2D center, int radius, MglVec4D color)
+{
+  MglVec2D point = {0,0};
+  int p = (5 - radius*4)/4;
+  point.y = radius;
+  if (!surface)
+  {
+    mgl_logger_warn("mgl_draw_circle: no surface provided");
+    return;
+  }
+  mgl_draw_circle_points(surface,center, point, color);
+  while (point.x < point.y) {
+    point.x++;
+    if (p < 0) {
+      p += 2*point.x+1;
+    } else {
+      point.y--;
+      p += 2*(point.x-point.y)+1;
+    }
+    mgl_draw_circle_points(surface,center, point, color);
+  }
+}
+
+static void mgl_draw_solid_circle_points(SDL_Surface *surface,MglVec2D center, MglVec2D point, MglVec4D color)
+{
+  MglUint drawColor;
+  MglRect drawRect;
+  drawColor = mgl_graphics_vec_to_surface_color(surface,color);
+  if (point.x == 0)
+  {
+    mgl_rect_set(&drawRect,center.x,center.y - point.y,1, 2 * point.y);
+    SDL_FillRect(surface,
+                 &drawRect,
+                 drawColor);
+
+    mgl_rect_set(&drawRect,center.x - point.y, center.y,2 * point.y, 1);
+    SDL_FillRect(surface,
+                 &drawRect,
+                 drawColor);
+  }
+  else if (point.x == point.y)
+  {
+    mgl_rect_set(&drawRect,center.x - point.x,center.y - point.y,2 * point.x, 2 * point.y);
+    SDL_FillRect(surface,
+                 &drawRect,
+                 drawColor);
+    
+  }
+  else if (point.x < point.y)
+  {
+    mgl_rect_set(&drawRect,center.x - point.x,center.y - point.y,2 * point.x, 2 * point.y);
+    SDL_FillRect(surface,
+                 &drawRect,
+                 drawColor);
+
+    mgl_rect_set(&drawRect,center.x - point.y,center.y - point.x,2 * point.y, 2 * point.x);
+    SDL_FillRect(surface,
+                 &drawRect,
+                 drawColor);
+  }
+}
+
+void mgl_draw_solid_circle(MglVec2D center, int radius, MglVec4D color)
+{
+  SDL_Surface *surface;
+  surface = mgl_graphics_get_screen_surface();
+  mgl_draw_solid_circle_to_surface(surface,center, radius, color);
+}
+
+void mgl_draw_solid_circle_to_surface(SDL_Surface *surface,MglVec2D center, int radius, MglVec4D color)
+{
+  MglVec2D point = {0,0};
+  int p = (5 - radius*4)/4;
+  point.y = radius;
+  if (!surface)
+  {
+    mgl_logger_warn("mgl_draw_circle: no surface provided");
+    return;
+  }
+  mgl_draw_solid_circle_points(surface,center, point, color);
+  while (point.x < point.y) {
+    point.x++;
+    if (p < 0) {
+      p += 2*point.x+1;
+    } else {
+      point.y--;
+      p += 2*(point.x-point.y)+1;
+    }
+    mgl_draw_solid_circle_points(surface,center, point, color);
+  }
+}
+
+/*eol@eof*/

@@ -1,4 +1,4 @@
-#include "mgl_shapes.h"
+#include "mgl_draw.h"
 #include "mgl_graphics.h"
 #include "mgl_config.h"
 #include "mgl_dict.h"
@@ -19,7 +19,7 @@ int main(int argc,char *argv[])
   char *confFile = NULL;
   MglUint sw,sh;
   MglInt dx = 1 ,dy = 1;
-  MglVec4D color = {0,255,0,255};
+  MglVec4D color = {0,255,255,255};
   MglVec2D position = {0,0};
   if (((argc == 2) && (strcmp(argv[1],"-h")==0))||(argc < 2))
   {
@@ -47,11 +47,19 @@ int main(int argc,char *argv[])
     if (position.x <= 0)dx = 1;
     if (position.y > sh)dy = -1;
     if (position.y <= 0)dy = 1;
-    mgl_draw_pixel(position,color);
-
+    mgl_draw_solid_circle(position, 100, mgl_vec4d(255,255,255,31));
+    mgl_draw_solid_circle(position, 75, mgl_vec4d(255,255,255,63));
+    mgl_draw_solid_circle(position, 50, mgl_vec4d(255,255,255,127));
+    mgl_draw_solid_circle(position, 25, mgl_vec4d(255,255,255,255));
+    mgl_draw_rect(mgl_rect(position.x,position.y,30,30),color);
+    mgl_draw_solid_rect(mgl_rect(position.x-30,position.y,30,30),mgl_vec4d(255,0,255,255));
+    mgl_draw_line(mgl_vec2d(sw/2,sh/2),position,mgl_vec4d(255,255,0,255));
     SDL_PumpEvents();
     keys = SDL_GetKeyboardState(NULL);
-    if (keys[SDL_SCANCODE_ESCAPE])done = 1;
+    if (keys[SDL_SCANCODE_ESCAPE])
+    {
+      done = 1;
+    }
     mgl_grahics_next_frame();
   }
   

@@ -113,7 +113,7 @@ void mgl_graphics_init(
         mgl_graphics_close();
         return;
     }
-
+    
     __mgl_graphics_background_color = SDL_MapRGB(__mgl_graphics_surface->format, bgcolor.x,bgcolor.y,bgcolor.z);
     
     atexit(mgl_graphics_close);
