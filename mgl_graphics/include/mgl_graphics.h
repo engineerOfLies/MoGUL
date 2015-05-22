@@ -81,6 +81,15 @@ SDL_Surface *mgl_graphics_get_screen_surface();
 SDL_Surface *mgl_graphics_create_surface(MglUint w,MglUint h);
 
 /**
+ * @brief get the active temp drawing buffer at least as big as the specified width and height.
+ * This surface should NOT be freed when done with and should not be held onto for very long
+ * @param w the desired width of the temp buffer.  
+ * @param h the desired height of the temp buffer.  
+ * @return a pointer to the temp drawing buffer
+ */
+SDL_Surface *mgl_graphics_get_temp_buffer(int w,int h);
+
+/**
  * @brief copy one surface on the current screen surface
  * @param surface the source of the copy
  * @param srcRect the clip rectangle for the source surface
@@ -144,5 +153,11 @@ MglUint mgl_graphics_vec_to_screen_color(MglVec4D color);
  * @return 0 on success, other on error
  */
 MglInt mgl_graphics_get_screen_resolution(MglUint *w,MglUint *h);
+
+/**
+ * @brief get the current calculated frames per second
+ * @return the fps in float
+ */
+MglFloat mgl_graphics_get_frames_per_second();
 
 #endif

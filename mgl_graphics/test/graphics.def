@@ -3,8 +3,9 @@
   "backgroundColor" : "0, 0, 0",
   "viewWidth" : 0,
   "viewHeight" : 0,
-  "fullscreen" : "TRUE",
-  "renderWidth" : 1280,
-  "renderHeight" : 960,
-  "frameDelay" : 15
+  "fullscreen" : "FALSE",
+  "renderWidth" : 1200,
+  "renderHeight" : 720,
+  "frameDelay" : 60,
+  "printFPS" : "TRUE"
 }

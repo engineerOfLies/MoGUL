@@ -11,6 +11,25 @@
 
 void init_all();
 
+void draw_candle_light(MglVec2D position)
+{
+  static float intensity = 0;
+  intensity = ((mgl_random()+0.1)+intensity*10)/11;
+  mgl_draw_solid_circle(position, 100*intensity, mgl_vec4d(255,32,0,10*intensity));
+  mgl_draw_solid_circle(position, 75*intensity, mgl_vec4d(255,64,0,63*intensity));
+  mgl_draw_solid_circle(position, 50*intensity, mgl_vec4d(255,128,0,127*intensity));
+  mgl_draw_solid_circle(position, 25*intensity, mgl_vec4d(255,255,0,255*intensity));
+}
+
+void draw_candle(MglVec2D position)
+{
+  //draw_candle_light(mgl_vec2d(position.x,position.y-20));
+  mgl_draw_solid_rect(mgl_rect(position.x-7,position.y+10,14,180),mgl_vec4d(255,255,255,255));
+  mgl_draw_solid_rect(mgl_rect(position.x-15,position.y+10,30,180),mgl_vec4d(255,255,255,128));
+  mgl_draw_solid_rect(mgl_rect(position.x-22,position.y+10,44,180),mgl_vec4d(255,255,255,128));
+  mgl_draw_solid_rect(mgl_rect(position.x-30,position.y+10,60,180),mgl_vec4d(255,255,255,128));
+}
+
 int main(int argc,char *argv[])
 {
   init_all();
@@ -47,20 +66,9 @@ int main(int argc,char *argv[])
     if (position.y > sh)dy = -1;
     if (position.y <= 0)dy = 1;
     /*circles*/
-    mgl_draw_solid_circle(position, 100, mgl_vec4d(255,255,255,31));
-    mgl_draw_solid_circle(position, 75, mgl_vec4d(255,255,255,63));
-    mgl_draw_solid_circle(position, 50, mgl_vec4d(255,255,255,127));
-    mgl_draw_solid_circle(position, 25, mgl_vec4d(255,255,255,255));
-    mgl_draw_circle(position, 100, mgl_vec4d(0,0,255,64));
-
-    mgl_draw_rect(mgl_rect(position.x,position.y,60,60),mgl_vec4d(255,255,0,100));
-    mgl_draw_solid_rect(mgl_rect(position.x-30,position.y,30,60),mgl_vec4d(255,0,255,128));
-    
-    mgl_draw_line(mgl_vec2d(sw/2,sh/2),position,mgl_vec4d(255,255,0,130));
-    mgl_draw_line_to_surface(mgl_graphics_get_screen_surface(),mgl_vec2d(sw/2,sh/2),position,mgl_vec4d(255,255,0,130));
-    
-    mgl_draw_line_to_surface(mgl_graphics_get_screen_surface(),mgl_vec2d(100,100),mgl_vec2d(sw-100,100),mgl_vec4d(255,0,255,130));
-    mgl_draw_line(mgl_vec2d(100,102),mgl_vec2d(sw-100,102),mgl_vec4d(255,0,255,130));
+    draw_candle(mgl_vec2d(sw/2,sh/2+10));
+    draw_candle(mgl_vec2d(sw/2 - 90,sh/2+10));
+    draw_candle(mgl_vec2d(sw/2 + 90,sh/2+10));
     
     SDL_PumpEvents();
     keys = SDL_GetKeyboardState(NULL);
@@ -69,6 +77,7 @@ int main(int argc,char *argv[])
       done = 1;
     }
     mgl_grahics_next_frame();
+    printf("fps:%f\n",mgl_graphics_get_frames_per_second());
   }
   
   mgl_logger_message("mgl_graphics_test end\n");

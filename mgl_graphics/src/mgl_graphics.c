@@ -9,11 +9,14 @@ static SDL_Window   *   __mgl_graphics_main_window = NULL;
 static SDL_Renderer *   __mgl_graphics_renderer = NULL;
 static SDL_Texture  *   __mgl_graphics_texture = NULL;
 static SDL_Surface  *   __mgl_graphics_surface = NULL;
+static SDL_Surface  *   __mgl_graphics_temp_buffer = NULL;
 
 /*timing*/
 static MglUint __mgl_graphics_frame_delay = 30;
 static MglUint __mgl_graphics_now = 0;
 static MglUint __mgl_graphics_then = 0;
+static MglBool __mgl_graphics_print_fps = MglFalse;
+static MglFloat __mgl_graphics_fps = 0; 
 
 /*background*/
 static MglUI32 __mgl_graphics_background_color = 0;
@@ -134,9 +137,19 @@ void mgl_graphics_close()
     {
         SDL_DestroyWindow(__mgl_graphics_main_window);
     }
+    if (__mgl_graphics_surface)
+    {
+        SDL_FreeSurface(__mgl_graphics_surface);
+    }
+    if (__mgl_graphics_temp_buffer)
+    {
+        SDL_FreeSurface(__mgl_graphics_temp_buffer);
+    }
+    __mgl_graphics_surface = NULL;
     __mgl_graphics_main_window = NULL;
     __mgl_graphics_renderer = NULL;
     __mgl_graphics_texture = NULL;
+    __mgl_graphics_temp_buffer = NULL;
 }
 
 int mgl_graphics_init_by_config(char *configFile)
@@ -169,7 +182,8 @@ int mgl_graphics_init_by_config(char *configFile)
     mgl_dict_get_hash_value_as_line(windowName, data, "windowName");
     mgl_dict_get_hash_value_as_uint(&__mgl_graphics_frame_delay, data, "frameDelay");
     mgl_dict_get_hash_value_as_vec3d(&bgcolor,data,"backgroundColor");
-    
+    mgl_dict_get_hash_value_as_bool(&__mgl_graphics_print_fps, data, "printFPS");
+
     mgl_config_free(&config);
     
     mgl_graphics_init(windowName,viewWidth,viewHeight,renderWidth,renderHeight,bgcolor,fullscreen);
@@ -191,11 +205,21 @@ void mgl_graphics_set_frame_delay(MglUint frameDelay)
     __mgl_graphics_frame_delay = frameDelay;
 }
 
+MglFloat mgl_graphics_get_frames_per_second()
+{
+    return __mgl_graphics_fps;
+}
+
 void mgl_graphics_frame_delay()
 {
     MglUint diff;
+    __mgl_graphics_then = __mgl_graphics_now;
     __mgl_graphics_now = SDL_GetTicks();
     diff = (__mgl_graphics_now - __mgl_graphics_then);
+    if (diff)
+    {
+        __mgl_graphics_fps = (1000.0 / diff);
+    }
     if (diff < __mgl_graphics_frame_delay)
     {
         SDL_Delay(__mgl_graphics_frame_delay - diff);
@@ -291,5 +315,40 @@ void mgl_graphics_blit_surface_to_screen(SDL_Surface *surface,const MglRect * sr
                     (SDL_Rect *)dstRect);
 }
 
+SDL_Surface *mgl_graphics_get_temp_buffer(int w,int h)
+{
+    /*if no temp buffer exists, create one*/
+    if (!__mgl_graphics_temp_buffer)
+    {
+        __mgl_graphics_temp_buffer = mgl_graphics_create_surface(w,h);
+        if (!__mgl_graphics_temp_buffer)
+        {
+            /*error already triggered*/
+            return NULL;
+        }
+        SDL_FillRect(__mgl_graphics_temp_buffer,NULL,mgl_graphics_vec_to_surface_color(__mgl_graphics_surface,mgl_vec4d(0,0,0,0)));
+        return __mgl_graphics_temp_buffer;
+    }
+    /*change the size of the temp buffer*/
+    if ((__mgl_graphics_temp_buffer->w < w)||
+        (__mgl_graphics_temp_buffer->h < h))
+    {
+        w = MAX(__mgl_graphics_temp_buffer->w,w);
+        h = MAX(__mgl_graphics_temp_buffer->h,h);
+        mgl_logger_info("mgl_graphics_get_temp_buffer:resizing buffer to %ix%i",w,h);
+        SDL_FreeSurface(__mgl_graphics_temp_buffer);
+        __mgl_graphics_temp_buffer = mgl_graphics_create_surface(w,h);
+        if (!__mgl_graphics_temp_buffer)
+        {
+            /*error already triggered*/
+            return NULL;
+        }
+        SDL_FillRect(__mgl_graphics_temp_buffer,NULL,mgl_graphics_vec_to_surface_color(__mgl_graphics_surface,mgl_vec4d(0,0,0,0)));
+        return __mgl_graphics_temp_buffer;
+    }
+    /*otherwise return the existing one*/
+    SDL_FillRect(__mgl_graphics_temp_buffer,NULL,mgl_graphics_vec_to_surface_color(__mgl_graphics_surface,mgl_vec4d(0,0,0,0)));
+    return __mgl_graphics_temp_buffer;
+}
 
 /*eol@eof*/
