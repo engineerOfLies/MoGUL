@@ -71,13 +71,14 @@ void mgl_graphics_init(
         return;
     }
     
-    __mgl_graphics_renderer = SDL_CreateRenderer(__mgl_graphics_main_window, -1, 0);
+    __mgl_graphics_renderer = SDL_CreateRenderer(__mgl_graphics_main_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
     if (!__mgl_graphics_renderer)
     {
         mgl_logger_error("failed to create renderer: %s",SDL_GetError());
         mgl_graphics_close();
         return;
     }
+    
     SDL_SetRenderDrawColor(__mgl_graphics_renderer, 0, 0, 0, 255);
     SDL_RenderClear(__mgl_graphics_renderer);
     SDL_RenderPresent(__mgl_graphics_renderer);
@@ -216,28 +217,101 @@ void mgl_graphics_frame_delay()
     __mgl_graphics_then = __mgl_graphics_now;
     __mgl_graphics_now = SDL_GetTicks();
     diff = (__mgl_graphics_now - __mgl_graphics_then);
-    if (diff)
-    {
-        __mgl_graphics_fps = (1000.0 / diff);
-    }
     if (diff < __mgl_graphics_frame_delay)
     {
         SDL_Delay(__mgl_graphics_frame_delay - diff);
     }
+    __mgl_graphics_fps = 1000.0/MAX(SDL_GetTicks() - __mgl_graphics_then,0.001);
 }
 
 void mgl_grahics_next_frame()
 {
-    SDL_UpdateTexture(__mgl_graphics_texture, NULL, __mgl_graphics_surface->pixels, __mgl_graphics_surface->pitch);
-    SDL_RenderClear(__mgl_graphics_renderer);
-    SDL_RenderCopy(__mgl_graphics_renderer, __mgl_graphics_texture, NULL, NULL);
+/*    SDL_UpdateTexture(__mgl_graphics_texture, NULL, __mgl_graphics_surface->pixels, __mgl_graphics_surface->pitch);
+    SDL_RenderCopy(__mgl_graphics_renderer, __mgl_graphics_texture, NULL, NULL);*/
     SDL_RenderPresent(__mgl_graphics_renderer);
     mgl_graphics_frame_delay();
+}
+
+void mgl_graphics_render_line(MglVec2D p1,MglVec2D p2, MglVec4D color)
+{
+    SDL_SetRenderDrawColor(__mgl_graphics_renderer,
+                           color.x,
+                           color.y,
+                           color.z,
+                           color.w);
+    SDL_RenderDrawLine(__mgl_graphics_renderer,
+                       p1.x,
+                       p1.y,
+                       p2.x,
+                       p2.y);
+}
+
+void mgl_graphics_render_pixel(MglVec2D pixel,MglVec4D color)
+{
+    SDL_SetRenderDrawColor(__mgl_graphics_renderer,
+                           color.x,
+                           color.y,
+                           color.z,
+                           color.w);
+    SDL_RenderDrawPoint(__mgl_graphics_renderer,
+                        pixel.x,
+                        pixel.y);
 }
 
 MglUint mgl_graphics_get_render_time()
 {
     return __mgl_graphics_now;
+}
+
+void mgl_graphics_render_surface_to_screen(SDL_Surface *surface,MglRect srcRect,MglVec2D position,MglVec2D scale,MglVec3D rotation)
+{
+    MglRect dstRect;
+    SDL_Point point;
+    int w,h;
+    if (!__mgl_graphics_texture)
+    {
+        mgl_logger_warn("mgl_graphics_render_surface_to_screen: no texture available");
+        return;
+    }
+    if (!surface)
+    {
+        mgl_logger_warn("mgl_graphics_render_surface_to_screen: no surface provided");
+        return;
+    }
+    SDL_QueryTexture(__mgl_graphics_texture,
+                     NULL,
+                     NULL,
+                     &w,
+                     &h);
+    /*check if resize is needed*/
+    if ((surface->w > w)||(surface->h > h))
+    {
+        SDL_DestroyTexture(__mgl_graphics_texture);
+        __mgl_graphics_texture = SDL_CreateTexture(__mgl_graphics_renderer,
+                          __mgl_graphics_surface->format->format,
+                          SDL_TEXTUREACCESS_STREAMING, 
+                          MAX(w,surface->w),
+                          MAX(h,surface->h));
+        if (!__mgl_graphics_texture)
+        {
+            mgl_logger_warn("mgl_graphics_render_surface_to_screen: failed to allocate more space for the screen texture!");
+            return;
+        }
+    }
+    SDL_SetTextureBlendMode(__mgl_graphics_texture,SDL_BLENDMODE_BLEND);        
+    SDL_UpdateTexture(__mgl_graphics_texture,
+                      &srcRect,
+                      surface->pixels,
+                      surface->pitch);
+    mgl_vec2d_set(point,rotation.x,rotation.y);
+    mgl_rect_set(&dstRect,position.x,position.y,scale.x*srcRect.w,scale.y*srcRect.h);
+    SDL_RenderCopyEx(__mgl_graphics_renderer,
+                     __mgl_graphics_texture,
+                     &srcRect,
+                     &dstRect,
+                     rotation.z,
+                     &point,
+                     SDL_FLIP_NONE);
 }
 
 void mgl_graphics_clear_screen()
@@ -247,6 +321,7 @@ void mgl_graphics_clear_screen()
         return;
     }
     SDL_FillRect(__mgl_graphics_surface,NULL,__mgl_graphics_background_color);
+    SDL_RenderClear(__mgl_graphics_renderer);
 }
 
 void mgl_graphics_set_bgcolor(MglVec3D bgcolor)
@@ -349,6 +424,74 @@ SDL_Surface *mgl_graphics_get_temp_buffer(int w,int h)
     /*otherwise return the existing one*/
     SDL_FillRect(__mgl_graphics_temp_buffer,NULL,mgl_graphics_vec_to_surface_color(__mgl_graphics_surface,mgl_vec4d(0,0,0,0)));
     return __mgl_graphics_temp_buffer;
+}
+
+SDL_Surface *mgl_graphics_screen_convert(SDL_Surface **surface)
+{
+    SDL_Surface *convert;
+    if (!(*surface))
+    {
+        mgl_logger_warn("mgl_graphics_screen_convert: surface provided was NULL");
+        return NULL;
+    }
+    if (!__mgl_graphics_surface)
+    {
+        mgl_logger_warn("mgl_graphics_screen_convert: graphics not yet initialized");
+        return NULL;
+    }
+    convert = SDL_ConvertSurface(*surface,
+                       __mgl_graphics_surface->format,
+                       0);
+    if (!convert)
+    {
+        mgl_logger_warn("mgl_graphics_screen_convert: failed to convert surface: %s",SDL_GetError());
+        return NULL;
+    }
+    SDL_FreeSurface(*surface);
+    *surface = NULL;
+    return convert;
+}
+
+MglUint mgl_graphics_get_surface_pixel(SDL_Surface *surface,MglVec2D position)
+{
+    MglUint bpp;/*bytes per pixel*/
+    char *pixels;
+    if (!surface)
+    {
+        mgl_logger_warn("mgl_graphics_get_surface_pixel: surface is not provided");
+        return 0;
+    }
+    if ((SDL_MUSTLOCK(surface))&&
+        (!surface->locked))
+    {
+        mgl_logger_warn("mgl_graphics_get_surface_pixel: surface must be locked before use");
+        return 0;
+    }
+    
+    pixels = (char *)surface->pixels;
+    bpp = surface->pitch / surface->w;
+    return *(pixels + ((MglUint)position.y * surface->pitch)+((MglUint)position.x * bpp));
+}
+
+void mgl_graphics_set_surface_pixel(SDL_Surface *surface,MglVec2D position,MglUint color)
+{
+    MglUint bpp;/*bytes per pixel*/
+    char *pixels;
+    if (!surface)
+    {
+        mgl_logger_warn("mgl_graphics_set_surface_pixel: surface is not provided");
+        return;
+    }
+    if ((SDL_MUSTLOCK(surface))&&
+        (!surface->locked))
+    {
+        mgl_logger_warn("mgl_graphics_set_surface_pixel: surface must be locked before use");
+        return;
+    }
+    
+    pixels = (char *)surface->pixels;
+    bpp = surface->pitch / surface->w;
+    memset((pixels + ((MglUint)position.y * surface->pitch)+((MglUint)position.x * bpp)),color,bpp);
 }
 
 /*eol@eof*/

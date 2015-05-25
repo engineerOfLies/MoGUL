@@ -6,6 +6,6 @@
   "fullscreen" : "FALSE",
   "renderWidth" : 1200,
   "renderHeight" : 720,
-  "frameDelay" : 60,
+  "frameDelay" : 17,
   "printFPS" : "TRUE"
 }

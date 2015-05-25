@@ -81,6 +81,14 @@ SDL_Surface *mgl_graphics_get_screen_surface();
 SDL_Surface *mgl_graphics_create_surface(MglUint w,MglUint h);
 
 /**
+ * @brief convert the provided surface to the screen's format
+ * If Successful frees the surface provided and sets your pointer to NULL
+ * @param surface a pointer to your surface pointer
+ * @return NULL on error, or a new SDL Surface with the screen pixel format
+ */
+SDL_Surface *mgl_graphics_screen_convert(SDL_Surface **surface);
+
+/**
  * @brief get the active temp drawing buffer at least as big as the specified width and height.
  * This surface should NOT be freed when done with and should not be held onto for very long
  * @param w the desired width of the temp buffer.  
@@ -96,6 +104,17 @@ SDL_Surface *mgl_graphics_get_temp_buffer(int w,int h);
  * @param dstRect the clip rectangle for the destination surface (the sceen)
  */
 void mgl_graphics_blit_surface_to_screen(SDL_Surface *surface,const MglRect * srcRect,const MglRect * dstRect);
+
+/**
+ * @brief renders the provided surface to the screen renderer
+ * 
+ * @param surface the surface to render
+ * @param srcRect the rectangle clip area to render
+ * @param position the position on the screen to render to
+ * @param scale the width and height to scale the image to  (1,1) is no scaling
+ * @param rotation the roation point (x,y and rotation angle (z) to rotate the image
+ */
+void mgl_graphics_render_surface_to_screen(SDL_Surface *surface,MglRect srcRect,MglVec2D position,MglVec2D scale,MglVec3D rotation);
 
 /**
  * @brief renders the contents of the screen buffer to the physical screen.  Internally waits to 
@@ -143,6 +162,39 @@ MglUint mgl_graphics_vec_to_surface_color(SDL_Surface *surface,MglVec4D color);
  * @return an SDL color that will work with the screen surface
  */
 MglUint mgl_graphics_vec_to_screen_color(MglVec4D color);
+
+/**
+ * @brief returns the color information for the specified surface pixel
+ * Surface should be locked prior to calling this function.
+ * @param surface the surface to query
+ * @param position the x and y coordinates of the pixel to check (rounded to integer space)
+ * 
+ * @return 0 if color is black or there is a problem.  Errors are logged
+ */
+MglUint mgl_graphics_get_surface_pixel(SDL_Surface *surface,MglVec2D position);
+/**
+ * @brief sets the pixel of the surface to the specified color
+ * Surface should be locked priot to calling this function.  This should not be considered a drawing tool.
+ * @param surface the surface to change
+ * @param position the x and y coordinates of the pixel to set
+ * @param color the color to set the pixel to, assumed to be in the same format as the surface
+ */
+void mgl_graphics_set_surface_pixel(SDL_Surface *surface,MglVec2D position,MglUint color);
+
+/**
+ * @brief draws a pixel to the active rendering context
+ * @param pixel the coordinates of the pixel to draw
+ * @param color the color to set the pixel too.
+ */
+void mgl_graphics_render_pixel(MglVec2D pixel,MglVec4D color);
+
+/**
+ * @brief draws a line to the active rendering context
+ * @param p1 end point 1 of the line
+ * @param p2 end point 2 of the line
+ * @param color the color to draw
+ */
+void mgl_graphics_render_line(MglVec2D p1,MglVec2D p2, MglVec4D color);
 
 /**
  * @brief get the currect render screen surface resolution

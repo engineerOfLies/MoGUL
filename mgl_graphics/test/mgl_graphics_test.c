@@ -14,16 +14,16 @@ void init_all();
 void draw_candle_light(MglVec2D position)
 {
   static float intensity = 0;
-  intensity = ((mgl_random()+0.1)+intensity*10)/11;
-  mgl_draw_solid_circle(position, 100*intensity, mgl_vec4d(255,32,0,10*intensity));
-  mgl_draw_solid_circle(position, 75*intensity, mgl_vec4d(255,64,0,63*intensity));
-  mgl_draw_solid_circle(position, 50*intensity, mgl_vec4d(255,128,0,127*intensity));
+  intensity = ((mgl_random()+0.2)+intensity*10)/11;
+  mgl_draw_solid_circle(position, 100*intensity, mgl_vec4d(255,32,0,60*intensity));
+  mgl_draw_solid_circle(position, 75*intensity, mgl_vec4d(255,64,0,120*intensity));
+  mgl_draw_solid_circle(position, 50*intensity, mgl_vec4d(255,128,0,220*intensity));
   mgl_draw_solid_circle(position, 25*intensity, mgl_vec4d(255,255,0,255*intensity));
 }
 
 void draw_candle(MglVec2D position)
 {
-  //draw_candle_light(mgl_vec2d(position.x,position.y-20));
+  draw_candle_light(mgl_vec2d(position.x,position.y-20));
   mgl_draw_solid_rect(mgl_rect(position.x-7,position.y+10,14,180),mgl_vec4d(255,255,255,255));
   mgl_draw_solid_rect(mgl_rect(position.x-15,position.y+10,30,180),mgl_vec4d(255,255,255,128));
   mgl_draw_solid_rect(mgl_rect(position.x-22,position.y+10,44,180),mgl_vec4d(255,255,255,128));
@@ -37,8 +37,6 @@ int main(int argc,char *argv[])
   const Uint8 *keys = NULL;
   char *confFile = NULL;
   MglUint sw,sh;
-  MglInt dx = 1 ,dy = 1;
-  MglVec2D position = {0,0};
   if (((argc == 2) && (strcmp(argv[1],"-h")==0))||(argc < 2))
   {
       fprintf(stdout,"usage:\n");
@@ -59,17 +57,10 @@ int main(int argc,char *argv[])
   {
     mgl_graphics_clear_screen();
     
-    position.x += dx * 0.3;
-    position.y += dy * 0.3;
-    if (position.x > sw)dx = -1;
-    if (position.x <= 0)dx = 1;
-    if (position.y > sh)dy = -1;
-    if (position.y <= 0)dy = 1;
     /*circles*/
     draw_candle(mgl_vec2d(sw/2,sh/2+10));
     draw_candle(mgl_vec2d(sw/2 - 90,sh/2+10));
     draw_candle(mgl_vec2d(sw/2 + 90,sh/2+10));
-    
     SDL_PumpEvents();
     keys = SDL_GetKeyboardState(NULL);
     if (keys[SDL_SCANCODE_ESCAPE])

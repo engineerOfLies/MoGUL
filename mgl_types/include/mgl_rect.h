@@ -1,7 +1,7 @@
 #ifndef __MGL_RECT_H__
 #define __MGL_RECT_H__
 /**
- * mgl_types
+ * mgl_rect
  * @license The MIT License (MIT)
    @copyright Copyright (c) 2015 EngineerOfLies
     Permission is hereby granted, free of charge, to any person obtaining a copy

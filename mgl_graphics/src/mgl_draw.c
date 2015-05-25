@@ -4,16 +4,7 @@
 
 void mgl_draw_pixel(MglVec2D point,MglVec4D color)
 {
-    SDL_Surface *surface;
-    MglRect pixel;
-    MglUint pixelColor;
-    /*make an empty surface*/
-    surface = mgl_graphics_get_temp_buffer(1,1);
-    pixelColor = mgl_graphics_vec_to_surface_color(surface,color);
-    SDL_FillRect(surface,NULL,pixelColor);
-    mgl_rect_set(&pixel,point.x,point.y,1,1);
-    /*blit surface to the screen surface*/
-    mgl_graphics_blit_surface_to_screen(surface,NULL,&pixel);
+    mgl_graphics_render_pixel(point,color);
 }
 
 void mgl_draw_pixel_to_surface(SDL_Surface *surface,MglVec2D point,MglVec4D color)
@@ -44,7 +35,7 @@ void mgl_draw_solid_rect(MglRect rect, MglVec4D color)
     SDL_FillRect(surface,NULL,rectColor);
     /*blit surface to the screen surface*/
     mgl_rect_set(&copyRect,0,0,rect.w,rect.h);
-    mgl_graphics_blit_surface_to_screen(surface,&copyRect,&rect);
+    mgl_graphics_render_surface_to_screen(surface,copyRect,mgl_vec2d(rect.x,rect.y),mgl_vec2d(1,1),mgl_vec3d(0,0,0));
 }
 
 void mgl_draw_solid_rect_to_surface(SDL_Surface *surface,MglRect rect, MglVec4D color)
@@ -109,6 +100,11 @@ void mgl_draw_rect_to_surface(SDL_Surface *surface,MglRect rect, MglVec4D color)
 }
 
 void mgl_draw_line(MglVec2D p1,MglVec2D p2,MglVec4D color)
+{
+    mgl_graphics_render_line(p1,p2,color);
+}
+
+void mgl_draw_line_to_screen_surface(MglVec2D p1,MglVec2D p2,MglVec4D color)
 {
     SDL_Surface *surface;
     MglRect area;
@@ -247,9 +243,9 @@ void mgl_draw_circle(MglVec2D center, int r, MglVec4D color)
   SDL_FillRect(surface,NULL,clearColor);
   /*draw circle to the new surface*/
   mgl_draw_circle_to_surface(surface,mgl_vec2d(r,r), r, color);
-  mgl_rect_set(&area,center.x-r,center.y-r,2*r,2*r);
+  mgl_rect_set(&area,0,0,2*r,2*r);
   /*blit surface to the screen surface*/
-  mgl_graphics_blit_surface_to_screen(surface,NULL,&area);
+  mgl_graphics_render_surface_to_screen(surface,area,mgl_vec2d(center.x-r,center.y-r),mgl_vec2d(1,1),mgl_vec3d(0,0,0));
 }
 
 void mgl_draw_circle_to_surface(SDL_Surface *surface,MglVec2D center, int radius, MglVec4D color)
@@ -263,11 +259,15 @@ void mgl_draw_circle_to_surface(SDL_Surface *surface,MglVec2D center, int radius
     return;
   }
   mgl_draw_circle_points(surface,center, point, color);
-  while (point.x < point.y) {
+  while (point.x < point.y)
+  {
     point.x++;
-    if (p < 0) {
+    if (p < 0)
+    {
       p += 2*point.x+1;
-    } else {
+    }
+    else
+    {
       point.y--;
       p += 2*(point.x-point.y)+1;
     }
@@ -325,9 +325,9 @@ void mgl_draw_solid_circle(MglVec2D center, int r, MglVec4D color)
   SDL_FillRect(surface,NULL,clearColor);
   /*draw circle to the new surface*/
   mgl_draw_solid_circle_to_surface(surface,mgl_vec2d(r,r), r, color);
-  mgl_rect_set(&area,center.x-r,center.y-r,2*r,2*r);
+  mgl_rect_set(&area,0,0,2*r,2*r);
   /*blit surface to the screen surface*/
-  mgl_graphics_blit_surface_to_screen(surface,NULL,&area);
+  mgl_graphics_render_surface_to_screen(surface,area,mgl_vec2d(center.x-r,center.y-r),mgl_vec2d(1,1),mgl_vec3d(0,0,0));
 }
 
 void mgl_draw_solid_circle_to_surface(SDL_Surface *surface,MglVec2D center, int radius, MglVec4D color)
@@ -341,11 +341,15 @@ void mgl_draw_solid_circle_to_surface(SDL_Surface *surface,MglVec2D center, int 
     return;
   }
   mgl_draw_solid_circle_points(surface,center, point, color);
-  while (point.x < point.y) {
+  while (point.x < point.y)
+  {
     point.x++;
-    if (p < 0) {
+    if (p < 0)
+    {
       p += 2*point.x+1;
-    } else {
+    }
+    else
+    {
       point.y--;
       p += 2*(point.x-point.y)+1;
     }
