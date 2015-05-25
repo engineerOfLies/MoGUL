@@ -18,12 +18,15 @@ These will be the core libraries of MoGUL.  This will contain resource managers 
  - mgl_svg - provides a resource manager for scalable vector graphics.  SVG files will be parsed into MglDict and used to draw.
  - mgl_audio - provides a resource manager for playing audio clips and music.  Wraps SDL_Mixer.
  - mgl_actor - provides a context for timing sprite/drawing animations, setting animation sequences and triggering events times with key frames.
+ - mgl_input - provides a platform to customize user controls and handle control events.
 
 <H3>Extensions</H3>
  - mgl_tiles - provides a set of functions for loading and dealing with tile maps.  Provides the framework for making more robust tiles (animated, active).  Will work with the mgl_path seamlessly.
- - mgl_path - provides a threaded path finding system.  Works with paths or 
+ - mgl_path - provides a threaded path finding system.  Works with tiles, platforms and free form levels.
  - mgl_entity - provides a resource manager for in-game entities.  Can be extended with user data and user defined function pointers.
-
+ - mgl_level - provides a common platform for developing game levels.  Will support a range of level styles from tiled to free form as well as multiple layers and parallax effects.
+ - mgl_gui - provides a graphical user interface platform including resource managers for windows and widgets.
+ - mgl_predict - provides a pattern predition implementation.  Useful for AI prediction of player actions.
 <H2>Documentation</H2>
 URL: TBD
 
