@@ -6,21 +6,23 @@ MoGUL is a colleciton of libraries that can be used as a whole or taken in parts
 <H3>Stand Alone</H3>
 These libraries provide useful utility for the C language that the rest of MoGUL will use, but these are not dependent on the rest of MoGUL.
  - mgl_types - a library of type aliases.  Mostly bult from the SDL standard types, but also provides some common types that will be useful in games in general such as vectors (the math construct, not the linked list) and matrices. mgl_dict is a complex generic type that will work well storing config data loaded from JSON, XML or YAML
- - mgl_logger - a simple logger with support for different levels.  Support for loggin in a separate thread.
- - mgl_rm - a resource manager "class" that allows the automatic tracking of use and cleaning up of any type of "resource" such as image or audio files or in-project constructs such as entities and windows.
+ - mgl_logger - a simple logger with support for different logging levels.  Support for loggin in a separate thread.
+ - mgl_resource - a resource manager "class" that allows the automatic tracking of use and cleaning up of any type of "resource" such as image or audio files or in-project constructs such as entities and windows.
+ - mgl_config - a config file parser and resource manager.  Will support xml, json and yaml when complete.  Converts config files to MglDict.
 
 <H3>MoGUL Core</H3>
 These will be the core libraries of MoGUL.  This will contain resource managers for resources typically used in game programming.
  - mgl_graphics - initializes and configures rendering pipleline and provides an interface to do basic drawing and frame timing.
- - mgl_shapes - provides drawing of shape primitives and integration with Chipmunk physics engine.
+ - mgl_draw - provides drawing of shape primitives and integration with Chipmunk physics engine.
  - mgl_sprite - provides a resource manager for animated sprites.  Sprites can be setup through sprite sheets or through image sequences.
+ - mgl_svg - provides a resource manager for scalable vector graphics.  SVG files will be parsed into MglDict and used to draw.
  - mgl_audio - provides a resource manager for playing audio clips and music.  Wraps SDL_Mixer.
- - mgl_actor - provides a context for timing sprite animations, setting animation sequences and triggering events times with key frames.
- - mgl_entity - provides a resource manager for in-game entities.  Can be extended with user data and user defined function pointers.
+ - mgl_actor - provides a context for timing sprite/drawing animations, setting animation sequences and triggering events times with key frames.
 
 <H3>Extensions</H3>
  - mgl_tiles - provides a set of functions for loading and dealing with tile maps.  Provides the framework for making more robust tiles (animated, active).  Will work with the mgl_path seamlessly.
  - mgl_path - provides a threaded path finding system.  Works with paths or 
+ - mgl_entity - provides a resource manager for in-game entities.  Can be extended with user data and user defined function pointers.
 
 <H2>Documentation</H2>
 URL: TBD
