@@ -114,7 +114,7 @@ void mgl_draw_circle_to_surface(SDL_Surface *surface,MglVec2D center, int radius
 /**
  * @brief draw a filled circle to the screen
  * @param center the center point to draw the circle
- * @param radiua the radius of the cirlce
+ * @param radius the radius of the cirlce
  * @param color the color (including alpha) to draw with
  */
 void mgl_draw_solid_circle(MglVec2D center, int radius, MglVec4D color);
@@ -127,5 +127,24 @@ void mgl_draw_solid_circle(MglVec2D center, int radius, MglVec4D color);
  * @param color the color (including alpha) to draw with
  */
 void mgl_draw_solid_circle_to_surface(SDL_Surface *surface,MglVec2D center, int radius, MglVec4D color);
+
+/**
+ * @brief draw a bezier curve to the screen rendering context
+ * @param p0 the start point of the curve to draw
+ * @param p1 the reference point of the curve to draw
+ * @param p2 the end point of the curve to draw
+ * @param color the color (including alpha) to draw with
+ */
+void mgl_draw_bezier(MglVec2D p0, MglVec2D p1,MglVec2D p2,MglVec4D color);
+
+/**
+ * @brief draw a bezier curve to the specified surface
+ * @param surface the SDL surface to draw to
+ * @param p0 the start point of the curve to draw
+ * @param p1 the reference point of the curve to draw
+ * @param p2 the end point of the curve to draw
+ * @param color the color (including alpha) to draw with
+ */
+void mgl_draw_bezier_to_surface(SDL_Surface *surface, MglVec2D p0, MglVec2D p1, MglVec2D p2, MglVec4D color);
 
 #endif

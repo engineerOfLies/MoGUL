@@ -491,7 +491,7 @@ void mgl_graphics_set_surface_pixel(SDL_Surface *surface,MglVec2D position,MglUi
     
     pixels = (char *)surface->pixels;
     bpp = surface->pitch / surface->w;
-    memset((pixels + ((MglUint)position.y * surface->pitch)+((MglUint)position.x * bpp)),color,bpp);
+    pixels[((MglUint)position.y * surface->pitch)+((MglUint)position.x * bpp)] = color;
 }
 
 /*eol@eof*/

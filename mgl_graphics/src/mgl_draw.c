@@ -357,4 +357,63 @@ void mgl_draw_solid_circle_to_surface(SDL_Surface *surface,MglVec2D center, int 
   }
 }
 
+void mgl_draw_bezier(MglVec2D p0, MglVec2D p1,MglVec2D p2,MglVec4D color)
+{
+    SDL_Surface *surface;
+    MglRect area;
+    MglUint clearColor;
+    int w,h,minx,miny,maxx,maxy;
+    minx = MIN(p0.x,MIN(p1.x,p2.x));
+    miny = MIN(p0.y,MIN(p1.y,p2.y));
+    maxx = MAX(p0.x,MAX(p1.x,p2.x));
+    maxy = MAX(p0.y,MAX(p1.y,p2.y));
+    w = abs(maxx - minx)+2;
+    h = abs(maxy - miny)+2;
+    /*make an empty surface*/
+    surface = mgl_graphics_get_temp_buffer(w,h);
+    clearColor = mgl_graphics_vec_to_surface_color(surface,mgl_vec4d(0,0,0,0));
+    SDL_FillRect(surface,NULL,clearColor);
+    /*draw circle to the new surface*/
+    mgl_draw_bezier_to_surface(surface, mgl_vec2d(p0.x - minx,p0.y - miny), mgl_vec2d(p1.x - minx,p1.y - miny),mgl_vec2d(p2.x - minx,p2.y - miny), color);
+    mgl_rect_set(&area,0,0,w,h);
+    /*blit surface to the screen surface*/
+    mgl_graphics_render_surface_to_screen(surface,area,mgl_vec2d(minx,miny),mgl_vec2d(1,1),mgl_vec3d(0,0,0));
+}
+
+
+void mgl_draw_bezier_to_surface(SDL_Surface *surface, MglVec2D p0, MglVec2D p1, MglVec2D p2, MglVec4D color)
+{
+    MglVec2D qp,qp2,qpv; /*approximation line starting point and vector*/
+    MglVec2D p0v,p1v,temp; /*vectors from point to next point*/
+    MglVec2D dp; /*draw point*/
+    MglFloat t = 0;  /*time segment*/
+    MglFloat tstep;
+    MglFloat totalLength;
+    totalLength = mgl_vec2d_magnitude(p0)+mgl_vec2d_magnitude(p1)+mgl_vec2d_magnitude(p2);
+    if (totalLength == 0)
+    {
+        mgl_logger_warn("path provided is zero length.");
+        return;
+    }
+    tstep = fabs(1.0/(totalLength * 0.9));
+    mgl_vec2d_sub(p0v,p1,p0);
+    mgl_vec2d_sub(p1v,p2,p1);
+    for (t = 0; t <= 1;t += tstep)
+    {
+        /*calculate Q*/
+        mgl_vec2d_scale(temp,p0v,t);
+        mgl_vec2d_add(qp,p0,temp);
+        
+        mgl_vec2d_scale(temp,p1v,t);
+        mgl_vec2d_add(qp2,p1,temp);
+        
+        mgl_vec2d_sub(qpv,qp2,qp);
+        
+        mgl_vec2d_scale(temp,qpv,t);
+        mgl_vec2d_add(dp,qp,temp);
+        
+        mgl_draw_pixel_to_surface(surface,dp,color);
+    }
+}  
+
 /*eol@eof*/

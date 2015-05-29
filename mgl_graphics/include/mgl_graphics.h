@@ -172,6 +172,7 @@ MglUint mgl_graphics_vec_to_screen_color(MglVec4D color);
  * @return 0 if color is black or there is a problem.  Errors are logged
  */
 MglUint mgl_graphics_get_surface_pixel(SDL_Surface *surface,MglVec2D position);
+
 /**
  * @brief sets the pixel of the surface to the specified color
  * Surface should be locked priot to calling this function.  This should not be considered a drawing tool.

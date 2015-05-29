@@ -22,7 +22,7 @@
  */
 #include <mgl_types.h>
 
-#define GOTHERE printf("GOT HERE: %s:%i\n",__FILE__,__LINE__)
+#define GOTHERE printf("GOT HERE: %s:%s():line:%i\n",__FILE__,__FUNCTION__,__LINE__)
 
 typedef enum _mgl_log_levels {
   MGL_LOG_NONE  = 0,

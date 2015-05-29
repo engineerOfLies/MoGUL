@@ -37,6 +37,8 @@ int main(int argc,char *argv[])
   const Uint8 *keys = NULL;
   char *confFile = NULL;
   MglUint sw,sh;
+  MglInt swoosh = 0;
+  MglInt dir = 1;
   if (((argc == 2) && (strcmp(argv[1],"-h")==0))||(argc < 2))
   {
       fprintf(stdout,"usage:\n");
@@ -57,10 +59,19 @@ int main(int argc,char *argv[])
   {
     mgl_graphics_clear_screen();
     
+    swoosh += dir;
+    if (swoosh >= sw)dir = -1;
+    if (swoosh <= 0)dir = 1;
+    
     /*circles*/
     draw_candle(mgl_vec2d(sw/2,sh/2+10));
     draw_candle(mgl_vec2d(sw/2 - 90,sh/2+10));
     draw_candle(mgl_vec2d(sw/2 + 90,sh/2+10));
+    mgl_draw_bezier(mgl_vec2d(100,sh/2), mgl_vec2d(swoosh,1),mgl_vec2d(sw-500,sh/2),mgl_vec4d(255,255,0,255));
+    mgl_draw_bezier(mgl_vec2d(200,sh/3), mgl_vec2d(swoosh,1),mgl_vec2d(sw-300,sh/3),mgl_vec4d(0,255,255,255));
+    mgl_draw_bezier(mgl_vec2d(300,sh/4), mgl_vec2d(swoosh,1),mgl_vec2d(sw-200,sh/4),mgl_vec4d(255,0,255,255));
+    mgl_draw_bezier(mgl_vec2d(500,sh), mgl_vec2d(swoosh,1),mgl_vec2d(sw-100,sh),mgl_vec4d(255,128,64,255));
+
     SDL_PumpEvents();
     keys = SDL_GetKeyboardState(NULL);
     if (keys[SDL_SCANCODE_ESCAPE])
