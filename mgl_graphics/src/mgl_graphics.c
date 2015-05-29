@@ -191,6 +191,11 @@ int mgl_graphics_init_by_config(char *configFile)
     return 0;
 }
 
+SDL_Renderer *mgl_graphics_get_renderer()
+{
+    return __mgl_graphics_renderer;
+}
+
 SDL_Texture *mgl_graphics_get_screen_texture()
 {
     return __mgl_graphics_texture;

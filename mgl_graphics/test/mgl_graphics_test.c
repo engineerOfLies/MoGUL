@@ -42,6 +42,7 @@ int main(int argc,char *argv[])
   MglUint sw,sh;
   MglInt swoosh = 0;
   MglInt dir = 1;
+  MglLines *lines;
   if (((argc == 2) && (strcmp(argv[1],"-h")==0))||(argc < 2))
   {
       fprintf(stdout,"usage:\n");
@@ -68,8 +69,17 @@ int main(int argc,char *argv[])
       NULL);
 
   mgl_graphics_get_screen_resolution(&sw,&sh);
+
+  lines = mgl_shape_lines_new();
+  
+  mgl_shape_lines_append_point(lines,mgl_vec2d(100,sh/2));
+  mgl_shape_lines_append_point(lines,mgl_vec2d(100,sh/4));
+  mgl_shape_lines_append_point(lines,mgl_vec2d(sw/2,sh/4));
+  mgl_shape_lines_append_point(lines,mgl_vec2d(sw/2,sh/2));
+  
   while (!done)
   {
+      GOTHERE;
     mgl_graphics_clear_screen();
     
     swoosh += dir;
@@ -85,6 +95,10 @@ int main(int argc,char *argv[])
     mgl_draw_bezier(mgl_vec2d(300,sh/4), mgl_vec2d(swoosh,1),mgl_vec2d(sw-200,sh/4),mgl_vec4d(255,0,255,255));
     mgl_draw_bezier(mgl_vec2d(500,sh), mgl_vec2d(swoosh,1),mgl_vec2d(sw-100,sh),mgl_vec4d(255,128,64,255));
 
+//            mgl_draw_line(mgl_vec2d(100,sh/2), mgl_vec2d(swoosh,1),mgl_vec4d(255,0,0,255));
+
+//    mgl_draw_line_sequence(lines,mgl_vec4d(255,0,0,255));
+    
     frame = (frame + 1)%16;
     mgl_sprite_draw(sprite, mgl_vec2d(sw/2,sh/4),frame);
     
@@ -97,7 +111,7 @@ int main(int argc,char *argv[])
     mgl_grahics_next_frame();
     /*printf("fps:%f\n",mgl_graphics_get_frames_per_second());*/
   }
-  
+  mgl_shape_lines_free(&lines);
   mgl_logger_message("mgl_graphics_test end\n");
 
 }

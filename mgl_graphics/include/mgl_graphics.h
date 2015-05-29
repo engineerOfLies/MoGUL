@@ -98,6 +98,12 @@ SDL_Surface *mgl_graphics_screen_convert(SDL_Surface **surface);
 SDL_Surface *mgl_graphics_get_temp_buffer(int w,int h);
 
 /**
+ * @brief get the active rendering context
+ * @return NULL on error or the active rendering context
+ */
+SDL_Renderer *mgl_graphics_get_renderer();
+
+/**
  * @brief copy one surface on the current screen surface
  * @param surface the source of the copy
  * @param srcRect the clip rectangle for the source surface

@@ -99,6 +99,22 @@ void mgl_draw_rect_to_surface(SDL_Surface *surface,MglRect rect, MglVec4D color)
                drawColor);
 }
 
+void mgl_draw_line_sequence(MglLines *lines,MglVec4D color)
+{
+    int count,i;
+    MglVec2D point,lastpoint;
+    if (!lines)return;
+    count = mgl_shape_lines_get_count(lines);
+    if (count < 2)return;
+    mgl_shape_lines_get_nth_point(&lastpoint,lines, 0);
+    for (i = 1; i < count;i++)
+    {
+        mgl_shape_lines_get_nth_point(&point,lines, i);
+        mgl_draw_line(lastpoint,point,color);
+        mgl_vec2d_copy(lastpoint,point);
+    }
+}
+
 void mgl_draw_line(MglVec2D p1,MglVec2D p2,MglVec4D color)
 {
     mgl_graphics_render_line(p1,p2,color);

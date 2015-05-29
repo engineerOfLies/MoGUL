@@ -25,6 +25,7 @@
 #include "mgl_types.h"
 #include "mgl_vector.h"
 #include "mgl_rect.h"
+#include "mgl_shape.h"
 #include <SDL.h>
 
 
@@ -94,6 +95,13 @@ void mgl_draw_line(MglVec2D p1,MglVec2D p2,MglVec4D color);
  * @param color the color (including alpha) to draw with
  */
 void mgl_draw_line_to_surface(SDL_Surface *surface,MglVec2D p1,MglVec2D p2,MglVec4D color);
+
+/**
+ * @brief draw a sequence of lines
+ * @param lines the line sequence to draw
+ * @param color the color (including alpha) to draw with
+ */
+void mgl_draw_line_sequence(MglLines *lines,MglVec4D color);
 
 /**
  * @brief draw a hollow circle to the screen
