@@ -62,10 +62,13 @@ void mgl_sprite_init(
     MglUint maxSprites,
     MglUint defaultFramesPerLine)
 {
-    IMG_Init( IMG_INIT_JPG |  IMG_INIT_PNG |  IMG_INIT_TIF);
+    if (!(IMG_Init( IMG_INIT_PNG) & IMG_INIT_PNG))
+    {
+        mgl_logger_error("mgl_sprite_init: failed to init image: %s",SDL_GetError());
+    }
     atexit(IMG_Quit);
     __mgl_sprite_resource_manager = mgl_resource_manager_init(
-        "sprite system",
+        "mgl sprite",
         maxSprites,
         sizeof(struct MglSprite_S),
         MglFalse,
@@ -119,7 +122,7 @@ MglBool mgl_sprite_load_resource(char *filename,void *data)
     image = IMG_Load(fname);
     if (!image)
     {
-        mgl_logger_warn("mgl_sprite_load_resource:failed to load sprite image file: %s",filename);
+        mgl_logger_warn("mgl_sprite_load_resource:failed to load sprite image file: %s, re: %s",fname, SDL_GetError());
         return MglFalse;
     }
     sprite->image = mgl_graphics_screen_convert(&image);
@@ -263,4 +266,27 @@ MglSprite *mgl_sprite_load_from_image(
         
     return sprite;
 }
+
+void mgl_sprite_draw(MglSprite *sprite, MglVec2D position,MglUint frame)
+{
+    MglRect cell;
+    if (!sprite)
+    {
+        return;
+    }
+    mgl_logger_warn("frame: %i",frame);
+    mgl_rect_set(
+        &cell,
+        frame%sprite->framesPerLine * sprite->frameWidth,
+        frame/sprite->framesPerLine * sprite->frameHeight,
+        sprite->frameWidth,
+        sprite->frameHeight);
+    mgl_graphics_render_surface_to_screen(sprite->image,cell,position,mgl_vec2d(1,1),mgl_vec3d(0,0,0));
+}
+
+void mgl_sprite_draw_to_surface(SDL_Surface *surface, MglSprite *sprite, MglVec2D position,MglUint frame)
+{
+    
+}
+
 /*eol@eof*/

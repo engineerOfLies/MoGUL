@@ -1,4 +1,5 @@
 #include "mgl_draw.h"
+#include "mgl_sprite.h"
 #include "mgl_graphics.h"
 #include "mgl_config.h"
 #include "mgl_dict.h"
@@ -36,6 +37,8 @@ int main(int argc,char *argv[])
   int done = 0;
   const Uint8 *keys = NULL;
   char *confFile = NULL;
+  int frame = 0;
+  MglSprite *sprite;
   MglUint sw,sh;
   MglInt swoosh = 0;
   MglInt dir = 1;
@@ -53,6 +56,16 @@ int main(int argc,char *argv[])
       mgl_logger_info("failed to load graphics, exiting...");
       return 0;
   }
+  mgl_sprite_init_from_config(confFile);
+  
+  sprite = mgl_sprite_load_from_image(
+      "test/giantbomb.png",
+      32,
+      32,
+      16,
+      NULL,
+      NULL,
+      NULL);
 
   mgl_graphics_get_screen_resolution(&sw,&sh);
   while (!done)
@@ -62,7 +75,7 @@ int main(int argc,char *argv[])
     swoosh += dir;
     if (swoosh >= sw)dir = -1;
     if (swoosh <= 0)dir = 1;
-    
+
     /*circles*/
     draw_candle(mgl_vec2d(sw/2,sh/2+10));
     draw_candle(mgl_vec2d(sw/2 - 90,sh/2+10));
@@ -72,6 +85,9 @@ int main(int argc,char *argv[])
     mgl_draw_bezier(mgl_vec2d(300,sh/4), mgl_vec2d(swoosh,1),mgl_vec2d(sw-200,sh/4),mgl_vec4d(255,0,255,255));
     mgl_draw_bezier(mgl_vec2d(500,sh), mgl_vec2d(swoosh,1),mgl_vec2d(sw-100,sh),mgl_vec4d(255,128,64,255));
 
+    frame = (frame + 1)%16;
+    mgl_sprite_draw(sprite, mgl_vec2d(sw/2,sh/4),frame);
+    
     SDL_PumpEvents();
     keys = SDL_GetKeyboardState(NULL);
     if (keys[SDL_SCANCODE_ESCAPE])
@@ -79,7 +95,7 @@ int main(int argc,char *argv[])
       done = 1;
     }
     mgl_grahics_next_frame();
-    printf("fps:%f\n",mgl_graphics_get_frames_per_second());
+    /*printf("fps:%f\n",mgl_graphics_get_frames_per_second());*/
   }
   
   mgl_logger_message("mgl_graphics_test end\n");

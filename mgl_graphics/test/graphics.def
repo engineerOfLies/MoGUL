@@ -7,5 +7,7 @@
   "renderWidth" : 1200,
   "renderHeight" : 720,
   "frameDelay" : 17,
-  "printFPS" : "TRUE"
+  "printFPS" : "TRUE",
+  "maxSprites" : 1024,
+  "defaultFramesPerLine" : 16
 }
