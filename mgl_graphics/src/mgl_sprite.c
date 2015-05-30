@@ -10,9 +10,11 @@
 
 static MglResourceManager * __mgl_sprite_resource_manager = NULL;
 static MglUint __mgl_sprite_default_fpl = 16;
+static MglSpriteMode __mgl_sprite_mode = MglSpriteBoth;
 
 struct MglSprite_S
 {
+    SDL_Texture *texture;
     SDL_Surface *image;
     
     MglUint frameWidth;
@@ -91,7 +93,7 @@ MglBool mgl_sprite_load_resource(char *filename,void *data)
     char ** strings;
     MglLine fname;
     MglUint fw,fh,fpl;
-    MglSI64 red,green,blue;
+    MglSI64 red,green,blue,colorKey;
     sprite = SPRITE(data);
     if (!sprite)
     {
@@ -109,6 +111,7 @@ MglBool mgl_sprite_load_resource(char *filename,void *data)
     red = atoi(strings[4]);
     green = atoi(strings[5]);
     blue = atoi(strings[6]);
+    colorKey = atoi(strings[7]);
     g_strfreev (strings);
     
     sprite->frameWidth = fw;
@@ -125,6 +128,9 @@ MglBool mgl_sprite_load_resource(char *filename,void *data)
         mgl_logger_warn("mgl_sprite_load_resource:failed to load sprite image file: %s, re: %s",fname, SDL_GetError());
         return MglFalse;
     }
+    SDL_SetColorKey(image,
+                    SDL_TRUE,
+                    colorKey);
     sprite->image = mgl_graphics_screen_convert(&image);
     if (!sprite->image)
     {
@@ -138,6 +144,22 @@ MglBool mgl_sprite_load_resource(char *filename,void *data)
         mgl_sprite_swap_colors(sprite);
     }
     
+    if (__mgl_sprite_mode & MglSpriteTexture)
+    {
+        sprite->texture = SDL_CreateTextureFromSurface(mgl_graphics_get_renderer(),sprite->image);
+        if (sprite->texture)
+        {
+            SDL_SetTextureBlendMode(sprite->texture,SDL_BLENDMODE_BLEND);        
+            SDL_UpdateTexture(sprite->texture,
+                            NULL,
+                            sprite->image->pixels,
+                            sprite->image->pitch);
+            if (!(__mgl_sprite_mode & MglSpriteSurface))
+            {
+                SDL_FreeSurface(sprite->image);
+            }
+        }
+    }
     return MglTrue;
 }
 
@@ -145,8 +167,15 @@ void mgl_sprite_delete(void *data)
 {
     MglSprite *sprite;
     sprite = (MglSprite *)data;
-    SDL_FreeSurface(sprite->image);
+    if (sprite->image)
+    {
+        SDL_FreeSurface(sprite->image);
+    }
     sprite->image = NULL;
+    if (sprite->texture)
+    {
+        SDL_DestroyTexture(sprite->texture);
+    }
 }
 
 
@@ -243,19 +272,21 @@ MglSprite *mgl_sprite_load_from_image(
     MglUint framesPerLine,
     MglVec4D *redSwap,
     MglVec4D *greenSwap,
-    MglVec4D *blueSwap)
+    MglVec4D *blueSwap,
+    MglVec4D *colorKey)
 {
     char *filenamePacked;
     MglSprite *sprite = NULL;
     filenamePacked = g_strdup_printf (
-        "%s|%i|%i|%i|%i|%i|%i",
+        "%s|%i|%i|%i|%i|%i|%i|%i",
         filename,
         frameWidth,
         frameHeight,
         framesPerLine,
         redSwap?mgl_graphics_vec_to_screen_color(*redSwap):-1,
         greenSwap?mgl_graphics_vec_to_screen_color(*greenSwap):-1,
-        blueSwap?mgl_graphics_vec_to_screen_color(*blueSwap):-1);
+        blueSwap?mgl_graphics_vec_to_screen_color(*blueSwap):-1,
+        colorKey?mgl_graphics_vec_to_screen_color(*colorKey):-1);
     sprite = mgl_resource_manager_load_resource(__mgl_sprite_resource_manager,filenamePacked);
     free(filenamePacked);
     if (!sprite)
@@ -267,21 +298,55 @@ MglSprite *mgl_sprite_load_from_image(
     return sprite;
 }
 
-void mgl_sprite_draw(MglSprite *sprite, MglVec2D position,MglUint frame)
+void mgl_sprite_draw(
+    MglSprite * sprite,
+    MglVec2D position,
+    MglVec2D * scale,
+    MglVec2D * scaleCenter,
+    MglVec3D * rotation,
+    MglUint frame)
 {
-    MglRect cell;
+    MglRect cell,target;
+    SDL_Point r;
+    MglVec2D scaleFactor = {1,1};
+    MglVec2D scaleOffset = {0,0};
     if (!sprite)
     {
         return;
     }
-    mgl_logger_warn("frame: %i",frame);
+    
+    if (scale)
+    {
+        mgl_vec2d_copy(scaleFactor,(*scale));
+    }
+    if (scaleCenter)
+    {
+        mgl_vec2d_copy(scaleOffset,(*scaleCenter));
+    }
+    
     mgl_rect_set(
         &cell,
         frame%sprite->framesPerLine * sprite->frameWidth,
         frame/sprite->framesPerLine * sprite->frameHeight,
         sprite->frameWidth,
         sprite->frameHeight);
-    mgl_graphics_render_surface_to_screen(sprite->image,cell,position,mgl_vec2d(1,1),mgl_vec3d(0,0,0));
+    mgl_rect_set(
+        &target,
+        position.x - (scaleFactor.x * scaleOffset.x),
+        position.y - (scaleFactor.y * scaleOffset.y),
+        sprite->frameWidth * scaleFactor.x,
+        sprite->frameHeight * scaleFactor.y);
+    if (rotation)
+    {
+        mgl_vec2d_copy(r,(*rotation));
+    }
+    SDL_RenderCopyEx(mgl_graphics_get_renderer(),
+                     sprite->texture,
+                     &cell,
+                     &target,
+                     rotation?rotation->z:0,
+                     rotation?&r:NULL,
+                     SDL_FLIP_NONE);
 }
 
 void mgl_sprite_draw_to_surface(SDL_Surface *surface, MglSprite *sprite, MglVec2D position,MglUint frame)

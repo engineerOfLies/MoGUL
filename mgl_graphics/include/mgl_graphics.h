@@ -50,7 +50,7 @@ void mgl_graphics_init(
     MglInt viewHeight,
     MglInt renderWidth,
     MglInt renderHeight,
-    MglVec3D bgcolor,
+    MglVec4D bgcolor,
     MglBool fullscreen
 );
 

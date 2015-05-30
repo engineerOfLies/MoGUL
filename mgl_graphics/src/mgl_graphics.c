@@ -20,6 +20,7 @@ static MglFloat __mgl_graphics_fps = 0;
 
 /*background*/
 static MglUI32 __mgl_graphics_background_color = 0;
+static MglVec4D __mgl_graphics_background_color_v = {0,0,0,255};
 
 /*color mask*/
 static MglInt __mgl_bitdepth;
@@ -36,7 +37,7 @@ void mgl_graphics_init(
     MglInt viewHeight,
     MglInt renderWidth,
     MglInt renderHeight,
-    MglVec3D bgcolor,
+    MglVec4D bgcolor,
     MglBool fullscreen
 )
 {
@@ -119,6 +120,8 @@ void mgl_graphics_init(
     }
     
     __mgl_graphics_background_color = SDL_MapRGB(__mgl_graphics_surface->format, bgcolor.x,bgcolor.y,bgcolor.z);
+    mgl_vec4d_set(__mgl_graphics_background_color_v,bgcolor.x,bgcolor.y,bgcolor.z,bgcolor.w);
+    
     
     atexit(mgl_graphics_close);
     mgl_logger_info("graphics initialized");
@@ -160,7 +163,7 @@ int mgl_graphics_init_by_config(char *configFile)
     MglInt renderWidth = 0,renderHeight = 0;
     MglInt viewWidth = 1024,viewHeight = 768;
     MglBool fullscreen = MglTrue;
-    MglVec3D bgcolor = {0,0,0};
+    MglVec4D bgcolor = {0,0,0,255};
     MglLine windowName = "--==MoGUL==--";
     if (!configFile)
     {
@@ -182,7 +185,7 @@ int mgl_graphics_init_by_config(char *configFile)
     mgl_dict_get_hash_value_as_bool(&fullscreen, data, "fullscreen");
     mgl_dict_get_hash_value_as_line(windowName, data, "windowName");
     mgl_dict_get_hash_value_as_uint(&__mgl_graphics_frame_delay, data, "frameDelay");
-    mgl_dict_get_hash_value_as_vec3d(&bgcolor,data,"backgroundColor");
+    mgl_dict_get_hash_value_as_vec4d(&bgcolor,data,"backgroundColor");
     mgl_dict_get_hash_value_as_bool(&__mgl_graphics_print_fps, data, "printFPS");
 
     mgl_config_free(&config);
@@ -325,6 +328,12 @@ void mgl_graphics_clear_screen()
     {
         return;
     }
+    SDL_SetRenderDrawColor(
+        __mgl_graphics_renderer,
+        __mgl_graphics_background_color_v.x,
+        __mgl_graphics_background_color_v.y,
+        __mgl_graphics_background_color_v.z,
+        __mgl_graphics_background_color_v.w);
     SDL_FillRect(__mgl_graphics_surface,NULL,__mgl_graphics_background_color);
     SDL_RenderClear(__mgl_graphics_renderer);
 }

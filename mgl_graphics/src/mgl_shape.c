@@ -61,7 +61,6 @@ void mgl_shape_lines_get_nth_point(MglVec2D *point,MglLines *lines, MglUint n)
     temp = mgl_dict_get_list_nth(lines->_points, n);
     if (!temp)return;
     mgl_dict_get_hash_value_as_vec2d(point, temp, "point");
-    mgl_logger_warn("point data: (%f,%f)",point->x,point->y);
 }
 
 /*eol@eof*/

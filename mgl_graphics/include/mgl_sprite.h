@@ -24,6 +24,12 @@
 #include "mgl_types.h"
 #include "mgl_vector.h"
 
+typedef enum {
+    MglSpriteSurface = 1,
+    MglSpriteTexture = 2,
+    MglSpriteBoth = 3
+} MglSpriteMode;
+
 typedef struct MglSprite_S MglSprite;
 
 
@@ -66,6 +72,7 @@ MglSprite *mgl_sprite_load_image(char *imageFile);
  * @param redSwap if Not NULL, any pixel that is pure red is replaced with this color mask, keeping the original pixel's intensity
  * @param greenSwap if Not NULL, any pixel that is pure green is replaced with this color mask, keeping the original pixel's intensity
  * @param blueSwap if Not NULL, any pixel that is pure blue is replaced with this color mask, keeping the original pixel's intensity
+ * @param colorKey if Not NULL, this color will be set to the clear color fo this sprite
  * @return NULL on error, or a sprite pointer to the loaded file.
  */
 MglSprite *mgl_sprite_load_from_image(
@@ -75,7 +82,8 @@ MglSprite *mgl_sprite_load_from_image(
     MglUint framesPerLine,
     MglVec4D *redSwap,
     MglVec4D *greenSwap,
-    MglVec4D *blueSwap);
+    MglVec4D *blueSwap,
+    MglVec4D *colorKey);
 
 /**
  * @brief frees a sprite no longer in use.  Sets your pointer to it to NULL.
@@ -88,9 +96,18 @@ void mgl_sprite_free(MglSprite **sprite);
  * @brief draw a sprite to the screen
  * @param sprite the sprite to draw
  * @param postion where the draw the sprite to
+ * @param scale Scaling factor in the x and y axis.  If NULL, no scaling is applied.  (1,1) is also no scaling
+ * @param scaleCenter Where to scale from.  If NULL, the sprite scales from 0,0
+ * @param rotation the rotation point (x,y) and rotation angle (z) in degrees
  * @param frame which frame to draw
  */
-void mgl_sprite_draw(MglSprite *sprite, MglVec2D position,MglUint frame);
+void mgl_sprite_draw(
+    MglSprite *sprite,
+    MglVec2D position,
+    MglVec2D * scale,
+    MglVec2D * scaleCenter,
+    MglVec3D * rotation,
+    MglUint frame);
 
 /**
  * @brief draw a sprite to the specified surface

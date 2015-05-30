@@ -1,6 +1,6 @@
 {
   "windowName" : "test window",
-  "backgroundColor" : "0, 0, 0",
+  "backgroundColor" : "0, 0, 0, 255",
   "viewWidth" : 0,
   "viewHeight" : 0,
   "fullscreen" : "FALSE",
