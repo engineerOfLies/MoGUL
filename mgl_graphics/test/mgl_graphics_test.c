@@ -45,6 +45,7 @@ int main(int argc,char *argv[])
   MglLines *lines;
   MglVec3D rotation = {16,16,0};
   MglVec2D scale = {1,1};
+  MglVec2D scaleCenter = {16,16};
   MglVec4D colorKey = {0,0,0,255};
   if (((argc == 2) && (strcmp(argv[1],"-h")==0))||(argc < 2))
   {
@@ -112,7 +113,7 @@ int main(int argc,char *argv[])
         sprite,
         mgl_vec2d(sw/2,sh/4),
         &scale,
-        NULL,
+        &scaleCenter,
         &rotation,
         frame);
     
