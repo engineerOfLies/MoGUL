@@ -323,6 +323,12 @@ void mgl_sprite_draw(
     {
         mgl_vec2d_copy(scaleOffset,(*scaleCenter));
     }
+    if (rotation)
+    {
+        mgl_vec2d_copy(r,(*rotation));
+        r.x *= scaleFactor.x;
+        r.y *= scaleFactor.y;
+    }
     
     mgl_rect_set(
         &cell,
@@ -336,10 +342,6 @@ void mgl_sprite_draw(
         position.y - (scaleFactor.y * scaleOffset.y),
         sprite->frameWidth * scaleFactor.x,
         sprite->frameHeight * scaleFactor.y);
-    if (rotation)
-    {
-        mgl_vec2d_copy(r,(*rotation));
-    }
     SDL_RenderCopyEx(mgl_graphics_get_renderer(),
                      sprite->texture,
                      &cell,
