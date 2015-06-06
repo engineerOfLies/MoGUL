@@ -45,7 +45,7 @@ int main(int argc,char *argv[])
   MglLines *lines;
   MglVec3D rotation = {16,3,0};
   MglVec2D scale = {1,1};
-  MglVec2D scaleCenter = {16,16};
+  MglVec2D scaleCenter = {16,3};
   MglVec4D colorKey = {0,0,0,255};
   if (((argc == 2) && (strcmp(argv[1],"-h")==0))||(argc < 2))
   {
@@ -101,15 +101,15 @@ int main(int argc,char *argv[])
 
     mgl_draw_line(mgl_vec2d(100,sh/2), mgl_vec2d(swoosh,1),mgl_vec4d(255,0,0,255));
 
-    mgl_draw_line_sequence(lines,mgl_vec4d(255,0,0,255));
-    rotation.z+=0.25;
+    //mgl_draw_line_sequence(lines,mgl_vec4d(255,0,0,255));
+    rotation.z+=0.5;
   //  frame = (frame + 1)%16;
-//    scale.x = scale.y = (scale.x + 0.1);
+    scale.x = scale.y = (scale.x + 0.1);
     if (scale.x >= 4)
     {
         scale.x = scale.y = 0.1;
     }
-    mgl_draw_circle(mgl_vec2d(sw/2+16,sh/4+3), 64, mgl_vec4d(255,32,0,255));
+    mgl_draw_circle(mgl_vec2d(sw/2,sh/4), 64, mgl_vec4d(255,32,0,255));
     mgl_sprite_draw(
         sprite,
         mgl_vec2d(sw/2,sh/4),
@@ -117,7 +117,7 @@ int main(int argc,char *argv[])
         &scaleCenter,
         &rotation,
         frame);
-    
+    mgl_draw_pixel(mgl_vec2d(sw/2,sh/4),mgl_vec4d(255,0,255,255));
     SDL_PumpEvents();
     keys = SDL_GetKeyboardState(NULL);
     if (keys[SDL_SCANCODE_ESCAPE])
@@ -125,7 +125,7 @@ int main(int argc,char *argv[])
       done = 1;
     }
     mgl_grahics_next_frame();
-    printf("fps:%f\n",mgl_graphics_get_frames_per_second());
+    /*printf("fps:%f\n",mgl_graphics_get_frames_per_second());*/
   }
   mgl_shape_lines_free(&lines);
   mgl_logger_message("mgl_graphics_test end\n");
