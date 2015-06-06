@@ -125,7 +125,7 @@ int main(int argc,char *argv[])
       done = 1;
     }
     mgl_grahics_next_frame();
-    /*printf("fps:%f\n",mgl_graphics_get_frames_per_second());*/
+    printf("fps:%f\n",mgl_graphics_get_frames_per_second());
   }
   mgl_shape_lines_free(&lines);
   mgl_logger_message("mgl_graphics_test end\n");
