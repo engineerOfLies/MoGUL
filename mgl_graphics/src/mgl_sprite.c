@@ -424,4 +424,10 @@ void mgl_sprite_draw_to_surface(SDL_Surface *surface, MglSprite *sprite, MglVec2
     SDL_BlitSurface(sprite->image,&cell,surface,&target);
 }
 
+void mgl_sprite_free(MglSprite **sprite)
+{
+    mgl_resource_free_element(__mgl_sprite_resource_manager,(void **)sprite);
+}
+
+
 /*eol@eof*/

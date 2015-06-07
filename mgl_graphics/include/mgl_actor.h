@@ -75,8 +75,16 @@ void mgl_actor_init_from_config(char *filename);
  * @brief loads an actor from file using the resource manager
  * Loads any dependant resources (Sprite, etc)
  * @param the actor file to load.
+ * @return NULL on error or your loaded actor on success
  */
 MglActor * mgl_actor_load(char  *filename);
+
+/**
+ * @brief frees a loaded actor from memory
+ * Sets your pointer to NULL
+ * @param actor a pointer to your actor pointer
+ */
+void mgl_actor_free(MglActor **actor);
 
 /**
  * @brief loads an actor from file and saves it into the actor data provided.
@@ -131,7 +139,7 @@ void mgl_actor_set_frame_rate(
  */
 void mgl_actor_set_action(
     MglActor * actor,
-    MglWord    action
+    MglLine    action
 );
 
 /**
@@ -174,9 +182,9 @@ void mgl_actor_draw(
     MglActor *actor,
     MglVec2D position,
     MglFloat rotation,
-    MglVec2D scale,
-    MglVec2D flip,
-    MglVec4D color
+    MglVec2D *scale,
+    MglVec2D *flip,
+    MglVec4D *color
 );
 
 

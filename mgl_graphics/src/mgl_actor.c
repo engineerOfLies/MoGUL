@@ -107,11 +107,13 @@ MglBool mgl_actor_load_resource(char *filename,void *data)
     conf = mgl_config_load(filename);
     if (!conf)
     {
+        mgl_logger_error("failed to load actor file: %s",filename);
         return MglFalse;
     }
     act = mgl_config_get_dictionary(conf);
     if (!act)
     {
+        mgl_logger_error("actor file: %s, contained no data",filename);
         mgl_config_free(&conf);
         return MglFalse;
     }
@@ -120,10 +122,15 @@ MglBool mgl_actor_load_resource(char *filename,void *data)
     {
         actor->sprite = mgl_sprite_load_from_def(spriteFilename);
     }
+    else
+    {
+        mgl_logger_error("failed to load actor file: %s, no spriteFile",filename);
+    }
     actor->frameRate = 1; /*default value*/
     mgl_dict_get_hash_value_as_float(&actor->frameRate,act,"frameRate");
     mgl_dict_get_hash_value_as_vec2d(&actor->scaleCenter,act,"scaleCenter");
     mgl_dict_get_hash_value_as_vec2d(&actor->rotationCenter,act,"rotationCenter");
+    actor->frameDirection = 1;
     actor->lastTime = mgl_graphics_get_render_time();
     actionList = mgl_dict_get_hash_value(act,"actionList");
     if (actionList)
@@ -203,6 +210,7 @@ void mgl_actor_set_action(
     action = __mgl_actor_find_action(actor,actionName);
     if (!action)
     {
+        mgl_logger_warn("actor %s has no action named %s",actor->name,actionName);
         return;
     }
     actor->frame = action->begin;
@@ -359,9 +367,9 @@ void mgl_actor_draw(
     MglActor *actor,
     MglVec2D position,
     MglFloat rotation,
-    MglVec2D scale,
-    MglVec2D flip,
-    MglVec4D color
+    MglVec2D *scale,
+    MglVec2D *flip,
+    MglVec4D *color
 )
 {
     MglVec3D rotationCenter;
@@ -372,10 +380,22 @@ void mgl_actor_draw(
     mgl_sprite_draw(
         actor->sprite,
         position,
-        &scale,
+        scale,
         &actor->scaleCenter,
         &rotationCenter,
-        &flip,
+        flip,
         (MglUint)actor->frame);
+}
+
+MglActor *mgl_actor_load(char * filename)
+{
+    MglActor *actor;
+    actor = mgl_resource_manager_load_resource(__mgl_actor_resource_manager,filename);
+    return actor;
+}
+
+void mgl_actor_free(MglActor **actor)
+{
+    mgl_resource_free_element(__mgl_actor_resource_manager,(void **)actor);
 }
 /*eol@eof*/

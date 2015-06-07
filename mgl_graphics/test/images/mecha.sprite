@@ -1,5 +1,5 @@
 {
-    "filename" : "images/mecha1.png",
+    "filename" : "test/images/mecha1.png",
     "frameWidth" : 48,
     "frameHeight" : 48,
     "framesPerLine" : 16,

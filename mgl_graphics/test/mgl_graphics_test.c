@@ -4,6 +4,7 @@
 #include "mgl_config.h"
 #include "mgl_dict.h"
 #include "mgl_logger.h"
+#include "mgl_actor.h"
 #include <string.h>
 #include <SDL.h>
 /**
@@ -39,6 +40,7 @@ int main(int argc,char *argv[])
   char *confFile = NULL;
   int frame = 0;
   MglSprite *sprite;
+  MglActor *actor;
   MglUint sw,sh;
   MglInt swoosh = 0;
   MglInt dir = 1;
@@ -48,6 +50,9 @@ int main(int argc,char *argv[])
   MglVec2D scaleCenter = {16,3};
   MglVec4D colorKey = {0,0,0,255};
   MglVec2D flip = {1,0};
+  MglVec2D patrol = {0,0};
+  MglVec2D mechaScale = {2,2};
+  MglInt    pDir = 1;
   if (((argc == 2) && (strcmp(argv[1],"-h")==0))||(argc < 2))
   {
       fprintf(stdout,"usage:\n");
@@ -63,6 +68,12 @@ int main(int argc,char *argv[])
       return 0;
   }
   mgl_sprite_init_from_config(confFile);
+  mgl_actor_init(
+      1000,
+      0,
+      33
+  );
+  
   
   sprite = mgl_sprite_load_from_image(
       "test/rotationscale.png",
@@ -73,6 +84,8 @@ int main(int argc,char *argv[])
       NULL,
       NULL,
       &colorKey);
+  
+  actor = mgl_actor_load("test/actors/mecha.actor");
 
   mgl_graphics_get_screen_resolution(&sw,&sh);
 
@@ -83,6 +96,13 @@ int main(int argc,char *argv[])
   mgl_shape_lines_append_point(lines,mgl_vec2d(sw/2,sh/4));
   mgl_shape_lines_append_point(lines,mgl_vec2d(sw/2,sh/2));
   
+  mgl_actor_set_action(
+      actor,
+      "walk_right"
+  );
+  
+  patrol.y = sh/2-24;
+  patrol.x = sw/2-24;
   while (!done)
   {
     mgl_graphics_clear_screen();
@@ -92,19 +112,14 @@ int main(int argc,char *argv[])
     if (swoosh <= 0)dir = 1;
 
     /*circles*/
-    draw_candle(mgl_vec2d(sw/2,sh/2+10));
-    draw_candle(mgl_vec2d(sw/2 - 90,sh/2+10));
-    draw_candle(mgl_vec2d(sw/2 + 90,sh/2+10));
+    draw_candle(mgl_vec2d(sw - sw/5,sh/2+10));
     mgl_draw_bezier(mgl_vec2d(100,sh/2), mgl_vec2d(swoosh,1),mgl_vec2d(sw-500,sh/2),mgl_vec4d(255,255,0,255));
-    mgl_draw_bezier(mgl_vec2d(200,sh/3), mgl_vec2d(swoosh,1),mgl_vec2d(sw-300,sh/3),mgl_vec4d(0,255,255,255));
-    mgl_draw_bezier(mgl_vec2d(300,sh/4), mgl_vec2d(swoosh,1),mgl_vec2d(sw-200,sh/4),mgl_vec4d(255,0,255,255));
     mgl_draw_bezier(mgl_vec2d(500,sh), mgl_vec2d(swoosh,1),mgl_vec2d(sw-100,sh),mgl_vec4d(255,128,64,255));
 
     mgl_draw_line(mgl_vec2d(100,sh/2), mgl_vec2d(swoosh,1),mgl_vec4d(255,0,0,255));
 
-    //mgl_draw_line_sequence(lines,mgl_vec4d(255,0,0,255));
+    mgl_draw_line_sequence(lines,mgl_vec4d(255,0,0,255));
     rotation.z+=0.5;
-  //  frame = (frame + 1)%16;
     scale.x = scale.y = (scale.x + 0.1);
     if (scale.x >= 4)
     {
@@ -120,6 +135,35 @@ int main(int argc,char *argv[])
         &flip,
         frame);
     mgl_draw_pixel(mgl_vec2d(sw/2,sh/4),mgl_vec4d(255,0,255,255));
+    
+    mgl_draw_solid_rect(mgl_rect(0,sh/2-10,sw,48),mgl_vec4d(255,255,255,128));
+    mgl_actor_next_frame(actor);
+    patrol.x += (pDir * 2);
+    if (patrol.x > (sw - sw/4))
+    {
+        pDir = -1;
+        mgl_actor_set_action(
+            actor,
+            "walk_left"
+        );
+    }
+    if (patrol.x < sw/4)
+    {
+        pDir = 1;
+        mgl_actor_set_action(
+            actor,
+            "walk_right"
+        );
+    }
+    mgl_actor_draw(
+        actor,
+        patrol,
+        0,
+        &mechaScale,
+        NULL,
+        NULL
+    );
+    
     SDL_PumpEvents();
     keys = SDL_GetKeyboardState(NULL);
     if (keys[SDL_SCANCODE_ESCAPE])
