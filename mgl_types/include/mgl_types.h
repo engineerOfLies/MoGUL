@@ -129,4 +129,54 @@ MglBool mgl_equals(MglDouble a, MglDouble b);
 #define MAX(a,b)          (a>=b?a:b)
 #endif
 
+/**
+ * @purpose Callbacks are data, function pointer pairs to be used whenever a callback is appropriate
+ *
+ */
+typedef struct
+{
+    void (*function)(void *data);/**<a pointer to the function to call*/
+    void *data;              /**<a pointer to the data that will be passed to the funciton*/
+}MglCallback;
+
+/**
+ * @brief helper function to create a callback pair
+ * @param function the function to set
+ * @param data the data to set
+ */
+MglCallback mgl_callback(void (*function)(void *data),void *data);
+
+/**
+ * @brief copy one callback into another
+ * @param dst the callback to be set
+ * @param src the callback to be copied
+ */
+void mgl_callback_copy(MglCallback *dst,MglCallback src);
+
+/**
+ * @brief set the values of an existing callback
+ * @param cb the callback to set
+ * @param function the function to set
+ * @param data the data to set
+ */
+void mgl_callback_set(MglCallback *cb,void (*function)(void *data),void *data);
+
+/**
+ * @brief allocate and zero a new callback pair
+ * @return NULL on error, or newly blank callback pair
+ */
+MglCallback *mgl_callback_new();
+
+/**
+ * @brief frees a callback and sets your pointer to it to NULL
+ * @param a pointer to a callback pointer
+ */
+void mgl_callback_free(MglCallback **cb);
+
+/**
+ * @brief frees a callback
+ * @param a pointer to a callback
+ */
+void mgl_callback_delete(MglCallback *cb);
+
 #endif

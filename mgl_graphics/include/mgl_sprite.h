@@ -99,6 +99,7 @@ void mgl_sprite_free(MglSprite **sprite);
  * @param scale Scaling factor in the x and y axis.  If NULL, no scaling is applied.  (1,1) is also no scaling
  * @param scaleCenter Where to scale from.  If NULL, the sprite scales from 0,0
  * @param rotation the rotation point (x,y) and rotation angle (z) in degrees
+ * @param flip if specified flip.x (if true) will mirror along the X axis, and flip.y will mirrior along the Y axis
  * @param frame which frame to draw
  */
 void mgl_sprite_draw(
@@ -107,10 +108,11 @@ void mgl_sprite_draw(
     MglVec2D * scale,
     MglVec2D * scaleCenter,
     MglVec3D * rotation,
+    MglVec2D * flip,
     MglUint frame);
 
 /**
- * @brief draw a sprite to the specified surface
+ * @brief draw a sprite to the specified surface, no support for additional features
  * @param surface the surface to draw to
  * @param sprite the sprite to draw
  * @param postion where the draw the sprite to

@@ -265,6 +265,54 @@ static void mgl_sprite_swap_colors(MglSprite *sprite)
     }
 }
 
+MglSprite *mgl_sprite_load_from_dict(MglDict *data)
+{
+    MglLine spriteFilename;
+    MglInt frameWidth;
+    MglInt frameHeight;
+    MglUint framesPerLine = __mgl_sprite_default_fpl;
+    MglVec4D redSwap = {-1,-1,-1,-1};
+    MglVec4D greenSwap = {-1,-1,-1,-1};
+    MglVec4D blueSwap = {-1,-1,-1,-1};
+    MglVec4D colorKey = {-1,-1,-1,-1};
+    if (!data)
+    {
+        return NULL;
+    }
+    mgl_dict_get_hash_value_as_line(spriteFilename,data,"filename");
+    mgl_dict_get_hash_value_as_int(&frameWidth,data,"frameWidth");
+    mgl_dict_get_hash_value_as_int(&frameHeight,data,"frameHeight");
+    mgl_dict_get_hash_value_as_uint(&framesPerLine,data,"framesPerLine");
+    
+    mgl_dict_get_hash_value_as_vec4d(&redSwap,data,"redSwap");
+    mgl_dict_get_hash_value_as_vec4d(&greenSwap,data,"greenSwap");
+    mgl_dict_get_hash_value_as_vec4d(&blueSwap,data,"blueSwap");
+    mgl_dict_get_hash_value_as_vec4d(&colorKey,data,"colorKey");
+    return mgl_sprite_load_from_image(
+        spriteFilename,
+        frameWidth,
+        frameHeight,
+        framesPerLine,
+        redSwap.x!=-1?&redSwap:NULL,
+        greenSwap.x!=-1?&greenSwap:NULL,
+        blueSwap.x!=-1?&blueSwap:NULL,
+        colorKey.x!=-1?&colorKey:NULL);
+}
+
+MglSprite *mgl_sprite_load_from_def(char *filename)
+{
+    MglConfig *config;
+    MglSprite *sprite;
+    MglDict *data;
+    if (!filename)return NULL;
+    config = mgl_config_load(filename);
+    if (!config)return NULL;
+    data = mgl_config_get_dictionary(config);
+    sprite = mgl_sprite_load_from_dict(data);
+    mgl_config_free(&config);
+    return sprite;
+}
+
 MglSprite *mgl_sprite_load_from_image(
     char *filename,
     MglInt frameWidth,
@@ -304,9 +352,11 @@ void mgl_sprite_draw(
     MglVec2D * scale,
     MglVec2D * scaleCenter,
     MglVec3D * rotation,
+    MglVec2D * flip,
     MglUint frame)
 {
     MglRect cell,target;
+    SDL_RendererFlip flipFlags = SDL_FLIP_NONE;
     SDL_Point r;
     MglVec2D scaleFactor = {1,1};
     MglVec2D scaleOffset = {0,0};
@@ -329,6 +379,11 @@ void mgl_sprite_draw(
         r.x *= scaleFactor.x;
         r.y *= scaleFactor.y;
     }
+    if (flip)
+    {
+        if (flip->x)flipFlags |= SDL_FLIP_HORIZONTAL;
+        if (flip->y)flipFlags |= SDL_FLIP_VERTICAL;
+    }
     
     mgl_rect_set(
         &cell,
@@ -348,12 +403,25 @@ void mgl_sprite_draw(
                      &target,
                      rotation?rotation->z:0,
                      rotation?&r:NULL,
-                     SDL_FLIP_NONE);
+                     flipFlags);
 }
 
 void mgl_sprite_draw_to_surface(SDL_Surface *surface, MglSprite *sprite, MglVec2D position,MglUint frame)
 {
-    
+    MglRect cell,target;
+    mgl_rect_set(
+        &cell,
+        frame%sprite->framesPerLine * sprite->frameWidth,
+        frame/sprite->framesPerLine * sprite->frameHeight,
+        sprite->frameWidth,
+        sprite->frameHeight);
+    mgl_rect_set(
+        &target,
+        position.x,
+        position.y,
+        sprite->frameWidth,
+        sprite->frameHeight);
+    SDL_BlitSurface(sprite->image,&cell,surface,&target);
 }
 
 /*eol@eof*/

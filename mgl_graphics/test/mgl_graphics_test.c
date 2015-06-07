@@ -47,6 +47,7 @@ int main(int argc,char *argv[])
   MglVec2D scale = {1,1};
   MglVec2D scaleCenter = {16,3};
   MglVec4D colorKey = {0,0,0,255};
+  MglVec2D flip = {1,0};
   if (((argc == 2) && (strcmp(argv[1],"-h")==0))||(argc < 2))
   {
       fprintf(stdout,"usage:\n");
@@ -116,6 +117,7 @@ int main(int argc,char *argv[])
         &scale,
         &scaleCenter,
         &rotation,
+        &flip,
         frame);
     mgl_draw_pixel(mgl_vec2d(sw/2,sh/4),mgl_vec4d(255,0,255,255));
     SDL_PumpEvents();

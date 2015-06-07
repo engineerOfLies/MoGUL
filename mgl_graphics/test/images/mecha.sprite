@@ -1,0 +1,7 @@
+{
+    "filename" : "images/mecha1.png",
+    "frameWidth" : 48,
+    "frameHeight" : 48,
+    "framesPerLine" : 16,
+    "colorKey" : "0,0,0,255"
+}
