@@ -114,6 +114,7 @@ MglBool mgl_sprite_load_resource(char *filename,void *data)
     colorKey = atoi(strings[7]);
     g_strfreev (strings);
     
+
     sprite->frameWidth = fw;
     sprite->frameHeight = fh;
     sprite->framesPerLine = fpl;
@@ -135,6 +136,14 @@ MglBool mgl_sprite_load_resource(char *filename,void *data)
     if (!sprite->image)
     {
         return MglFalse;
+    }
+    if (fw == -1)
+    {
+        sprite->frameWidth = sprite->image->w;
+    }
+    if (fh == -1)
+    {
+        sprite->frameHeight = sprite->image->h;
     }
     /*set the rest of the data*/
     if ((red != -1)||
@@ -268,8 +277,8 @@ static void mgl_sprite_swap_colors(MglSprite *sprite)
 MglSprite *mgl_sprite_load_from_dict(MglDict *data)
 {
     MglLine spriteFilename;
-    MglInt frameWidth;
-    MglInt frameHeight;
+    MglInt frameWidth = -1;
+    MglInt frameHeight = -1;
     MglUint framesPerLine = __mgl_sprite_default_fpl;
     MglVec4D redSwap = {-1,-1,-1,-1};
     MglVec4D greenSwap = {-1,-1,-1,-1};
@@ -313,6 +322,19 @@ MglSprite *mgl_sprite_load_from_def(char *filename)
     return sprite;
 }
 
+MglSprite *mgl_sprite_load_image(char *imageFile)
+{
+    return mgl_sprite_load_from_image(
+        imageFile,
+        -1,
+        -1,
+        1,
+        NULL,
+        NULL,
+        NULL,
+        NULL);
+}
+
 MglSprite *mgl_sprite_load_from_image(
     char *filename,
     MglInt frameWidth,
@@ -344,6 +366,18 @@ MglSprite *mgl_sprite_load_from_image(
     }
         
     return sprite;
+}
+
+void mgl_sprite_draw_image(MglSprite *image,MglVec2D position)
+{
+    mgl_sprite_draw(
+        image,
+        position,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        0);
 }
 
 void mgl_sprite_draw(
@@ -428,6 +462,7 @@ void mgl_sprite_free(MglSprite **sprite)
 {
     mgl_resource_free_element(__mgl_sprite_resource_manager,(void **)sprite);
 }
+
 
 
 /*eol@eof*/

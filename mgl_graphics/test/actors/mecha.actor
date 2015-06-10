@@ -1,7 +1,7 @@
 {
   "name" : "mecha",
   "spriteFile" : "test/images/mecha.sprite",
-  "frameRate" : 1,
+  "frameRate" : 2,
   "scaleCenter" : "24,24",
   "rotationCenter" : "24,24",
   "actionList" :

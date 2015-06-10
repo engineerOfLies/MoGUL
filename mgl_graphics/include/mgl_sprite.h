@@ -112,6 +112,13 @@ void mgl_sprite_draw(
     MglUint frame);
 
 /**
+ * @brief draw an image to the screen at a specific position
+ * @param image the image to draw
+ * @param position the position to draw the image to
+ */
+void mgl_sprite_draw_image(MglSprite *image,MglVec2D position);
+
+/**
  * @brief draw a sprite to the specified surface, no support for additional features
  * @param surface the surface to draw to
  * @param sprite the sprite to draw

@@ -39,6 +39,7 @@ int main(int argc,char *argv[])
   const Uint8 *keys = NULL;
   char *confFile = NULL;
   int frame = 0;
+  MglSprite *bgimage;
   MglSprite *sprite;
   MglActor *actor;
   MglUint sw,sh;
@@ -84,7 +85,7 @@ int main(int argc,char *argv[])
       NULL,
       NULL,
       &colorKey);
-  
+  bgimage = mgl_sprite_load_image("test/images/linux_desktop.png");
   actor = mgl_actor_load("test/actors/mecha.actor");
 
   mgl_graphics_get_screen_resolution(&sw,&sh);
@@ -106,13 +107,14 @@ int main(int argc,char *argv[])
   while (!done)
   {
     mgl_graphics_clear_screen();
+    mgl_sprite_draw_image(bgimage,mgl_vec2d(0,0));
     
     swoosh += dir;
     if (swoosh >= sw)dir = -1;
     if (swoosh <= 0)dir = 1;
 
     /*circles*/
-    draw_candle(mgl_vec2d(sw - sw/5,sh/2+10));
+    draw_candle(mgl_vec2d(sw - sw/5,sh/4+10));
     mgl_draw_bezier(mgl_vec2d(100,sh/2), mgl_vec2d(swoosh,1),mgl_vec2d(sw-500,sh/2),mgl_vec4d(255,255,0,255));
     mgl_draw_bezier(mgl_vec2d(500,sh), mgl_vec2d(swoosh,1),mgl_vec2d(sw-100,sh),mgl_vec4d(255,128,64,255));
 
