@@ -7,9 +7,13 @@ MoGUL is a colleciton of libraries that can be used as a whole or taken in parts
 These libraries provide useful utility for the C language that the rest of MoGUL will use, but these are not dependent on the rest of MoGUL.
  - mgl_types - [complete] - a library of type aliases.  Mostly bult from the SDL standard types, but also provides some common types that will be useful in games in general such as vectors (the math construct, not the linked list) and matrices. mgl_dict is a complex generic type that will work well storing config data loaded from JSON, XML or YAML
     - mgl_dict - [complete] - a dictionary type primary used for supporting config
+    - mgl_text - [complete] - support for finite length strings.  Used frequently in config
  - mgl_logger - [complete] - a simple logger with support for different logging levels.  Support for loggin in a separate thread.
  - mgl_resource - [complete] - a resource manager "class" that allows the automatic tracking of use and cleaning up of any type of "resource" such as image or audio files or in-project constructs such as entities and windows.
  - mgl_config - [complete] - a config file parser and resource manager.  Will support xml, json and yaml when complete.  Converts config files to MglDict.
+    - mgl_json_parse - [complete] - translation from libjansson json_t to mgl_dict
+    - mgl_yaml_parse - [complete] - yaml parser using libyaml, parses it to mgl_dict
+    - mgl_xml_parse - [in progress] - xml parser using expat, parses it to mgl_dict
 
 <H3>MoGUL Graphics</H3>
 These will be the core graphics libraries of MoGUL.  This will contain resource managers for resources typically used in game programming.
@@ -19,9 +23,9 @@ These will be the core graphics libraries of MoGUL.  This will contain resource 
  - mgl_svg - provides a resource manager for scalable vector graphics.  SVG files will be parsed into MglDict and used to draw.
  - mgl_actor - [complete] - provides a context for timing sprite/drawing animations, setting animation sequences and triggering events times with key frames.
  - mgl_font - provides a resource manager for loading and displaying fonts / support for word wrapping and font effects.
- - mgl_input - provides a platform to customize user controls and handle control events.
-
+ 
 <H3>Extensions</H3>
+ - mgl_input - provides a platform to customize user controls and handle control events.
  - mgl_audio - provides a resource manager for playing audio clips and music.  Wraps SDL_Mixer.
  - mgl_tiles - provides a set of functions for loading and dealing with tile maps.  Provides the framework for making more robust tiles (animated, active).  Will work with the mgl_path seamlessly.
  - mgl_path - provides a threaded path finding system.  Works with tiles, platforms and free form levels.
