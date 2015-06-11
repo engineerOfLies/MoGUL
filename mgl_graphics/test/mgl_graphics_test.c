@@ -5,6 +5,8 @@
 #include "mgl_dict.h"
 #include "mgl_logger.h"
 #include "mgl_actor.h"
+#include "mgl_font.h"
+
 #include <string.h>
 #include <SDL.h>
 /**
@@ -73,6 +75,11 @@ int main(int argc,char *argv[])
       1000,
       0,
       33
+  );
+  mgl_font_init(
+      10,
+      "test/fonts/Exo-Regular.otf",
+      16
   );
   
   
@@ -165,6 +172,12 @@ int main(int argc,char *argv[])
         NULL,
         NULL
     );
+    
+    mgl_font_draw_text_basic(
+        mgl_vec2d(50,50),
+        "THIS IS TEXT",
+        mgl_vec4d(0,0,255,255));
+    
     
     SDL_PumpEvents();
     keys = SDL_GetKeyboardState(NULL);

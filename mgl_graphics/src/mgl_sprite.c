@@ -30,8 +30,8 @@ struct MglSprite_S
 
 void mgl_sprite_close();
 MglBool mgl_sprite_load_resource(char *filename,void *data);
-static void mgl_sprite_swap_colors(MglSprite *sprite);
 void mgl_sprite_delete(void *data);
+static void mgl_sprite_swap_colors(MglSprite *sprite);
 
 void mgl_sprite_init_from_config(char * configFile)
 {
@@ -176,6 +176,7 @@ void mgl_sprite_delete(void *data)
 {
     MglSprite *sprite;
     sprite = (MglSprite *)data;
+    if (!sprite)return;
     if (sprite->image)
     {
         SDL_FreeSurface(sprite->image);

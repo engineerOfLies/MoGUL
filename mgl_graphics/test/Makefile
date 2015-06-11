@@ -30,7 +30,7 @@ GLIB_CFLAGS = `pkg-config --cflags glib-2.0`
 GLIB_LDFLAGS = `pkg-config --libs glib-2.0`
 
 SDL_CFLAGS = `sdl2-config --cflags`
-SDL_LDFLAGS = `sdl2-config --libs` -lSDL2_image -lpng -ljpeg -lz -lyaml -ljansson -lm
+SDL_LDFLAGS = `sdl2-config --libs` -lSDL2_image -lpng -ljpeg -lz -lyaml -ljansson -lm -lSDL2_ttf
 
 LFLAGS = -g  -o ../$(PROJECT)
 CFLAGS = -g $(MGL_CFLAGS) -Wall -pedantic -std=gnu99 -fgnu89-inline -Wno-unknown-pragmas -Wno-variadic-macros
