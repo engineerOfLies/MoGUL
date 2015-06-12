@@ -55,4 +55,21 @@ typedef char MglText[512];
 #define mgl_text_cpy(dst,src) (strncpy(dst,src,MGLTEXTLEN))
 #define mgl_text_clear(a)  (memset(a,0,sizeof(char)*MGLTEXTLEN))
 
+/**
+ * @brief chomp off the first length characters from the provided string
+ * Null character terminated
+ * @param text the text to chomp
+ * @param length this many characters are chomped
+ * @param strl the length of the input string
+ */
+void mgl_text_chomp(char *text,int length,int strl);
+
+/**
+ * @brief replace all control characters with spaces
+ * \n, \t, \r
+ * @param in the input string
+ * @return a newly allocated string, which must be freed when done
+ */
+char * mgl_text_clean_control_characters(char *in);
+
 #endif

@@ -177,6 +177,13 @@ int main(int argc,char *argv[])
         mgl_vec2d(50,50),
         "THIS IS TEXT",
         mgl_vec4d(0,0,255,255));
+
+    mgl_font_draw_text_wrap(
+        "THIS is even longer text that will end up wrapping around due to how long it is and the bounds provided",
+        mgl_rect(50,100,100,300),
+        mgl_vec4d(255,0,255,255),
+        mgl_font_default()
+    );
     
     
     SDL_PumpEvents();
