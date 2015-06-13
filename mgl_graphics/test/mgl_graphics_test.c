@@ -103,7 +103,9 @@ int main(int argc,char *argv[])
   mgl_shape_lines_append_point(lines,mgl_vec2d(200,100));
   mgl_shape_lines_append_point(lines,mgl_vec2d(200,200));
   mgl_shape_lines_append_point(lines,mgl_vec2d(100,200));
-  mgl_shape_lines_append_point(lines,mgl_vec2d(100,100));
+  mgl_shape_lines_append_point(lines,mgl_vec2d(300,100));
+  mgl_shape_lines_append_point(lines,mgl_vec2d(300,300));
+  mgl_shape_lines_append_point(lines,mgl_vec2d(100,300));
   
   mgl_actor_set_action(
       actor,
@@ -125,7 +127,7 @@ int main(int argc,char *argv[])
     draw_candle(mgl_vec2d(sw - sw/5,sh/4+10));
     mgl_draw_bezier(mgl_vec2d(500,sh), mgl_vec2d(swoosh,1),mgl_vec2d(sw-100,sh),mgl_vec4d(255,128,64,255));
 
-    mgl_draw_line_sequence(lines,mgl_vec4d(255,0,0,255));
+    /*mgl_draw_line_sequence(lines,mgl_vec4d(255,0,0,255));*/
     rotation.z+=0.5;
     scale.x = scale.y = (scale.x + 0.1);
     if (scale.x >= 4)
@@ -178,7 +180,7 @@ int main(int argc,char *argv[])
 
     mgl_font_draw_text_wrap(
         "THIS is even longer text that will end up wrapping around due to how long it is and the bounds provided",
-        mgl_rect(50,100,100,300),
+        mgl_rect(350,100,100,300),
         mgl_vec4d(255,0,255,255),
         mgl_font_default()
     );
