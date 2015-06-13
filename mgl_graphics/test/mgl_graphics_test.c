@@ -99,10 +99,11 @@ int main(int argc,char *argv[])
 
   lines = mgl_shape_lines_new();
   
-  mgl_shape_lines_append_point(lines,mgl_vec2d(100,sh/2));
-  mgl_shape_lines_append_point(lines,mgl_vec2d(100,sh/4));
-  mgl_shape_lines_append_point(lines,mgl_vec2d(sw/2,sh/4));
-  mgl_shape_lines_append_point(lines,mgl_vec2d(sw/2,sh/2));
+  mgl_shape_lines_append_point(lines,mgl_vec2d(100,100));
+  mgl_shape_lines_append_point(lines,mgl_vec2d(200,100));
+  mgl_shape_lines_append_point(lines,mgl_vec2d(200,200));
+  mgl_shape_lines_append_point(lines,mgl_vec2d(100,200));
+  mgl_shape_lines_append_point(lines,mgl_vec2d(100,100));
   
   mgl_actor_set_action(
       actor,
@@ -122,10 +123,7 @@ int main(int argc,char *argv[])
 
     /*circles*/
     draw_candle(mgl_vec2d(sw - sw/5,sh/4+10));
-    mgl_draw_bezier(mgl_vec2d(100,sh/2), mgl_vec2d(swoosh,1),mgl_vec2d(sw-500,sh/2),mgl_vec4d(255,255,0,255));
     mgl_draw_bezier(mgl_vec2d(500,sh), mgl_vec2d(swoosh,1),mgl_vec2d(sw-100,sh),mgl_vec4d(255,128,64,255));
-
-    mgl_draw_line(mgl_vec2d(100,sh/2), mgl_vec2d(swoosh,1),mgl_vec4d(255,0,0,255));
 
     mgl_draw_line_sequence(lines,mgl_vec4d(255,0,0,255));
     rotation.z+=0.5;
@@ -184,6 +182,8 @@ int main(int argc,char *argv[])
         mgl_vec4d(255,0,255,255),
         mgl_font_default()
     );
+    
+    mgl_draw_line_curved(lines,mgl_vec4d(255,0,255,255));
     
     
     SDL_PumpEvents();

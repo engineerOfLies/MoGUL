@@ -1,4 +1,5 @@
 #include "mgl_draw.h"
+#include "mgl_dict.h"
 #include "mgl_graphics.h"
 #include "mgl_logger.h"
 
@@ -114,6 +115,61 @@ void mgl_draw_line_sequence(MglLines *lines,MglVec4D color)
         mgl_vec2d_copy(lastpoint,point);
     }
 }
+
+void mgl_draw_line_curved(MglLines *lines,MglVec4D color)
+{
+    int count,i;
+    MglBool cleanup = MglFalse;
+    MglLines *path;
+    MglVec2D point,lastpoint,midpoint;
+    if (!lines)return;
+    count = mgl_shape_lines_get_count(lines);
+    if (count < 2)return;
+    
+    if (count < 3)
+    {
+        /*draw a line*/
+        return;
+    }
+    if (count > 3)
+    {
+        cleanup = MglTrue;
+        /*subdivide as needed*/
+        path = mgl_shape_lines_clone(lines);
+        mgl_vec2d_clear(lastpoint);
+        for (i = 1;i < count - 2;i+=2)
+        {
+            mgl_lines_subdivide_line(path,i);
+            count++;
+        }
+        count = mgl_shape_lines_get_count(path);
+    }
+    else
+    {
+        path = lines;
+    }
+    /*draw curves*/
+    mgl_shape_lines_get_nth_point(&point,path, 0);
+    for (i = 1;i < count;i+=2)
+    {
+        mgl_vec2d_copy(lastpoint,point);
+        mgl_shape_lines_get_nth_point(&midpoint,path, i);
+        mgl_shape_lines_get_nth_point(&point,path, i+1);
+        
+        mgl_draw_bezier(lastpoint, midpoint,point,color);        
+
+    }
+    for (i = 0;i < count;i++)
+    {
+        mgl_shape_lines_get_nth_point(&point,path, i);
+        mgl_draw_pixel(point,mgl_vec4d(0,255,0,255));
+    }
+    if (cleanup)
+    {
+        mgl_shape_lines_free(&path);
+    }
+}
+
 
 void mgl_draw_line(MglVec2D p1,MglVec2D p2,MglVec4D color)
 {

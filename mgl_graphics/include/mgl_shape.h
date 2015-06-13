@@ -28,7 +28,7 @@
  * Provide container data types for various shapes.
  */
 
-#include "mgl_types.h"
+#include "mgl_dict.h"
 #include "mgl_vector.h"
 
 typedef struct MglLines_S MglLines;
@@ -40,6 +40,14 @@ typedef struct MglLines_S MglLines;
  * @return NULL on error, or a newly allocated MglLine pointer.
  */
 MglLines *mgl_shape_lines_new();
+
+/**
+ * @brief create a copy of the provided line sequence.
+ * Free it with mgl_shape_lines_free();
+ * @param src the original line sequence to copy
+ * @return NULL on error, or a new copy of the MglLine pointer.
+ */
+MglLines *mgl_shape_lines_clone(MglLines *src);
 
 /**
  * @brief free a line sequence from memory
@@ -69,5 +77,17 @@ MglUint mgl_shape_lines_get_count(MglLines *lines);
  */
 void mgl_shape_lines_get_nth_point(MglVec2D *point,MglLines *lines, MglUint n);
 
+/**
+ * @brief subdivide the nth line in the list
+ * @param lines the line sequence to subdivide
+ * @param n the edge to subdivide
+ */
+void mgl_lines_subdivide_line(MglLines *lines,MglUint n);
+
+/**
+ * @brief get a pointer to the internal data dictionary for the line sequence
+ * @return NULL on error, or the data dictionary
+ */
+MglDict *mgl_lines_get_data(MglLines *lines);
 
 #endif

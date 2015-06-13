@@ -104,6 +104,14 @@ void mgl_draw_line_to_surface(SDL_Surface *surface,MglVec2D p1,MglVec2D p2,MglVe
 void mgl_draw_line_sequence(MglLines *lines,MglVec4D color);
 
 /**
+ * @brief draw a sequence of lines as a curve
+ * @param lines the line sequence to draw
+ * @param color the color (including alpha) to draw with
+ */
+void mgl_draw_line_curved(MglLines *lines,MglVec4D color);
+
+
+/**
  * @brief draw a hollow circle to the screen
  * @param center the center point to draw the circle
  * @param radiua the radius of the cirlce

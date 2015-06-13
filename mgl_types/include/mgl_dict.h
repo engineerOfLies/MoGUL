@@ -134,6 +134,16 @@ MglBool mgl_dict_get_line(MglLine output,MglDict *key);
 void mgl_dict_list_append(MglDict *list,MglDict *item);
 
 /**
+ * @brief appends a list item to the MglDict list value.
+ * if its not a pointer to a list, it will return without doing anything.
+ * @param list the typed pointer of a glist
+ * @param position the position to insert in the list.  appends if this position is 
+ * out of the range of the list
+ * @param item the MglDict to the item to be added to the list.
+ */
+void mgl_dict_list_insert(MglDict *list,MglUint position,MglDict *item);
+
+/**
  * @brief get the number of elements in this hash.
  * NOTE: This does not recurse into the elements of the hash
  * @param hash the dict has to query
@@ -232,7 +242,7 @@ void mgl_dict_list_clear(MglDict *list);
 /**
  * @brief prints to terminal the dict specified
  */
-void mgl_dict_print(const MglDict *chain);
+void mgl_dict_print(MglDict *chain);
 
 /**
 * @brief convenience function when working with GString types.

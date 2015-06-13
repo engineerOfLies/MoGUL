@@ -96,14 +96,13 @@ MglDict *mgl_dict_clone(MglDict *src)
 MglDict *mgl_dict_clone_string(MglDict *src)
 {
   MglLine str;
-  if (!mgl_dict_get_line(str,src))return NULL;
-  return mgl_dict_new_string(str);
+  return mgl_dict_new_string(src->keyValue);
 }
 
 MglDict *mgl_dict_clone_list(MglDict *src)
 {
   MglUint count,i;
-  MglDict *item, *list = NULL;
+  MglDict *item, *list = NULL,*clone;
   if (!src)return NULL;
   list = mgl_dict_new_list();
   if (!list)return NULL;
@@ -112,7 +111,8 @@ MglDict *mgl_dict_clone_list(MglDict *src)
   {
     item = mgl_dict_get_list_nth(src, i);
     if (!item)continue;
-    mgl_dict_list_append(list,mgl_dict_clone(item));
+    clone = mgl_dict_clone(item);
+    mgl_dict_list_append(list,clone);
   }
   return list;
 }
@@ -122,7 +122,7 @@ MglDict *mgl_dict_clone_hash(MglDict *src)
   MglUint count,i;
   MglDict *hash;
   MglLine keystring;
-  MglDict * value;
+  MglDict * value, *newValue;
   if (!src)return NULL;
   hash = mgl_dict_new_hash();
   if (!hash)return NULL;
@@ -131,7 +131,8 @@ MglDict *mgl_dict_clone_hash(MglDict *src)
   {
     value = mgl_dict_get_hash_nth(keystring,src, i);
     if (!value)continue;
-    mgl_dict_hash_insert(hash,keystring,mgl_dict_clone(value));
+    newValue = mgl_dict_clone(value);
+    mgl_dict_hash_insert(hash,keystring,newValue);
   }
   return hash;
 }
@@ -358,6 +359,14 @@ void mgl_dict_list_append(MglDict *list,MglDict *item)
   list->itemCount++;
 }
 
+void mgl_dict_list_insert(MglDict *list,MglUint position,MglDict *item)
+{
+    if (!list)return;
+    if (list->keyType != MGL_DICT_LIST)return;
+    list->keyValue = g_list_insert (list->keyValue,(gpointer)item,(gint)position);    
+    list->itemCount++;
+}
+
 MglDict *mgl_dict_get_hash_value(MglDict *hash,MglLine key)
 {
   GHashTable*hashtable = NULL;
@@ -396,18 +405,18 @@ MglUint mgl_dict_get_list_count(MglDict *list)
 MglDict *mgl_dict_get_hash_nth(MglLine key, MglDict *hash, MglUint n)
 {
   GHashTable *hashtable = NULL;
-  GList *keys = NULL, *values = NULL;
+  MglDict *result = NULL;
+  GList *keys = NULL;
   if (!hash)return NULL;
   if (hash->keyType != MGL_DICT_HASH)return NULL;
   if (hash->keyValue == NULL)return NULL;
   hashtable = (GHashTable*)hash->keyValue;
   keys = g_hash_table_get_keys(hashtable);
-  values = g_hash_table_get_values(hashtable);
-  if ((!keys)||(!values))return NULL;
+  if (!keys)return NULL;
   mgl_line_cpy(key,g_list_nth_data(keys,n));
-  g_list_free(values);
+  result = mgl_dict_get_hash_value(hash,key);
   g_list_free(keys);
-  return g_list_nth_data(values,n);
+  return result;
 }
 
 MglDict *mgl_dict_get_list_nth(MglDict *list, MglUint n)
@@ -672,9 +681,9 @@ void mgl_dict_print_link(MglDict *link,MglUint depth,MglBool listStart)
   }
 }
 
-void mgl_dict_print(const MglDict *chain)
+void mgl_dict_print(MglDict *chain)
 {
-  mgl_dict_print_link((MglDict *)chain,0,MglFalse);
+  mgl_dict_print_link(chain,0,MglFalse);
 }
 
 /*eol@eof*/
