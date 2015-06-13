@@ -1,7 +1,7 @@
-#ifndef __MGL_TEXT_H__
-#define __MGL_TEXT_H__
+#ifndef __MGL_TEXT__H__
+#define __MGL_TEXT__H__
 /**
- * mgl_types
+ * mgl_text
  * @license The MIT License (MIT)
    @copyright Copyright (c) 2015 EngineerOfLies
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -54,22 +54,5 @@ typedef char MglText[512];
 #define mgl_text_cmp(a,b) (strncmp(a,b,MGLTEXTLEN))
 #define mgl_text_cpy(dst,src) (strncpy(dst,src,MGLTEXTLEN))
 #define mgl_text_clear(a)  (memset(a,0,sizeof(char)*MGLTEXTLEN))
-
-/**
- * @brief chomp off the first length characters from the provided string
- * Null character terminated
- * @param text the text to chomp
- * @param length this many characters are chomped
- * @param strl the length of the input string
- */
-void mgl_text_chomp(char *text,int length,int strl);
-
-/**
- * @brief replace all control characters with spaces
- * \n, \t, \r
- * @param in the input string
- * @return a newly allocated string, which must be freed when done
- */
-char * mgl_text_clean_control_characters(char *in);
 
 #endif

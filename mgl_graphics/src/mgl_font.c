@@ -18,6 +18,8 @@ static MglFont * __mgl_font_default = NULL;
 void mgl_font_close();
 MglBool mgl_font_load_resource(char *filename,void *data);
 void mgl_font_delete(void *data);
+void mgl_font_chomp(char *text,int length,int strl);
+char * mgl_font_clean_control_characters(char *in);
 
 static MglBool mgl_font_initialized();
 
@@ -227,7 +229,7 @@ MglRect mgl_font_get_text_wrap_bounds(
         {
             break;
         }
-        mgl_text_chomp(text,strlen(word) + 1,MGLTEXTLEN);
+        mgl_font_chomp(text,strlen(word) + 1,MGLTEXTLEN);
         strncpy(textline,temptextline,MGLTEXTLEN);/*keep the last line that worked*/
         for(i = 0;i < (space - 1);i++)
         {
@@ -316,7 +318,7 @@ void mgl_font_draw_text(
     colortype.g = color.y;
     colortype.b = color.z;
     colortype.a = color.w;
-    renderText = mgl_text_clean_control_characters(text);
+    renderText = mgl_font_clean_control_characters(text);
     if (!renderText)
     {
         temp = TTF_RenderText_Blended(font->font, text,colortype);
@@ -403,7 +405,7 @@ void mgl_font_draw_text_wrap(
             return;
         }
         
-        mgl_text_chomp(text,strlen(word) + space,MGLTEXTLEN);
+        mgl_font_chomp(text,strlen(word) + space,MGLTEXTLEN);
         strncpy(textline,temptextline,MGLTEXTLEN);/*keep the last line that worked*/
         for (i = 0;i < (space - 1);i++)
         {
@@ -429,6 +431,50 @@ void mgl_font_draw_text_wrap(
             sprintf(temptextline,"%s",word); /*add a word*/
         }
     }while(1);
+}
+
+void mgl_font_chomp(char *text,int length,int strl)
+{
+    int i;
+    if (!text)return;
+    for(i = 0;i < strl - length;i++)
+    {
+        text[i] = text[i + length];
+    }
+    if (i > 0)
+    {
+        text[i - 1] = '\0';/*null terminate in case its overwritten*/
+    }
+    else
+    {
+        text[0] = '\0';
+    }
+}
+
+char * mgl_font_clean_control_characters(char *in)
+{
+    char *out;
+    int outIndex = 0;
+    int inIndex = 0;
+    out = malloc(strlen(in)*2);
+    if (!out)return NULL;
+    for (inIndex = 0;inIndex < strlen(in);inIndex++,outIndex++)
+    {
+        if (in[inIndex] == '\t')
+        {
+            out[outIndex++] = ' ';
+            out[outIndex] = ' ';
+            continue;
+        }
+        if (in[inIndex] == '\r')
+        {
+            out[outIndex] = ' ';
+            continue;
+        }
+        out[outIndex] = in[inIndex];
+    }
+    out[outIndex] = '\0';
+    return out;
 }
 
 /*eol@eof*/
