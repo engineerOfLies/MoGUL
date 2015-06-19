@@ -27,6 +27,7 @@ struct MglActor_S
 {
     MglLine     name;
     MglSprite * sprite;
+    MglVec4D    color; /**<color shift for the actor*/
     MglAction * action; /**<the active action*/
     MglUint     lastFrame;
     MglUint     lastTime;
@@ -130,6 +131,8 @@ MglBool mgl_actor_load_resource(char *filename,void *data)
     mgl_dict_get_hash_value_as_float(&actor->frameRate,act,"frameRate");
     mgl_dict_get_hash_value_as_vec2d(&actor->scaleCenter,act,"scaleCenter");
     mgl_dict_get_hash_value_as_vec2d(&actor->rotationCenter,act,"rotationCenter");
+    mgl_vec4d_set(actor->color,255,255,255,255);
+    mgl_dict_get_hash_value_as_vec4d(&actor->color,act,"color");
     actor->frameDirection = 1;
     actor->lastTime = mgl_graphics_get_render_time();
     actionList = mgl_dict_get_hash_value(act,"actionList");
@@ -372,11 +375,23 @@ void mgl_actor_draw(
     MglVec4D *color
 )
 {
+    MglVec4D colorShift;
     MglVec3D rotationCenter;
     if (!actor)return;
     rotationCenter.x = actor->rotationCenter.x;
     rotationCenter.y = actor->rotationCenter.y;
     rotationCenter.z = rotation;
+    if (color)
+    {
+        colorShift.x = (color->x / 255.0) * actor->color.x; 
+        colorShift.y = (color->y / 255.0) * actor->color.y; 
+        colorShift.z = (color->z / 255.0) * actor->color.z; 
+        colorShift.w = (color->w / 255.0) * actor->color.w; 
+    }
+    else
+    {
+        mgl_vec4d_copy(colorShift,actor->color);
+    }
     mgl_sprite_draw(
         actor->sprite,
         position,
@@ -384,6 +399,7 @@ void mgl_actor_draw(
         &actor->scaleCenter,
         &rotationCenter,
         flip,
+        &colorShift,
         (MglUint)actor->frame);
 }
 

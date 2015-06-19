@@ -100,6 +100,7 @@ void mgl_sprite_free(MglSprite **sprite);
  * @param scaleCenter Where to scale from.  If NULL, the sprite scales from 0,0
  * @param rotation the rotation point (x,y) and rotation angle (z) in degrees
  * @param flip if specified flip.x (if true) will mirror along the X axis, and flip.y will mirrior along the Y axis
+ * @param colorShift if specified (and supported) this color value will be used to color shift the entire sprite.  Alpha Supported
  * @param frame which frame to draw
  */
 void mgl_sprite_draw(
@@ -109,6 +110,7 @@ void mgl_sprite_draw(
     MglVec2D * scaleCenter,
     MglVec3D * rotation,
     MglVec2D * flip,
+    MglVec4D * colorShift,
     MglUint frame);
 
 /**
