@@ -52,6 +52,7 @@ int main(int argc,char *argv[])
   MglVec2D scale = {1,1};
   MglVec2D scaleCenter = {16,3};
   MglVec4D colorKey = {0,0,0,255};
+  MglVec4D color = {0,255,0,128};
   MglVec2D flip = {1,0};
   MglVec2D patrol = {0,0};
   MglVec2D mechaScale = {2,2};
@@ -142,6 +143,7 @@ int main(int argc,char *argv[])
         &scaleCenter,
         &rotation,
         &flip,
+        &color,
         frame);
     mgl_draw_pixel(mgl_vec2d(sw/2,sh/4),mgl_vec4d(255,0,255,255));
     

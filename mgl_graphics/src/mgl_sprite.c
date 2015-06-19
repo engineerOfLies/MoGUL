@@ -378,6 +378,7 @@ void mgl_sprite_draw_image(MglSprite *image,MglVec2D position)
         NULL,
         NULL,
         NULL,
+        NULL,
         0);
 }
 
@@ -388,6 +389,7 @@ void mgl_sprite_draw(
     MglVec2D * scaleCenter,
     MglVec3D * rotation,
     MglVec2D * flip,
+    MglVec4D * colorShift,
     MglUint frame)
 {
     MglRect cell,target;
@@ -419,6 +421,17 @@ void mgl_sprite_draw(
         if (flip->x)flipFlags |= SDL_FLIP_HORIZONTAL;
         if (flip->y)flipFlags |= SDL_FLIP_VERTICAL;
     }
+    if (colorShift)
+    {
+        SDL_SetTextureColorMod(
+            sprite->texture,
+            colorShift->x,
+            colorShift->y,
+            colorShift->z);
+        SDL_SetTextureAlphaMod(
+            sprite->texture,
+            colorShift->w);
+    }
     
     mgl_rect_set(
         &cell,
@@ -439,6 +452,17 @@ void mgl_sprite_draw(
                      rotation?rotation->z:0,
                      rotation?&r:NULL,
                      flipFlags);
+    if (colorShift)
+    {
+        SDL_SetTextureColorMod(
+            sprite->texture,
+            255,
+            255,
+            255);
+        SDL_SetTextureAlphaMod(
+            sprite->texture,
+            255);
+    }
 }
 
 void mgl_sprite_draw_to_surface(SDL_Surface *surface, MglSprite *sprite, MglVec2D position,MglUint frame)
