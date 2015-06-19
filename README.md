@@ -27,6 +27,8 @@ These will be the core graphics libraries of MoGUL.  This will contain resource 
 <H3>Extensions</H3>
  - mgl_input - provides a platform to customize user controls and handle control events.
  - mgl_audio - provides a resource manager for playing audio clips and music.  Wraps SDL_Mixer.
+    - mgl_sound - provides support to load and play sound chunks.  Support for channel groups
+    - mgl_music - provides support to load and play music files.  Support for playlists
  - mgl_tiles - provides a set of functions for loading and dealing with tile maps.  Provides the framework for making more robust tiles (animated, active).  Will work with the mgl_path seamlessly.
  - mgl_path - provides a threaded path finding system.  Works with tiles, platforms and free form levels.
  - mgl_entity - provides a resource manager for in-game entities.  Can be extended with user data and user defined function pointers.
