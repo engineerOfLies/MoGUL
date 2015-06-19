@@ -22,12 +22,14 @@
  */
 #include "mgl_types.h"
 #include "mgl_sound.h"
+#include "mgl_music.h"
 
 /**
  * @brief initializes the audio system based on the passed in parameters
  * @param maxSounds the maximum number of sounds that can be loaded into memory at once
  * @param channels the nrumber of allocated audio channels (excluding music channel)
  * @param channelGroups the number of channels to be reserved for groups to be set up
+ * @param maxMusic the number of simultaneous music files that will be supported
  * @param enableMP3 if true, initializes audio system with mp3 support, if available
  * @param enableOgg if true, initializes audio system with ogg vorbis support, if available
  */
@@ -35,7 +37,13 @@ void mgl_audio_init(
     MglUint maxSounds,
     MglUint channels,
     MglUint channelGroups,
+    MglUint maxMusic,
     MglBool enableMP3,
     MglBool enableOgg);
+
+/**
+ * @brief initializes the audio system based on the config file
+ */
+void mgl_audio_init_from_config(char *filename);
 
 #endif

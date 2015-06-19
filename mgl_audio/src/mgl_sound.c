@@ -30,7 +30,7 @@ void mgl_sound_init(
     MglUint groupChannels)
 {
     __mgl_sound_resource_manager = mgl_resource_manager_init(
-        "mgl audio",
+        "mgl sound",
         maxSounds,
         sizeof(struct MglSound_S),
         MglFalse,
@@ -41,11 +41,6 @@ void mgl_sound_init(
     __mgl_sound_allocated_channels = Mix_AllocateChannels(channels);
     __mgl_sound_reserved_channels = Mix_ReserveChannels(groupChannels);
     atexit(mgl_sound_close);    
-}
-
-void mgl_sound_init_from_config(char * filename)
-{
-    
 }
 
 void mgl_sound_close()
@@ -113,6 +108,12 @@ MglSound *mgl_sound_sound_load(
         sound->defaultChannel = *defaultChannel;
     }
     return sound;
+}
+
+void mgl_sound_free(MglSound **sound)
+{
+    if (!sound)return;
+    mgl_resource_free_element(__mgl_sound_resource_manager,(void **)sound);
 }
 
 void mgl_sound_get_group_data(
@@ -214,6 +215,38 @@ void mgl_sound_play(
     }
     Mix_VolumeChunk(sound->chunk, (int)(netVolume * MIX_MAX_VOLUME));
     Mix_PlayChannel(chan, sound->chunk, loops);
+}
+
+void mgl_sound_setup_groups_by_config(char * filename)
+{
+    MglConfig *config;
+    MglDict *data,*group;
+    MglUint count,i;
+    
+    MglLine name;
+    MglUint channels;
+    MglFloat volume;
+    
+    if (!filename)return;
+    
+    config = mgl_config_load(filename);
+    if (!config)return;
+    data = mgl_config_get_dictionary(config);
+    
+    data = mgl_dict_get_hash_value(data,"groups");
+    count = mgl_dict_get_list_count(data);
+    for (i = 0; i < count; i++)
+    {
+        group = mgl_dict_get_list_nth(data, i);
+        if (!group)continue;
+        mgl_dict_get_hash_value_as_line(name, group, "name");
+        mgl_dict_get_hash_value_as_uint(&channels, group, "channels");
+        mgl_dict_get_hash_value_as_float(&volume, group, "volume");
+        mgl_sound_set_group(
+            name,
+            channels,
+            volume);
+    }
 }
 
 /*eol@eof*/

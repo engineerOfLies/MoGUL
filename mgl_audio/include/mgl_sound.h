@@ -40,12 +40,6 @@ void mgl_sound_init(
     MglUint channelGroups);
 
 /**
- * @brief initializes the sound system based on the specified config file
- * @param filename the config file to load
- */
-void mgl_sound_init_from_config(char * filename);
-
-/**
  * @brief loads a supported audio file from file.
  * @param filename the sound file to load
  * @param volume [optional] if specified the volume will be set to this.
@@ -57,12 +51,32 @@ MglSound *mgl_sound_sound_load(
     MglUint *defaultChannel);
 
 /**
+ * @brief play a loaded sound file
+ * @param sound the sound to play
+ * @param volume [optional] if provided this will change the volume of the sound to play.  Value is expected to be between 0 and 1.
+ * @param channel [optional] if provided this will be the channel to play the sound on
+ * @param group [optional] if provided, this will be the channel group to play the sound on
+ * @param loops the number of times to loop this sound.  -1 implies indefinitely
+ */
+void mgl_sound_play(
+    MglSound * sound,
+    MglFloat * volume,
+    MglInt   * channel,
+    char     * group,
+    MglInt     loops);
+
+/**
  * @brief sets the playing volume for the specified sound file
  * @param sound the sound file to set
  * @param volume the sound level to set it to.  Expects a value between 0 and 1
  */
 void mgl_sound_set_volume(MglSound *sound,MglFloat volume);
 
+/**
+ * @brief free the sound file
+ * @param a pointer to your sound pointer
+ */
+void mgl_sound_free(MglSound **sound);
 
 /*
  
@@ -79,5 +93,23 @@ void mgl_sound_get_group_data(
     char * group,
     MglInt *id,
     MglFloat *volume);
+
+/**
+ * @brief allocate a group of sound channels
+ * @param group the name of the group to create
+ * @param channels how many channels to allocate
+ * @param volume the volume to play the channel at.  Expects a value between 0 and 1
+ */
+void mgl_sound_set_group(
+    char * group,
+    MglUint channels,
+    MglFloat volume
+);
+
+/**
+ * @brief setup audio groups based on config file
+ * @param filename the config file to use
+ */
+void mgl_sound_setup_groups_by_config(char * filename);
 
 #endif
