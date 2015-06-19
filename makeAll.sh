@@ -23,4 +23,8 @@ cd ../../mgl_graphics/src
 make
 make static
 
+cd ../../mgl_audio/src
+make
+make static
+
 echo "done"

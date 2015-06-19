@@ -1,4 +1,5 @@
 #include "mgl_types.h"
+#include "mgl_vector.h"
 #include "mgl_config.h"
 #include "mgl_logger.h"
 #include "mgl_graphics.h"
