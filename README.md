@@ -26,14 +26,18 @@ These will be the core graphics libraries of MoGUL.  This will contain resource 
  
 <H3>Extensions</H3>
  - mgl_input - provides a platform to customize user controls and handle control events.
+    - mgl_combo - provides support to parsing and catching input chains for complex inputs.
  - mgl_audio - [complete] - provides a resource manager for playing audio clips and music.  Wraps SDL_Mixer.
     - mgl_sound - provides support to load and play sound chunks.  Support for channel groups
     - mgl_music - provides support to load and play music files.  Support for playlists
- - mgl_tiles - provides a set of functions for loading and dealing with tile maps.  Provides the framework for making more robust tiles (animated, active).  Will work with the mgl_path seamlessly.
- - mgl_path - provides a threaded path finding system.  Works with tiles, platforms and free form levels.
  - mgl_entity - provides a resource manager for in-game entities.  Can be extended with user data and user defined function pointers.
  - mgl_level - provides a common platform for developing game levels.  Will support a range of level styles from tiled to free form as well as multiple layers and parallax effects.
+    - mgl_parallax - provides logic to render parallax layered backgrounds
+    - mgl_tiles - provides a set of functions for loading and dealing with tile maps.  Provides the framework for making more robust tiles (animated, active).  Will work with the mgl_path seamlessly.
+    - mgl_path - provides a threaded path finding system.  Works with tiles, platforms and free form levels.
  - mgl_gui - provides a graphical user interface platform including resource managers for windows and widgets.
+    - mgl_window - provides the resource manager for windows
+    - mgl_component - provides the resource manager for building window component widgets
  - mgl_predict - provides a pattern predition implementation.  Useful for AI prediction of player actions.
 <H2>Documentation</H2>
 URL: TBD
