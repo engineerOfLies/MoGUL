@@ -25,6 +25,7 @@ static MglBool __mgl_music_playlist_play = MglFalse;
 void mgl_music_close();
 MglBool mgl_music_load_resource(char *filename,void *data);
 void mgl_music_delete(void *data);
+
 void mgl_music_playlist_play_next();
 
 void mgl_music_init(
@@ -38,6 +39,7 @@ void mgl_music_init(
         mgl_music_delete,
         mgl_music_load_resource
     );
+    atexit(mgl_music_close);
     Mix_HookMusicFinished(mgl_music_playlist_play_next);
 }
 

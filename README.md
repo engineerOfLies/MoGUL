@@ -22,11 +22,11 @@ These will be the core graphics libraries of MoGUL.  This will contain resource 
  - mgl_sprite - [complete] - provides a resource manager for animated sprites.  Sprites can be setup through sprite sheets or through image sequences.
  - mgl_svg - provides a resource manager for scalable vector graphics.  SVG files will be parsed into MglDict and used to draw.
  - mgl_actor - [complete] - provides a context for timing sprite/drawing animations, setting animation sequences and triggering events times with key frames.
- - mgl_font - provides a resource manager for loading and displaying fonts / support for word wrapping and font effects.
+ - mgl_font - [complete] - provides a resource manager for loading and displaying fonts / support for word wrapping and font effects.
  
 <H3>Extensions</H3>
  - mgl_input - provides a platform to customize user controls and handle control events.
- - mgl_audio - provides a resource manager for playing audio clips and music.  Wraps SDL_Mixer.
+ - mgl_audio - [complete] - provides a resource manager for playing audio clips and music.  Wraps SDL_Mixer.
     - mgl_sound - provides support to load and play sound chunks.  Support for channel groups
     - mgl_music - provides support to load and play music files.  Support for playlists
  - mgl_tiles - provides a set of functions for loading and dealing with tile maps.  Provides the framework for making more robust tiles (animated, active).  Will work with the mgl_path seamlessly.
