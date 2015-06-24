@@ -40,7 +40,7 @@ These will be the core graphics libraries of MoGUL.  This will contain resource 
     - mgl_component - provides the resource manager for building window component widgets
  - mgl_predict - provides a pattern predition implementation.  Useful for AI prediction of player actions.
 <H2>Documentation</H2>
-URL: TBD
+https://github.com/engineerOfLies/MoGUL/wiki
 
 <H2>Coding Style Guide</H2><p>
 CONSTANTS_OR_DEFINES<p>

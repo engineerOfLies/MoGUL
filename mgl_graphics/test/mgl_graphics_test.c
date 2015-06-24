@@ -15,6 +15,17 @@
 
 void init_all();
 
+void draw_trinity(MglVec2D position,MglFloat r,MglVec4D color)
+{
+    MglVec2D top = {position.x,position.y-r};
+    MglVec2D left = {position.x - (r * sin(MGL_2PI/6)),position.y + (r * cos(MGL_2PI/6))};
+    MglVec2D right = {position.x + (r * sin(MGL_2PI/6)),position.y + (r * cos(MGL_2PI/6))};
+    mgl_draw_bezier(top, right,left,color);
+    mgl_draw_bezier(top, left,right,color);
+    mgl_draw_bezier(left, top,right,color);
+    mgl_draw_circle(position, r * 0.8, color);
+}
+
 void draw_candle_light(MglVec2D position)
 {
   static float intensity = 0;
@@ -83,7 +94,6 @@ int main(int argc,char *argv[])
       16
   );
   
-  
   sprite = mgl_sprite_load_from_image(
       "test/rotationscale.png",
       32,
@@ -128,6 +138,8 @@ int main(int argc,char *argv[])
     draw_candle(mgl_vec2d(sw - sw/5,sh/4+10));
     mgl_draw_bezier(mgl_vec2d(500,sh), mgl_vec2d(swoosh,1),mgl_vec2d(sw-100,sh),mgl_vec4d(255,128,64,255));
 
+    draw_trinity(mgl_vec2d(sw/2,sh/2),100,mgl_vec4d(0,255,0,255));
+    draw_trinity(mgl_vec2d(sw/2,sh/2),120,mgl_vec4d(0,255,0,255));
     /*mgl_draw_line_sequence(lines,mgl_vec4d(255,0,0,255));*/
     rotation.z+=0.5;
     scale.x = scale.y = (scale.x + 0.1);
