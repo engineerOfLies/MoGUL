@@ -1,0 +1,38 @@
+var mgl__types_8h =
+[
+    [ "MglCallback", "struct_mgl_callback.html", "struct_mgl_callback" ],
+    [ "MAX", "mgl__types_8h.html#afa99ec4acc4ecb2dc3c2d05da15d0e3f", null ],
+    [ "MGL_2PI", "mgl__types_8h.html#adfb8b4e7058f989aff7c2ced3a819774", null ],
+    [ "mgl_crandom", "mgl__types_8h.html#ac966b0ef64758f4fe5734de1b17097ab", null ],
+    [ "MGL_DEGTORAD", "mgl__types_8h.html#a997e85e92bdd5be512b3788678844e01", null ],
+    [ "MGL_EPSILON", "mgl__types_8h.html#a2062238e44b6e1df98a14339bbf413e7", null ],
+    [ "MGL_RADTODEG", "mgl__types_8h.html#acdde527826c37e616e6482eab23813c8", null ],
+    [ "mgl_random", "mgl__types_8h.html#a86ad2d61f1d1662ce4d39b59cfd35d7f", null ],
+    [ "MIN", "mgl__types_8h.html#a3acffbd305ee72dcd4593c0d8af64a4f", null ],
+    [ "MglBool", "mgl__types_8h.html#a7130098a4ce9d71481aec154fc09143b", null ],
+    [ "MglDouble", "mgl__types_8h.html#af71d5c793596b0c62455aeb2084d443e", null ],
+    [ "MglFloat", "mgl__types_8h.html#aee0fa984c85ae72dee9d5f3e78ed6c3c", null ],
+    [ "MglInt", "mgl__types_8h.html#a072961a553ca10dc9bafb1e8dee91ef0", null ],
+    [ "MglSI32", "mgl__types_8h.html#a9ecabcafeeb92052961b550c5ac35072", null ],
+    [ "MglSI64", "mgl__types_8h.html#adecac7847a2be7ae844b5ba81dd46522", null ],
+    [ "MglSI8", "mgl__types_8h.html#a7519608ff7e04db5b53daabb5af8cacb", null ],
+    [ "MglUI32", "mgl__types_8h.html#af708ed1a98907c05bef564d08f3686e0", null ],
+    [ "MglUI64", "mgl__types_8h.html#a8979949888eab9db948ead4f2fc5ed04", null ],
+    [ "MglUI8", "mgl__types_8h.html#a2c5ec2309b855d30a504fcb3bde055f8", null ],
+    [ "MglUint", "mgl__types_8h.html#ad274d13b004695967ec3d57e4c354e9c", null ],
+    [ "MglBoolEnum", "mgl__types_8h.html#af0d6c5db3db9622e8d84bc6c3183354c", [
+      [ "MglTrue", "mgl__types_8h.html#af0d6c5db3db9622e8d84bc6c3183354ca16b3200b63f875c35f1ac838c0878154", null ],
+      [ "MglFalse", "mgl__types_8h.html#af0d6c5db3db9622e8d84bc6c3183354ca93124bb510b9ab42ee8f2cf3e4de77bf", null ]
+    ] ],
+    [ "mgl_bool_from_string", "mgl__types_8h.html#a81ba19b40fd6950ca1990caea7fbf4d6", null ],
+    [ "mgl_callback", "mgl__types_8h.html#aea4ac8e769459c0aba4b1b0ea6cd6147", null ],
+    [ "mgl_callback_copy", "mgl__types_8h.html#a05534b6799e8bd37e0adecb38f0ac5ba", null ],
+    [ "mgl_callback_delete", "mgl__types_8h.html#afc65dd5a3961c3dd6913467efd47dae4", null ],
+    [ "mgl_callback_free", "mgl__types_8h.html#abd5a9892421d980cf6eadceff9d85856", null ],
+    [ "mgl_callback_new", "mgl__types_8h.html#a17ecf9d01fa97d992bd5c033aef9be94", null ],
+    [ "mgl_callback_set", "mgl__types_8h.html#aa983cb963e170640d46747bc0e27246d", null ],
+    [ "mgl_equals", "mgl__types_8h.html#a5c032d8a201977f35bc551218b10ca29", null ],
+    [ "mgl_false_from_string", "mgl__types_8h.html#a1725c391dba75276d8a800480f97e6ce", null ],
+    [ "mgl_string_from_bool", "mgl__types_8h.html#a42f07729f63e717324dfbaf26afa7051", null ],
+    [ "mgl_true_from_string", "mgl__types_8h.html#ac6c2c941d32931b3e44c5ab916686f0f", null ]
+];

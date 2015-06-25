@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['mglaction',['MglAction',['../struct_mgl_action.html',1,'']]],
+  ['mglactor_5fs',['MglActor_S',['../struct_mgl_actor___s.html',1,'']]],
+  ['mglcallback',['MglCallback',['../struct_mgl_callback.html',1,'']]],
+  ['mglconfig_5fs',['MglConfig_S',['../struct_mgl_config___s.html',1,'']]],
+  ['mgldict_5fs',['MglDict_S',['../struct_mgl_dict___s.html',1,'']]],
+  ['mglfont_5fs',['MglFont_S',['../struct_mgl_font___s.html',1,'']]],
+  ['mglinput_5fs',['MglInput_S',['../struct_mgl_input___s.html',1,'']]],
+  ['mgllines_5fs',['MglLines_S',['../struct_mgl_lines___s.html',1,'']]],
+  ['mgllogevent_5fs',['mglLogEvent_S',['../structmgl_log_event___s.html',1,'']]],
+  ['mglmusic_5fs',['MglMusic_S',['../struct_mgl_music___s.html',1,'']]],
+  ['mglrectfloat',['MglRectFloat',['../struct_mgl_rect_float.html',1,'']]],
+  ['mglresourceheader',['MglResourceHeader',['../struct_mgl_resource_header.html',1,'']]],
+  ['mglresourcemanager_5fs',['MglResourceManager_S',['../struct_mgl_resource_manager___s.html',1,'']]],
+  ['mglsound_5fs',['MglSound_S',['../struct_mgl_sound___s.html',1,'']]],
+  ['mglsprite_5fs',['MglSprite_S',['../struct_mgl_sprite___s.html',1,'']]],
+  ['mglvec2d',['MglVec2D',['../struct_mgl_vec2_d.html',1,'']]],
+  ['mglvec3d',['MglVec3D',['../struct_mgl_vec3_d.html',1,'']]],
+  ['mglvec4d',['MglVec4D',['../struct_mgl_vec4_d.html',1,'']]]
+];

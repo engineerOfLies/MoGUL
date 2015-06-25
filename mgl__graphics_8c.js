@@ -1,0 +1,27 @@
+var mgl__graphics_8c =
+[
+    [ "mgl_grahics_next_frame", "mgl__graphics_8c.html#a51996f53d05bfef23a46541ab044e654", null ],
+    [ "mgl_graphics_blit_surface_to_screen", "mgl__graphics_8c.html#a0079ab9810052ae99722134f2e960797", null ],
+    [ "mgl_graphics_clear_screen", "mgl__graphics_8c.html#a994c9a38fae02690ae34d7e69f086f14", null ],
+    [ "mgl_graphics_create_surface", "mgl__graphics_8c.html#aeab15ace26f1cc3586e1d6eb2a4c8ccf", null ],
+    [ "mgl_graphics_frame_delay", "mgl__graphics_8c.html#a118ade95eb21697e897b76c4661fc257", null ],
+    [ "mgl_graphics_get_frames_per_second", "mgl__graphics_8c.html#a346e6ff6442337d80952b2321db76b3c", null ],
+    [ "mgl_graphics_get_render_time", "mgl__graphics_8c.html#a51b6b615732c9671ec0bfc09b37a4b93", null ],
+    [ "mgl_graphics_get_renderer", "mgl__graphics_8c.html#a193020f8ca9e515cd41bd8f9afe72571", null ],
+    [ "mgl_graphics_get_screen_resolution", "mgl__graphics_8c.html#a56e019db68c54151048e72b61d6efee6", null ],
+    [ "mgl_graphics_get_screen_surface", "mgl__graphics_8c.html#aa25cf171f808322c7b43f53aea881325", null ],
+    [ "mgl_graphics_get_screen_texture", "mgl__graphics_8c.html#a7ceb48280670e3c6e6bf2153d06b423f", null ],
+    [ "mgl_graphics_get_surface_pixel", "mgl__graphics_8c.html#a326fa3d9572d70d677b8201de4325618", null ],
+    [ "mgl_graphics_get_temp_buffer", "mgl__graphics_8c.html#a29eb0c26008a27fcfcfa89343f848a8b", null ],
+    [ "mgl_graphics_init", "mgl__graphics_8c.html#a62827aa60790359838d93aa6594ea47c", null ],
+    [ "mgl_graphics_init_by_config", "mgl__graphics_8c.html#a415bafd09cd6e61d5e8c9afc8ce6084e", null ],
+    [ "mgl_graphics_render_line", "mgl__graphics_8c.html#a32f52e9acfba7ef6f76117c77a8e072a", null ],
+    [ "mgl_graphics_render_pixel", "mgl__graphics_8c.html#a11db7dd24e8774dcbc3f05755d76c910", null ],
+    [ "mgl_graphics_render_surface_to_screen", "mgl__graphics_8c.html#ae7c0328f184b94a893286cb195e85936", null ],
+    [ "mgl_graphics_screen_convert", "mgl__graphics_8c.html#a77695a5bd955c14192bf1dcaf910fa04", null ],
+    [ "mgl_graphics_set_bgcolor", "mgl__graphics_8c.html#abea409f1d37ad706c010b28887872458", null ],
+    [ "mgl_graphics_set_frame_delay", "mgl__graphics_8c.html#a6825a4a488ddb01f788b329b0fca3255", null ],
+    [ "mgl_graphics_set_surface_pixel", "mgl__graphics_8c.html#a200afbda868c4b47b6322e87a71cf67d", null ],
+    [ "mgl_graphics_vec_to_screen_color", "mgl__graphics_8c.html#a164e029c75eb7cd68cf36c6a7ea9af55", null ],
+    [ "mgl_graphics_vec_to_surface_color", "mgl__graphics_8c.html#a2845bd6f17a682ba0c85623fbebec75c", null ]
+];
