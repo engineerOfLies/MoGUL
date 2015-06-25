@@ -9,7 +9,9 @@
 #include <glib/glist.h>
 #include <glib.h>
 
-
+/**
+ *@brief an action defines a specific animation sequence for an actor 
+ */
 typedef struct
 {
     MglLine name;       /**<the name of the action*/

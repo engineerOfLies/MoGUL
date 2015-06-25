@@ -247,7 +247,6 @@ void mgl_parallax_draw_layer(MglParallax *par,MglUint l,MglVec2D position)
     }
     if (layer->image)
     {
-        mgl_logger_info("drawing layer %i at position (%f,%f)",l,layer->aspect.x * position.x,layer->aspect.y * position.y);
          mgl_sprite_draw_image(
              layer->image,
              mgl_vec2d(layer->aspect.x * position.x,layer->aspect.y * position.y));

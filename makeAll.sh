@@ -29,6 +29,12 @@ cd ../../mgl_audio/src
 make
 make static
 
+echo "building input MoGUL lib..."
+
+cd ../../mgl_input/src
+make
+make static
+
 echo "building level MoGUL lib..."
 
 cd ../../mgl_level/src

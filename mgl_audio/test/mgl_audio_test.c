@@ -16,7 +16,7 @@ int main(int argc,char *argv[])
     int done = 0;
     const Uint8 *keys = NULL;
     MglSound *sound;
-    
+    MglMusic *music;
     if ((argc == 2) && (strcmp(argv[1],"-h")==0))
     {
         fprintf(stdout,"usage:\n");
@@ -25,18 +25,14 @@ int main(int argc,char *argv[])
     }
     init_all();
     
-    mgl_audio_init(
-        1000,
-        100,
-        90,
-        MglTrue,
-        MglTrue);
+    mgl_audio_init_from_config(argv[1]);
     
     fprintf(stdout,"mgl_audio_test begin\n");
     sound = mgl_sound_sound_load(
         "test/audio/Fuse-Burning.wav",
         NULL,
         NULL);
+    music = mgl_music_load("test/audio/Holst-_mars.ogg");
     
     mgl_sound_play(
         sound,
@@ -44,6 +40,12 @@ int main(int argc,char *argv[])
         NULL,
         NULL,
         0);
+    
+    mgl_music_play(
+        music,
+        NULL,
+        -1);
+    
     while (!done)
     {
         SDL_PumpEvents();

@@ -95,7 +95,6 @@ MglDict *mgl_dict_clone(MglDict *src)
 
 MglDict *mgl_dict_clone_string(MglDict *src)
 {
-  MglLine str;
   return mgl_dict_new_string(src->keyValue);
 }
 

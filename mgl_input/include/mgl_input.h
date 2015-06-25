@@ -1,7 +1,7 @@
-#ifndef __MGL_TEXT__H__
-#define __MGL_TEXT__H__
+#ifndef __MGL_INPUT_H__
+#define __MGL_INPUT_H__
 /**
- * mgl_text
+ * mgl_input
  * @license The MIT License (MIT)
    @copyright Copyright (c) 2015 EngineerOfLies
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,43 +19,44 @@
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
-*/
-
-/**
- * @purpose the MGL text library provides common string support for fixed length
- *  strings.  For use with unlimited strings mgl will use glib's GString type
  */
 
 #include "mgl_types.h"
 
 /**
- * constant lenth character buffers.
- * These will be used when the convenience of GString is not needed
+ * @purpose provide an abstraction for individual input actions.  These may be keyboard, mouse, gamepad, etc. referenced by name.
  */
 
+typedef struct MglInput_S MglInput;
+
+typedef enum
+{
+    MglInputNull,
+    MglInputKey,
+    MglInputMod,
+    MglInputButton,
+    MglInputAxisPositive,
+    MglInputAxisNegative
+}MglInputType;
+
+typedef enum
+{
+    MglInputKeyboard,
+    MglInputMouse,
+    MglInputJoystick
+}MglInputDevice;
+
 /**
- * @brief 16 character buffer used for short tags
+ * @brief initialize the input manager
  */
-typedef char MglWord[16];
-#define MGLWORDLEN   16
-#define mgl_word_cmp(a,b) (strncmp(a,b,MGLWORDLEN))
-#define mgl_word_cpy(dst,src) (strncpy(dst,src,MGLWORDLEN))
-#define mgl_word_clear(a)  (memset(a,0,sizeof(char)*MGLWORDLEN))
+void mgl_input_init(
+    MglUint maxInputs
+);
+
 /**
- * @brief 128 character buffer used for statements
+ * @brief update tracked inputs
  */
-typedef char MglLine[128];
-#define MGLLINELEN   128
-#define mgl_line_cmp(a,b) (strncmp(a,b,MGLLINELEN))
-#define mgl_line_cpy(dst,src) (strncpy(dst,src,MGLLINELEN))
-#define mgl_line_clear(a)  (memset(a,0,sizeof(char)*MGLLINELEN))
-/**
- * @brief 512 character buffer used for text blocks
- */
-typedef char MglText[512];
-#define MGLTEXTLEN   512
-#define mgl_text_cmp(a,b) (strncmp(a,b,MGLTEXTLEN))
-#define mgl_text_cpy(dst,src) (strncpy(dst,src,MGLTEXTLEN))
-#define mgl_text_clear(a)  (memset(a,0,sizeof(char)*MGLTEXTLEN))
+void mgl_input_update();
+
 
 #endif

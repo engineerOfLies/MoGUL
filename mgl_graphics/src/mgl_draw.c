@@ -159,11 +159,6 @@ void mgl_draw_line_curved(MglLines *lines,MglVec4D color)
         mgl_draw_bezier(lastpoint, midpoint,point,color);        
 
     }
-    for (i = 0;i < count;i++)
-    {
-        mgl_shape_lines_get_nth_point(&point,path, i);
-        mgl_draw_pixel(point,mgl_vec4d(0,255,0,255));
-    }
     if (cleanup)
     {
         mgl_shape_lines_free(&path);

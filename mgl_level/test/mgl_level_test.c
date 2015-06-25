@@ -105,6 +105,7 @@ void init_all()
         1000,
         100,
         90,
+        25,
         MglTrue,
         MglTrue);
     mgl_camera_init(1);

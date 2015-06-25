@@ -47,15 +47,15 @@ typedef enum mglDictTypes {
 typedef void (*MglDictFree)(void *data);
 
 /**
-* @brief his structure wraps description information for a pointer to a container type
+* @brief this structure wraps description information for a pointer to a container type
 * it will be used in spawn and config types where we deal with pointers to unknown types.
 */
-typedef struct dict_S
+typedef struct MglDict_S
 {
   MglDictTypes keyType;
   MglUint itemCount;  /*in the case of list or hash*/
   MglDictFree keyFree;
-  struct dict_S * (*keyClone)(struct dict_S *src);
+  struct MglDict_S * (*keyClone)(struct MglDict_S *src);
   void *keyValue;
 }MglDict;
 
