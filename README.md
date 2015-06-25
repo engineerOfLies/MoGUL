@@ -1,4 +1,4 @@
-# MoGUL
+<H1> MoGUL </H1>
 MoGUL - Mosaic Game Utility Library.  A suite of libraries designed to facilitate game programming.  Taken as a whole it will be a comprehensive game engine library.
 
 <H2>Usage Documentation</H2>
@@ -47,13 +47,14 @@ These will be the core graphics libraries of MoGUL.  This will contain resource 
  - mgl_predict - provides a pattern predition implementation.  Useful for AI prediction of player actions.
  
 <H2>Coding Style Guide</H2><p>
-CONSTANTS_OR_DEFINES<p>
-\__INCLUDE_GUARDS\__<p>
-MglTypeDefinitions<p>
-mglVariables<p>
-mgl_class_function_format  Where class will be the name of the "class" or file that it is defined in<p>
-/* Comments will use strict ansii C style\*/<p>
-/** @brief documentation comments follow doxygen format \*/<p>
+    CONSTANTS_OR_DEFINES<p>
+    \__INCLUDE_GUARDS\__<p>
+    MglTypeDefinitions<p>
+    mglVariables<p>
+    mgl_class_function_format  Where class will be the name of the "class" or file that it is defined in<p>
+    /* */Comments will use strict ansii C style  <p>
+    /** \@brief documentation comments follow doxygen format <p>
+
 <H2>License</H2><p>
 <h3>The MIT License (MIT)</h3>
  @copyright Copyright (c) 2015 EngineerOfLies
