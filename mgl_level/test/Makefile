@@ -19,7 +19,7 @@ PROJECT = mgl_level_test
 CC      = gcc
 #CC	= clang
 MGL_LIBS = 
-MGL_STATIC_LIBS = libmgl_config.a libmgl_logger.a libmgl_resource.a libmgl_graphics.a libmgl_types.a libmgl_audio.a libmgl_level.a
+MGL_STATIC_LIBS = libmgl_config.a libmgl_logger.a libmgl_resource.a libmgl_types.a libmgl_graphics.a libmgl_audio.a libmgl_level.a
 MGL_LIB_PATH = ../../libs
 MGL_LDFLAGS = -L$(MGL_LIB_PATH) $(foreach d, $(MGL_STATIC_LIBS),$(MGL_LIB_PATH)/$d)
 
@@ -31,7 +31,7 @@ GLIB_CFLAGS = `pkg-config --cflags glib-2.0`
 GLIB_LDFLAGS = `pkg-config --libs glib-2.0`
 
 SDL_CFLAGS = `sdl2-config --cflags`
-SDL_LDFLAGS = `sdl2-config --libs` -lSDL2_mixer -lyaml -ljansson -lm
+SDL_LDFLAGS = `sdl2-config --libs` -lSDL2_mixer -lyaml -ljansson -lm -lSDL2_image -lpng -ljpeg -lz -lSDL2_ttf
 
 LFLAGS = -g  -o ../$(PROJECT)
 CFLAGS = -g $(MGL_CFLAGS) -Wall -pedantic -std=gnu99 -fgnu89-inline -Wno-unknown-pragmas -Wno-variadic-macros

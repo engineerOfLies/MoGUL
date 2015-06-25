@@ -109,6 +109,7 @@ void mgl_camera_change_position(MglCamera *cam, MglVec2D position)
     }
     mgl_vec2d_copy(cam->position,position);
     if (!cam->useBounds)return;
+    
     if ((cam->position.x + cam->size.x) > (cam->bounds.x + cam->bounds.w))
     {
         cam->position.x = (cam->bounds.x + cam->bounds.w) - cam->size.x;
@@ -148,6 +149,23 @@ MglVec2D mgl_camera_get_center(MglCamera *cam)
     }
     mgl_vec2d_set(out,cam->position.x + (cam->size.x * 0.5),cam->position.y + (cam->size.y * 0.5));
     return out;
+}
+
+void mgl_camera_get_size(MglCamera *cam,MglUint *w, MglUint *h)
+{
+    if (!cam)
+    {
+        mgl_logger_error("provided NULL camera!");
+        return;
+    }
+    if (w)
+    {
+        *w = cam->size.x;
+    }
+    if (h)
+    {
+        *h = cam->size.y;
+    }
 }
 
 /*eol@eof*/

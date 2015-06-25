@@ -129,9 +129,12 @@ MglBool mgl_sprite_load_resource(char *filename,void *data)
         mgl_logger_warn("mgl_sprite_load_resource:failed to load sprite image file: %s, re: %s",fname, SDL_GetError());
         return MglFalse;
     }
-    SDL_SetColorKey(image,
-                    SDL_TRUE,
-                    colorKey);
+    if (colorKey != -1)
+    {
+        SDL_SetColorKey(image,
+                        SDL_TRUE,
+                        colorKey);
+    }
     sprite->image = mgl_graphics_screen_convert(&image);
     if (!sprite->image)
     {
@@ -489,6 +492,17 @@ void mgl_sprite_free(MglSprite **sprite)
     mgl_resource_free_element(__mgl_sprite_resource_manager,(void **)sprite);
 }
 
-
+void mgl_sprite_get_size(MglSprite *sprite,MglUint *w,MglUint *h)
+{
+    if (!sprite)return;
+    if (w)
+    {
+        *w = sprite->frameWidth;
+    }
+    if (h)
+    {
+        *h = sprite->frameHeight;
+    }
+}
 
 /*eol@eof*/

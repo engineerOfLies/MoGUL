@@ -24,6 +24,11 @@
 #include "mgl_types.h"
 #include "mgl_vector.h"
 #include "mgl_rect.h"
+#include "mgl_sprite.h"
+#include "mgl_actor.h"
+#include "mgl_font.h"
+#include "mgl_draw.h"
+#include "mgl_shape.h"
 #include <SDL.h>
 
 /**

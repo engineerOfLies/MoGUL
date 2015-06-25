@@ -107,4 +107,13 @@ MglVec2D mgl_camera_get_position(MglCamera *cam);
  * @return the center vector of the camera view
  */
 MglVec2D mgl_camera_get_center(MglCamera *cam);
+
+/**
+ * @brief get the specified camera's view port size
+ * @param cam the camera to get
+ * @param w [output] optional if provided this will be populated with the camera's width
+ * @param h [output] optional if provided this will be populated with the camera's height
+ */
+void mgl_camera_get_size(MglCamera *cam,MglUint *w, MglUint *h);
+
 #endif

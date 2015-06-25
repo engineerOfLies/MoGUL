@@ -19,7 +19,7 @@ PROJECT = mgl_level
 CC      = gcc
 #CC      = clang
 MGL_LIBS = 
-MGL_STATIC_LIBS = libmgl_types.a libmgl_logger.a libmgl_resource.a libmgl_config.a libmgl_graphics.a libmgl_audio.a
+MGL_STATIC_LIBS = libmgl_config.a libmgl_logger.a libmgl_resource.a libmgl_types.a libmgl_graphics.a libmgl_audio.a
 MGL_LIB_PATH = ../../libs
 
 INC_PATHS = ../include ../../mgl_types/include \

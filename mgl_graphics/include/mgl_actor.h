@@ -169,6 +169,14 @@ MglBool mgl_actor_next_frame(MglActor * actor);
 MglFloat mgl_actor_get_frame(MglActor *actor);
 
 /**
+ * @brief get the actor's width and height
+ * @param actor the actor to check
+ * @param w [output] optional if provided this will be populated with the actor's width
+ * @param h [output] optional if provided this will be populated with the actor's height
+ */
+void mgl_actor_get_size(MglActor *actor,MglUint *w,MglUint *h);
+
+/**
  * @brief draw the actor to the current rendering context
  *
  * @param act pointer to the actor to draw

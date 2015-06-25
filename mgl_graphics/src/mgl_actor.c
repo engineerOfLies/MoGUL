@@ -414,4 +414,10 @@ void mgl_actor_free(MglActor **actor)
 {
     mgl_resource_free_element(__mgl_actor_resource_manager,(void **)actor);
 }
+
+void mgl_actor_get_size(MglActor *actor,MglUint *w,MglUint *h)
+{
+    if (!actor)return;
+    mgl_sprite_get_size(actor->sprite,w,h);
+}
 /*eol@eof*/

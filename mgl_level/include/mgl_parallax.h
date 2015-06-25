@@ -29,5 +29,59 @@
 
 typedef struct MglParallax_S MglParallax;
 
+/**
+ * @brief initialize the parallax manager
+ * @param maxParallaxs how many simulataneous background you want to support
+ * @param defaultCam if provided this will be the assumed camera for parallax calculations
+ */
+void mgl_parallax_init(
+    MglUint maxParallaxs,
+    MglCamera *defaultCam);
+
+/**
+ * @brief load a parallax background
+ * @param filename the definition file to load
+ * @param cam use the camera to set proper aspects
+ * @return NULL on error or a parallax background on success.
+ */
+MglParallax *mgl_parallax_load(char * filename,MglCamera *cam);
+
+/**
+ * @brief draw all parallax background layers back to front
+ * @param par the parallax background to draw
+ * @param position the position to draw it from
+ */
+void mgl_parallax_draw_all_layers(MglParallax *par,MglVec2D position);
+
+/**
+ * @brief draw only 1 specific layer of a pallax background
+ * @param par the parallax background to draw
+ * @param l the layer index to draw
+ * @param position the position to draw the layer at
+ */
+void mgl_parallax_draw_layer(MglParallax *par,MglUint l,MglVec2D position);
+
+/**
+ * @brief change which plane will be used as the camera 1:1 layer
+ * @param par the parallax background to change
+ * @param n which layer should be the focus
+ */
+void mgl_parallax_change_camera_plane(MglParallax *par, MglUint n);
+
+/**
+ * @brief change which camera the parallax context uses for calculations
+ * @param par the parallax background to change
+ * @param cam use the camera to set proper aspects
+ */
+void mgl_parallax_change_camera(MglParallax *par,MglCamera *cam);
+
+/**
+ * @brief get the size of the camera plane
+ * @param par the parallax background to check
+ * @param w [output] optional if provided this will be populated with the layer's width
+ * @param h [output] optional if provided this will be populated with the layer's height
+ */
+void mgl_parallax_get_size(MglParallax *par,MglUint *w,MglUint *h);
+
 
 #endif

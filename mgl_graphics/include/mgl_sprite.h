@@ -129,4 +129,12 @@ void mgl_sprite_draw_image(MglSprite *image,MglVec2D position);
  */
 void mgl_sprite_draw_to_surface(SDL_Surface *surface, MglSprite *sprite, MglVec2D position,MglUint frame);
 
+/**
+ * @brief get a sprite's frame width and height
+ * @param sprite the sprite to check
+ * @param w [output] optional if provided this will be populated with the sprite's width
+ * @param h [output] optional if provided this will be populated with the sprite's height
+ */
+void mgl_sprite_get_size(MglSprite *sprite,MglUint *w,MglUint *h);
+
 #endif

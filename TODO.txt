@@ -1,0 +1,5 @@
+#todo list
+
+TODO: organize all test assets into a common project folder
+TODO: provide load by dictionary options for all resources in addition to load from file or config
+TODO: support mutliple rendering contexts

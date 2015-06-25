@@ -1,8 +1,11 @@
 #include "mgl_camera.h"
+#include "mgl_parallax.h"
 #include "mgl_audio.h"
 #include "mgl_logger.h"
 #include "mgl_config.h"
 #include "mgl_graphics.h"
+#include "mgl_actor.h"
+#include "mgl_font.h"
 #include <string.h>
 #include <SDL.h>
 
@@ -18,6 +21,9 @@ int main(int argc,char *argv[])
     const Uint8 *keys = NULL;
     MglCamera *cam;
     MglUint sw = 0,sh = 0;
+    MglParallax *par;
+    MglUint bgw,bgh;
+    MglVec2D pos = {0,0};
     
     if ((argc == 2) && (strcmp(argv[1],"-h")==0))
     {
@@ -29,17 +35,45 @@ int main(int argc,char *argv[])
 
     mgl_graphics_get_screen_resolution(&sw,&sh);
 
-    cam = mgl_camera_new(mgl_vec2d(sw,sh));    
+    cam = mgl_camera_new(mgl_vec2d(sw,sh));
+    par = mgl_parallax_load("test/images/testlevel/testbg.def",cam);
+    mgl_parallax_get_size(par,&bgw,&bgh);
+        mgl_logger_info("camera layer size: (%i,%i)",bgw,bgh);
+    
+    
+    mgl_camera_set_bounds(cam,mgl_rect(0,0,bgw,bgh));
     
     fprintf(stdout,"mgl_level_test begin\n");
     while (!done)
     {
+        pos = mgl_camera_get_position(cam);
+        mgl_graphics_clear_screen();
+        mgl_parallax_draw_all_layers(par,mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0)));
+//        mgl_parallax_draw_layer(par,2,mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0)));
         SDL_PumpEvents();
         keys = SDL_GetKeyboardState(NULL);
+        if (keys[SDL_SCANCODE_RIGHT])
+        {
+            pos.x += 5;
+        }
+        if (keys[SDL_SCANCODE_LEFT])
+        {
+            pos.x -= 5;
+        }
+        if (keys[SDL_SCANCODE_DOWN])
+        {
+            pos.y += 5;
+        }
+        if (keys[SDL_SCANCODE_UP])
+        {
+            pos.y -= 5;
+        }
+        mgl_camera_change_position(cam, pos);
         if (keys[SDL_SCANCODE_ESCAPE])
         {
             done = 1;
         }
+        mgl_grahics_next_frame();
     }
     fprintf(stdout,"mgl_level_test end\n");
 }
@@ -55,6 +89,18 @@ void init_all()
         mgl_logger_info("failed to load graphics, exiting...");
         return;
     }
+    mgl_sprite_init_from_config("test/graphics.def");
+    mgl_actor_init(
+        1000,
+        0,
+        33
+    );
+    mgl_font_init(
+        10,
+        "test/fonts/Exo-Regular.otf",
+        16
+    );
+
     mgl_audio_init(
         1000,
         100,
@@ -62,4 +108,6 @@ void init_all()
         MglTrue,
         MglTrue);
     mgl_camera_init(1);
+    mgl_parallax_init(5,NULL);
+
 }
