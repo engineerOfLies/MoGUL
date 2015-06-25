@@ -22,9 +22,12 @@
  */
 
 #include "mgl_vector.h"
+#include "mgl_camera.h"
 /**
  * @purpose parallax backgrounds are drawn in such a way that different layers 
  */
+
+typedef struct MglParallax_S MglParallax;
 
 
 #endif

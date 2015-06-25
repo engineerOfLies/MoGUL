@@ -53,12 +53,12 @@ MglCamera *mgl_camera_new(
 void mgl_camera_free(MglCamera **cam);
 
 /**
- * @brief check if the provided rectangle is within camera bounds
+ * @brief check if the provided rectangle is within camera view
  * @param cam the camera to check
  * @param rect the rect to check for
  * @return MglTrue if the rectangle clips the camera view, MglFalse otherwise
  */
-MglBool mgl_camera_check_bounds(MglCamera *cam,MglRect rect);
+MglBool mgl_camera_check_view(MglCamera *cam,MglRect rect);
 
 /**
  * @brief adjust the provided position relative to the camera
@@ -92,5 +92,19 @@ void mgl_camera_enable_bounds(MglCamera *cam, MglBool enable);
  */
 void mgl_camera_change_position(MglCamera *cam, MglVec2D position);
 
+/**
+ * @brief get the specified camera's position
+ * NOTE: position will be the top left corner
+ * @param cam the camera to get
+ * @return the position vector of the camera
+ */
+MglVec2D mgl_camera_get_position(MglCamera *cam);
 
+/**
+ * @brief get the specified camera's center position
+ * NOTE: position will be the center of the view
+ * @param cam the camera to get
+ * @return the center vector of the camera view
+ */
+MglVec2D mgl_camera_get_center(MglCamera *cam);
 #endif

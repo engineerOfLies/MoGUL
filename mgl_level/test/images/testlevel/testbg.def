@@ -1,0 +1,25 @@
+{
+  "layers" : 
+  [
+    {
+        "image" : "test/images/testlevel/bg_0.png",
+        "cameraPlane" : "false"
+    },
+    {
+        "image" : "test/images/testlevel/bg_1.png",
+        "cameraPlane" : "false"
+    },
+    {
+        "image" : "test/images/testlevel/bg_2.png",
+        "cameraPlane" : "false"
+    },
+    {
+        "image" : "test/images/testlevel/bg_3.png",
+        "cameraPlane" : "false"
+    },
+    {
+        "image" : "test/images/testlevel/bg_4.png",
+        "cameraPlane" : "true"
+    }
+  ]
+}

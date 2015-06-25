@@ -23,7 +23,15 @@ cd ../../mgl_graphics/src
 make
 make static
 
+echo "building audio MoGUL lib..."
+
 cd ../../mgl_audio/src
+make
+make static
+
+echo "building level MoGUL lib..."
+
+cd ../../mgl_level/src
 make
 make static
 

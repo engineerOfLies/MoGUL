@@ -106,7 +106,7 @@ void mgl_rectf_set(
  * @param b the other rect to check
  * @return MglTrue if they overlap, MglFalse otherwise
  */
-MglBool mgl_rect_lap_rect(MglRect a, MglRect b);
+MglBool mgl_rect_on_rect(MglRect a, MglRect b);
 
 /**
  * @brief checks if the second rect is inside the first rect.

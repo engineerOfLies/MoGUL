@@ -92,7 +92,7 @@ MglBool mgl_rect_in_rect(MglRect a, MglRect b)
   return MglFalse;
 }
 
-MglBool mgl_rect_lap_rect(MglRect a, MglRect b)
+MglBool mgl_rect_on_rect(MglRect a, MglRect b)
 {
   if ((a.x > (b.x + b.w)) || (a.y > (b.y + b.h)) || (b.x > (a.x + a.w)) || (b.y > (a.y + a.h)))
     return MglFalse;
