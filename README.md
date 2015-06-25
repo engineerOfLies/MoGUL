@@ -43,6 +43,9 @@ These will be the core graphics libraries of MoGUL.  This will contain resource 
 <H2>Usage Documentation</H2>
 https://github.com/engineerOfLies/MoGUL/wiki
 
+<H2>Code Documentation</H2>
+http://engineeroflies.github.io/MoGUL/index.html
+
 <H2>Coding Style Guide</H2><p>
 CONSTANTS_OR_DEFINES<p>
 \__INCLUDE_GUARDS\__<p>
