@@ -15,15 +15,16 @@ OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 #
 
 # Linux
-PROJECT = mgl_graphics
+PROJECT = mgl_level
 CC      = gcc
 #CC      = clang
 MGL_LIBS = 
-MGL_STATIC_LIBS = libmgl_types.a libmgl_logger.a libmgl_resource.a libmgl_config.a
+MGL_STATIC_LIBS = libmgl_types.a libmgl_logger.a libmgl_resource.a libmgl_config.a libmgl_graphics.a libmgl_audio.a
 MGL_LIB_PATH = ../../libs
 
 INC_PATHS = ../include ../../mgl_types/include \
-../../mgl_logger/include ../../mgl_resource/include ../../mgl_config/include
+../../mgl_logger/include ../../mgl_resource/include ../../mgl_config/include ../../mgl_graphics/include \
+../../mgl_audio/include
 INC_PARAMS =$(foreach d, $(INC_PATHS), -I$d)
 
 GLIB_CFLAGS = `pkg-config --cflags glib-2.0`

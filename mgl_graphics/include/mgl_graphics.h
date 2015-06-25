@@ -97,6 +97,9 @@ SDL_Surface *mgl_graphics_screen_convert(SDL_Surface **surface);
  */
 SDL_Surface *mgl_graphics_get_temp_buffer(int w,int h);
 
+/*
+ * TODO: support multiple rendering contexts
+ */
 /**
  * @brief get the active rendering context
  * @return NULL on error or the active rendering context

@@ -19,7 +19,7 @@ PROJECT = mgl_audio
 CC      = gcc
 #CC      = clang
 MGL_LIBS = 
-MGL_STATIC_LIBS = libmgl_types.a libmgl_logger.a libmgl_resource.a libgml_config.a
+MGL_STATIC_LIBS = libmgl_types.a libmgl_logger.a libmgl_resource.a libmgl_config.a
 MGL_LIB_PATH = ../../libs
 
 INC_PATHS = ../include ../../mgl_types/include \
