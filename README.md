@@ -2,7 +2,7 @@
 MoGUL - Mosaic Game Utility Library.  A suite of libraries designed to facilitate game programming.  Taken as a whole it will be a comprehensive game engine library.
 
 <H2>Libraries</H2>
-MoGUL is a colleciton of libraries that can be used as a whole or taken in parts.  The libraries are broken down into libraries that can be used independently from the rest of MoGUL, the core set of game related libraries and optional extension libraries.
+MoGUL is a collection of libraries that can be used as a whole or taken in parts.  The libraries are broken down into libraries that can be used independently from the rest of MoGUL, the core set of game related libraries and optional extension libraries.
 <H3>Stand Alone</H3>
 These libraries provide useful utility for the C language that the rest of MoGUL will use, but these are not dependent on the rest of MoGUL.
  - mgl_types - [complete] - a library of type aliases.  Mostly bult from the SDL standard types, but also provides some common types that will be useful in games in general such as vectors (the math construct, not the linked list) and matrices. mgl_dict is a complex generic type that will work well storing config data loaded from JSON, XML or YAML
@@ -39,7 +39,8 @@ These will be the core graphics libraries of MoGUL.  This will contain resource 
     - mgl_window - provides the resource manager for windows
     - mgl_component - provides the resource manager for building window component widgets
  - mgl_predict - provides a pattern predition implementation.  Useful for AI prediction of player actions.
-<H2>Documentation</H2>
+ 
+<H2>Usage Documentation</H2>
 https://github.com/engineerOfLies/MoGUL/wiki
 
 <H2>Coding Style Guide</H2><p>

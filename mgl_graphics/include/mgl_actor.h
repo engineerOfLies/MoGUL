@@ -40,7 +40,7 @@ enum MglActionTypes {
 
 
 /**
- * @purpose the purpose of an actor type is to provide a specific instance of an
+ * @brief the purpose of an actor type is to provide a specific instance of an
  *          animated model.  Actors might be used by entities, particles or UI
  * unlike other resources, the actor is not meant to be allocated or de-allocated.
  * @note Actors have a frameRate and individual actions also have frameRates.  The Actor 
