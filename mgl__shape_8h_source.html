@@ -110,29 +110,29 @@ $(document).ready(function(){initNavTree('mgl__shape_8h_source.html','');});
 <a href="mgl__shape_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef __MGL_SHAPES__</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define __MGL_SHAPES__</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="mgl__dict_8h.html">mgl_dict.h</a>&quot;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="mgl__vector_8h.html">mgl_vector.h</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="mgl__dict_8h.html">mgl_dict.h</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="mgl__vector_8h.html">mgl_vector.h</a>&quot;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="mgl__shape_8h.html#a358d12294d8ddc9877f373bc3f751c95">   32</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct_mgl_lines___s.html">MglLines_S</a> <a class="code" href="struct_mgl_lines___s.html">MglLines</a>;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="mgl__shape_8h.html#a358d12294d8ddc9877f373bc3f751c95">   34</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct_mgl_lines___s.html">MglLines_S</a> <a class="code" href="struct_mgl_lines___s.html">MglLines</a>;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<a class="code" href="struct_mgl_lines___s.html">MglLines</a> *<a class="code" href="mgl__shape_8h.html#a33f41565b4b86327de105f5696b5c618">mgl_shape_lines_new</a>();</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<a class="code" href="struct_mgl_lines___s.html">MglLines</a> *<a class="code" href="mgl__shape_8h.html#ac6bf7d43a9522d463e3ecfa92a15665c">mgl_shape_lines_clone</a>(<a class="code" href="struct_mgl_lines___s.html">MglLines</a> *src);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keywordtype">void</span> <a class="code" href="mgl__shape_8h.html#a23bdaef0e6571b9a04f822c9d10fd5f4">mgl_shape_lines_free</a>(<a class="code" href="struct_mgl_lines___s.html">MglLines</a> **lines);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keywordtype">void</span> <a class="code" href="mgl__shape_8h.html#a282197a6b7f805094bb92f40ccbd7d08">mgl_shape_lines_append_point</a>(<a class="code" href="struct_mgl_lines___s.html">MglLines</a> *lines, <a class="code" href="struct_mgl_vec2_d.html">MglVec2D</a> point);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<a class="code" href="mgl__types_8h.html#ad274d13b004695967ec3d57e4c354e9c">MglUint</a> <a class="code" href="mgl__shape_8h.html#a1e9d140423fa036c26e089ce4b5203d5">mgl_shape_lines_get_count</a>(<a class="code" href="struct_mgl_lines___s.html">MglLines</a> *lines);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keywordtype">void</span> <a class="code" href="mgl__shape_8h.html#a483124654255e136c22e5a12fa7e79e2">mgl_shape_lines_get_nth_point</a>(<a class="code" href="struct_mgl_vec2_d.html">MglVec2D</a> *point,<a class="code" href="struct_mgl_lines___s.html">MglLines</a> *lines, <a class="code" href="mgl__types_8h.html#ad274d13b004695967ec3d57e4c354e9c">MglUint</a> n);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keywordtype">void</span> <a class="code" href="mgl__shape_8h.html#af1ef758aeee2d381d1c758b6ce7b9326">mgl_lines_subdivide_line</a>(<a class="code" href="struct_mgl_lines___s.html">MglLines</a> *lines,<a class="code" href="mgl__types_8h.html#ad274d13b004695967ec3d57e4c354e9c">MglUint</a> n);</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<a class="code" href="struct_mgl_dict___s.html">MglDict</a> *<a class="code" href="mgl__shape_8h.html#ac00491ab3d7902dbb1606f5608aa3c2b">mgl_lines_get_data</a>(<a class="code" href="struct_mgl_lines___s.html">MglLines</a> *lines);</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<a class="code" href="struct_mgl_lines___s.html">MglLines</a> *<a class="code" href="mgl__shape_8h.html#a33f41565b4b86327de105f5696b5c618">mgl_shape_lines_new</a>();</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<a class="code" href="struct_mgl_lines___s.html">MglLines</a> *<a class="code" href="mgl__shape_8h.html#ac6bf7d43a9522d463e3ecfa92a15665c">mgl_shape_lines_clone</a>(<a class="code" href="struct_mgl_lines___s.html">MglLines</a> *src);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keywordtype">void</span> <a class="code" href="mgl__shape_8h.html#a23bdaef0e6571b9a04f822c9d10fd5f4">mgl_shape_lines_free</a>(<a class="code" href="struct_mgl_lines___s.html">MglLines</a> **lines);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keywordtype">void</span> <a class="code" href="mgl__shape_8h.html#a282197a6b7f805094bb92f40ccbd7d08">mgl_shape_lines_append_point</a>(<a class="code" href="struct_mgl_lines___s.html">MglLines</a> *lines, <a class="code" href="struct_mgl_vec2_d.html">MglVec2D</a> point);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<a class="code" href="mgl__types_8h.html#ad274d13b004695967ec3d57e4c354e9c">MglUint</a> <a class="code" href="mgl__shape_8h.html#a1e9d140423fa036c26e089ce4b5203d5">mgl_shape_lines_get_count</a>(<a class="code" href="struct_mgl_lines___s.html">MglLines</a> *lines);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keywordtype">void</span> <a class="code" href="mgl__shape_8h.html#a483124654255e136c22e5a12fa7e79e2">mgl_shape_lines_get_nth_point</a>(<a class="code" href="struct_mgl_vec2_d.html">MglVec2D</a> *point,<a class="code" href="struct_mgl_lines___s.html">MglLines</a> *lines, <a class="code" href="mgl__types_8h.html#ad274d13b004695967ec3d57e4c354e9c">MglUint</a> n);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keywordtype">void</span> <a class="code" href="mgl__shape_8h.html#af1ef758aeee2d381d1c758b6ce7b9326">mgl_lines_subdivide_line</a>(<a class="code" href="struct_mgl_lines___s.html">MglLines</a> *lines,<a class="code" href="mgl__types_8h.html#ad274d13b004695967ec3d57e4c354e9c">MglUint</a> n);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<a class="code" href="struct_mgl_dict___s.html">MglDict</a> *<a class="code" href="mgl__shape_8h.html#ac00491ab3d7902dbb1606f5608aa3c2b">mgl_lines_get_data</a>(<a class="code" href="struct_mgl_lines___s.html">MglLines</a> *lines);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="mgl__shape_8h_html_af1ef758aeee2d381d1c758b6ce7b9326"><div class="ttname"><a href="mgl__shape_8h.html#af1ef758aeee2d381d1c758b6ce7b9326">mgl_lines_subdivide_line</a></div><div class="ttdeci">void mgl_lines_subdivide_line(MglLines *lines, MglUint n)</div><div class="ttdoc">subdivide the nth line in the list </div><div class="ttdef"><b>Definition:</b> <a href="mgl__shape_8c_source.html#l00090">mgl_shape.c:90</a></div></div>
 <div class="ttc" id="mgl__shape_8h_html_ac6bf7d43a9522d463e3ecfa92a15665c"><div class="ttname"><a href="mgl__shape_8h.html#ac6bf7d43a9522d463e3ecfa92a15665c">mgl_shape_lines_clone</a></div><div class="ttdeci">MglLines * mgl_shape_lines_clone(MglLines *src)</div><div class="ttdoc">create a copy of the provided line sequence. Free it with mgl_shape_lines_free(); ...</div><div class="ttdef"><b>Definition:</b> <a href="mgl__shape_8c_source.html#l00030">mgl_shape.c:30</a></div></div>
 <div class="ttc" id="mgl__shape_8h_html_ac00491ab3d7902dbb1606f5608aa3c2b"><div class="ttname"><a href="mgl__shape_8h.html#ac00491ab3d7902dbb1606f5608aa3c2b">mgl_lines_get_data</a></div><div class="ttdeci">MglDict * mgl_lines_get_data(MglLines *lines)</div><div class="ttdoc">get a pointer to the internal data dictionary for the line sequence </div><div class="ttdef"><b>Definition:</b> <a href="mgl__shape_8c_source.html#l00113">mgl_shape.c:113</a></div></div>
@@ -153,7 +153,7 @@ $(document).ready(function(){initNavTree('mgl__shape_8h_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_006b21d9a2ae5bb0b8c9d1ba8d6f9ab5.html">mgl_graphics</a></li><li class="navelem"><a class="el" href="dir_6142436cd43a4612456038a59d18a3f8.html">include</a></li><li class="navelem"><a class="el" href="mgl__shape_8h.html">mgl_shape.h</a></li>
-    <li class="footer">Generated on Wed Jun 24 2015 21:05:41 for MoGUL by
+    <li class="footer">Generated on Thu Jun 25 2015 07:31:58 for MoGUL by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>
