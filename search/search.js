@@ -15,8 +15,7 @@ var indexSectionsWithContent =
   5: "m",
   6: "_m",
   7: "kmsv",
-  8: "gms",
-  9: "m"
+  8: "gms"
 };
 
 var indexSectionNames =
@@ -29,8 +28,7 @@ var indexSectionNames =
   5: "typedefs",
   6: "enums",
   7: "enumvalues",
-  8: "defines",
-  9: "pages"
+  8: "defines"
 };
 
 function convertToId(search)

@@ -4,7 +4,6 @@ var searchData=
   ['main',['main',['../mgl__audio__test_8c.html#a0ddf1224851353fc92bfbff6f499fa97',1,'main(int argc, char *argv[]):&#160;mgl_audio_test.c'],['../mgl__config__test_8c.html#a0ddf1224851353fc92bfbff6f499fa97',1,'main(int argc, char *argv[]):&#160;mgl_config_test.c'],['../mgl__graphics__test_8c.html#a0ddf1224851353fc92bfbff6f499fa97',1,'main(int argc, char *argv[]):&#160;mgl_graphics_test.c'],['../mgl__logger__test_8c.html#a0ddf1224851353fc92bfbff6f499fa97',1,'main(int argc, char *argv[]):&#160;mgl_logger_test.c'],['../mgl__resource__test_8c.html#a0ddf1224851353fc92bfbff6f499fa97',1,'main(int argc, char *argv[]):&#160;mgl_resource_test.c']]],
   ['manager',['manager',['../mgl__resource__test_8c.html#a7436e73605800b77aec45fa73f9df86e',1,'mgl_resource_test.c']]],
   ['max',['MAX',['../mgl__types_8h.html#afa99ec4acc4ecb2dc3c2d05da15d0e3f',1,'mgl_types.h']]],
-  ['mogul',['MoGUL',['../md__r_e_a_d_m_e.html',1,'']]],
   ['message',['message',['../structmgl_log_event___s.html#a0b2e8c7f76df48129f994ecc46d5c66c',1,'mglLogEvent_S']]],
   ['mgl_5f2pi',['MGL_2PI',['../mgl__types_8h.html#adfb8b4e7058f989aff7c2ced3a819774',1,'mgl_types.h']]],
   ['mgl_5factor_2ec',['mgl_actor.c',['../mgl__actor_8c.html',1,'']]],

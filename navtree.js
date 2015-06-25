@@ -1,7 +1,6 @@
 var NAVTREE =
 [
   [ "MoGUL", "index.html", [
-    [ "MoGUL", "md__r_e_a_d_m_e.html", null ],
     [ "Data Structures", null, [
       [ "Data Structures", "annotated.html", "annotated" ],
       [ "Data Structure Index", "classes.html", null ],
@@ -28,9 +27,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"mgl__draw_8c.html#af294a5b8205eb1cbec206fb161faff6c",
-"mgl__rect_8c_source.html",
-"mgl__vector_8h.html#a2112773fafd1073259409268f39d4312"
+"mgl__draw_8c_source.html",
+"mgl__rect_8h.html",
+"mgl__vector_8h.html#a213b68c0ea54808f4017e6c7eca8fd22"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

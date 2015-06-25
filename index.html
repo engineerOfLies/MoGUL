@@ -46,7 +46,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li class="current"><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -87,7 +86,7 @@ $(document).ready(function(){initNavTree('index.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -101,12 +100,81 @@ $(document).ready(function(){initNavTree('index.html','');});
 <div class="title">MoGUL Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-</div><!-- contents -->
+<div class="textblock"><p>documentation comments follow doxygen format &lt;p&gt; MoGUL - Mosaic Game Utility Library. A suite of libraries designed to facilitate game programming. Taken as a whole it will be a comprehensive game engine library.</p>
+<h2>Usage Documentation</h2>
+<p><a href="https://github.com/engineerOfLies/MoGUL/wiki">Wiki</a></p>
+<h2>Code Documentation</h2>
+<p><a href="http://engineeroflies.github.io/MoGUL/index.html">dox</a></p>
+<h2>Libraries</h2>
+<p>MoGUL is a collection of libraries that can be used as a whole or taken in parts. The libraries are broken down into libraries that can be used independently from the rest of MoGUL, the core set of game related libraries and optional extension libraries. </p>
+<h3>Stand Alone</h3>
+<p>These libraries provide useful utility for the C language that the rest of MoGUL will use, but these are not dependent on the rest of MoGUL.</p>
+<ul>
+<li>mgl_types - [complete] - a library of type aliases. Mostly bult from the SDL standard types, but also provides some common types that will be useful in games in general such as vectors (the math construct, not the linked list) and matrices. mgl_dict is a complex generic type that will work well storing config data loaded from JSON, XML or YAML<ul>
+<li>mgl_dict - [complete] - a dictionary type primary used for supporting config</li>
+<li>mgl_text - [complete] - support for finite length strings. Used frequently in config</li>
+</ul>
+</li>
+<li>mgl_logger - [complete] - a simple logger with support for different logging levels. Support for loggin in a separate thread.</li>
+<li>mgl_resource - [complete] - a resource manager "class" that allows the automatic tracking of use and cleaning up of any type of "resource" such as image or audio files or in-project constructs such as entities and windows.</li>
+<li>mgl_config - [complete] - a config file parser and resource manager. Will support xml, json and yaml when complete. Converts config files to MglDict.<ul>
+<li>mgl_json_parse - [complete] - translation from libjansson json_t to mgl_dict</li>
+<li>mgl_yaml_parse - [complete] - yaml parser using libyaml, parses it to mgl_dict</li>
+<li>mgl_xml_parse - [in progress] - xml parser using expat, parses it to mgl_dict</li>
+</ul>
+</li>
+</ul>
+<h3>MoGUL Graphics</h3>
+<p>These will be the core graphics libraries of MoGUL. This will contain resource managers for resources typically used in game programming.</p>
+<ul>
+<li>mgl_graphics - [complete] - initializes and configures rendering pipleline and provides an interface to do basic drawing and frame timing.</li>
+<li>mgl_draw - [complete] - provides drawing of shape primitives and integration with Chipmunk physics engine.</li>
+<li>mgl_sprite - [complete] - provides a resource manager for animated sprites. Sprites can be setup through sprite sheets or through image sequences.</li>
+<li>mgl_svg - provides a resource manager for scalable vector graphics. SVG files will be parsed into MglDict and used to draw.</li>
+<li>mgl_actor - [complete] - provides a context for timing sprite/drawing animations, setting animation sequences and triggering events times with key frames.</li>
+<li>mgl_font - [complete] - provides a resource manager for loading and displaying fonts / support for word wrapping and font effects.</li>
+</ul>
+<h3>Extensions</h3>
+<ul>
+<li>mgl_input - provides a platform to customize user controls and handle control events.<ul>
+<li>mgl_combo - provides support to parsing and catching input chains for complex inputs.</li>
+</ul>
+</li>
+<li>mgl_audio - [complete] - provides a resource manager for playing audio clips and music. Wraps SDL_Mixer.<ul>
+<li>mgl_sound - provides support to load and play sound chunks. Support for channel groups</li>
+<li>mgl_music - provides support to load and play music files. Support for playlists</li>
+</ul>
+</li>
+<li>mgl_entity - provides a resource manager for in-game entities. Can be extended with user data and user defined function pointers.</li>
+<li>mgl_level - provides a common platform for developing game levels. Will support a range of level styles from tiled to free form as well as multiple layers and parallax effects.<ul>
+<li>mgl_parallax - provides logic to render parallax layered backgrounds</li>
+<li>mgl_tiles - provides a set of functions for loading and dealing with tile maps. Provides the framework for making more robust tiles (animated, active). Will work with the mgl_path seamlessly.</li>
+<li>mgl_path - provides a threaded path finding system. Works with tiles, platforms and free form levels.</li>
+</ul>
+</li>
+<li>mgl_gui - provides a graphical user interface platform including resource managers for windows and widgets.<ul>
+<li>mgl_window - provides the resource manager for windows</li>
+<li>mgl_component - provides the resource manager for building window component widgets</li>
+</ul>
+</li>
+<li>mgl_predict - provides a pattern predition implementation. Useful for AI prediction of player actions.</li>
+</ul>
+<h2>Coding Style Guide</h2>
+<p>CONSTANTS_OR_DEFINES</p>
+<p>__INCLUDE_GUARDS__</p>
+<p>MglTypeDefinitions</p>
+<p>mglVariables</p>
+<p>mgl_class_function_format Where class will be the name of the "class" or file that it is defined in</p>
+<p>/* Comments will use strict ansii C style&lt;p&gt; /**</p>
+<h2>License</h2>
+<h3>The MIT License (MIT)</h3>
+<dl class="section copyright"><dt>Copyright</dt><dd>Copyright (c) 2015 EngineerOfLies Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </dd></dl>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jun 25 2015 07:31:59 for MoGUL by
+    <li class="footer">Generated on Thu Jun 25 2015 07:37:19 for MoGUL by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>
