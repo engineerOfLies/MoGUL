@@ -279,7 +279,7 @@ MglDict *mgl_tileset_get_custom_info(MglTileSet *set)
 MglDict *mgl_tileset_get_tile_custom_info(MglTileSet *set,MglUint index)
 {
     MglTileInfo *tileInfo;
-    tileInfo = mgl_tileset_get_tileinfo(tileset,index);
+    tileInfo = mgl_tileset_get_tileinfo(set,index);
     if (!tileInfo)return NULL;
     return tileInfo->info;
 }
@@ -287,7 +287,7 @@ MglDict *mgl_tileset_get_tile_custom_info(MglTileSet *set,MglUint index)
 MglBool mgl_tileset_tile_solid(MglTileSet *set,MglUint index)
 {
     MglTileInfo *tileInfo;
-    tileInfo = mgl_tileset_get_tileinfo(tileset,index);
+    tileInfo = mgl_tileset_get_tileinfo(set,index);
     if (!tileInfo)
     {
         mgl_logger_warn("tile %s not found in set",index);
