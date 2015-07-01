@@ -74,4 +74,62 @@ void mgl_tileset_delete(void *data)
     g_list_free(set);
 }
 
+MglTileInfo *mgl_tileset_load_info_from_dict(MglDict *def)
+{
+    MglTileInfo *tileInfo;
+    if (!def)return NULL;
+    tileInfo = g_new(MglTileInfo,1);
+    if (!tileInfo)
+    {
+        mgl_logger_error("failed to allocate memory for tile info");
+        return NULL;
+    }
+    memset(tileInfo,0,sizeof(MglTileInfo));
+}
+
+MglTileSet *mgl_tileset_load_from_dict(MglTileSet *tileset,MglDict *def)
+{
+    MglDict *list;
+    if (!def)
+    {
+        mgl_logger_error("no dictionary provided");
+        return NULL;
+    }
+    if (!tileset)
+    {
+        tileset = (MglTileSet*)mgl_resource_new_element(__mgl_tileset_resource_manager);
+        if (!tileset)
+        {
+            return NULL;
+        }
+    }
+    mgl_dict_get_hash_value_as_vec2d(&tileset->tileSize, def, "tileSize");
+    list = mgl_dict_get_hash_value(def,"set");
+    return tileset;
+}
+
+MglBool mgl_tileset_load_resource(char *filename,void *data)
+{
+    MglTileSet *tileset;
+    MglConfig *conf;
+    MglDict *def;
+    if (!data)
+    {
+        return MglFalse;
+    }
+    tileset = (MglTileSet *)data;
+    conf = mgl_config_load(filename);
+    if (!conf)
+    {
+        return MglFalse;
+    }
+    def = mgl_config_get_dictionary(conf);
+    tileset = mgl_tileset_load_from_dict(tileset,def);    
+    mgl_config_free(&sconf);
+    if (!tileset)
+    {
+        return MglFalse;
+    }
+    return MglTrue;
+}
 /*eol@eof*/
