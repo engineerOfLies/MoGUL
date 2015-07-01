@@ -1,0 +1,19 @@
+{
+  "tileSize" : "32,32",
+  "tileSet" :
+  [
+    "solid":"true",
+    "scale":"0.25,0.25",
+    "footprint": "1,1",
+    "image" :"test/images/tiles/tile01.png",
+    "color" : "255,255,255,255",
+    "info" :
+    {
+        "customData" : "anything you want"
+    }
+  ],
+  "info" :
+  {
+    "customData" : "anything you want"
+  }
+}

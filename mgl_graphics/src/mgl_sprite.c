@@ -166,10 +166,6 @@ MglBool mgl_sprite_load_resource(char *filename,void *data)
                             NULL,
                             sprite->image->pixels,
                             sprite->image->pitch);
-            if (!(__mgl_sprite_mode & MglSpriteSurface))
-            {
-                SDL_FreeSurface(sprite->image);
-            }
         }
     }
     return MglTrue;
@@ -468,9 +464,28 @@ void mgl_sprite_draw(
     }
 }
 
-void mgl_sprite_draw_to_surface(SDL_Surface *surface, MglSprite *sprite, MglVec2D position,MglUint frame)
+void mgl_sprite_draw_to_surface(
+    SDL_Surface *surface,
+    MglSprite *sprite,
+    MglVec2D position,
+    MglVec2D *scale,
+    MglVec2D * scaleCenter,
+    MglVec4D *color,
+    MglUint frame)
 {
     MglRect cell,target;
+    MglVec2D scaleOffset = {0,0};
+    MglVec2D scaleFactor = {1,1};
+
+    if (scale)
+    {
+        mgl_vec2d_copy(scaleFactor,(*scale));
+    }
+    if (scaleCenter)
+    {
+        mgl_vec2d_copy(scaleOffset,(*scaleCenter));
+    }
+
     mgl_rect_set(
         &cell,
         frame%sprite->framesPerLine * sprite->frameWidth,
@@ -479,11 +494,34 @@ void mgl_sprite_draw_to_surface(SDL_Surface *surface, MglSprite *sprite, MglVec2
         sprite->frameHeight);
     mgl_rect_set(
         &target,
-        position.x,
-        position.y,
-        sprite->frameWidth,
-        sprite->frameHeight);
-    SDL_BlitSurface(sprite->image,&cell,surface,&target);
+        position.x - (scaleFactor.x * scaleOffset.x),
+        position.y - (scaleFactor.y * scaleOffset.y),
+        sprite->frameWidth * scaleFactor.x,
+        sprite->frameHeight * scaleFactor.y);
+    
+    if (color)
+    {
+        SDL_SetSurfaceColorMod(
+            sprite->image,
+            color->x,
+            color->y,
+            color->z);
+        SDL_SetSurfaceAlphaMod(
+            sprite->image,
+            color->w);
+    }
+    SDL_BlitScaled(sprite->image,&cell,surface,&target);
+    if (color)
+    {
+        SDL_SetSurfaceColorMod(
+            sprite->image,
+            255,
+            255,
+            255);
+        SDL_SetSurfaceAlphaMod(
+            sprite->image,
+            255);
+    }
 }
 
 void mgl_sprite_free(MglSprite **sprite)

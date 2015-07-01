@@ -405,6 +405,39 @@ void mgl_actor_draw(
         (MglUint)actor->frame);
 }
 
+void mgl_actor_draw_to_surface(
+    MglActor *actor,
+    MglVec2D position,
+    MglVec2D *scale,
+    MglVec4D *color,
+    SDL_Surface *surface
+)
+{
+    MglVec4D colorShift;
+    if (!actor)return;
+    if (color)
+    {
+        colorShift.x = (color->x / 255.0) * actor->color.x; 
+        colorShift.y = (color->y / 255.0) * actor->color.y; 
+        colorShift.z = (color->z / 255.0) * actor->color.z; 
+        colorShift.w = (color->w / 255.0) * actor->color.w; 
+    }
+    else
+    {
+        mgl_vec4d_copy(colorShift,actor->color);
+    }
+    mgl_sprite_draw_to_surface(
+        surface,
+        actor->sprite,
+        position,
+        scale,
+        &actor->scaleCenter,
+        &colorShift,
+        (MglUint)actor->frame);
+
+}
+
+
 MglActor *mgl_actor_load(char * filename)
 {
     MglActor *actor;

@@ -125,9 +125,19 @@ void mgl_sprite_draw_image(MglSprite *image,MglVec2D position);
  * @param surface the surface to draw to
  * @param sprite the sprite to draw
  * @param postion where the draw the sprite to
+ * @param scale Scaling factor in the x and y axis.  If NULL, no scaling is applied.  (1,1) is also no scaling
+ * @param scaleCenter Where to scale from.  If NULL, the sprite scales from 0,0
+ * @param color if specified (and supported) this color value will be used to color shift the entire sprite.  Alpha Supported
  * @param frame which frame to draw
  */
-void mgl_sprite_draw_to_surface(SDL_Surface *surface, MglSprite *sprite, MglVec2D position,MglUint frame);
+void mgl_sprite_draw_to_surface(
+    SDL_Surface *surface,
+    MglSprite *sprite,
+    MglVec2D position,
+    MglVec2D *scale,
+    MglVec2D * scaleCenter,
+    MglVec4D *color,
+    MglUint frame);
 
 /**
  * @brief get a sprite's frame width and height

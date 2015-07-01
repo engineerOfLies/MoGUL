@@ -193,5 +193,22 @@ void mgl_actor_draw(
     MglVec4D *color
 );
 
+/**
+ * @brief draw the actor to the specified surface
+ *
+ * @param act pointer to the actor to draw
+ * @param position the place to draw the actor
+ * @param scale how the actor is scaled
+ * @param color color shifting of the actor (1,1,1,1) is no change.
+ * @param surface the surface to draw to
+ */
+void mgl_actor_draw_to_surface(
+    MglActor *actor,
+    MglVec2D position,
+    MglVec2D *scale,
+    MglVec4D *color,
+    SDL_Surface *surface
+);
+
 
 #endif
