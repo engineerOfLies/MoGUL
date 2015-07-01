@@ -295,4 +295,13 @@ MglBool mgl_tileset_tile_solid(MglTileSet *set,MglUint index)
     }
     return tileInfo->solid;
 }
+
+void mgl_tileset_get_tile_size(MglTileSet *set, MglVec2D *size)
+{
+    if (!set)return;
+    if (!size)return;
+    size->x = set->tileSize.x;
+    size->y = set->tileSize.y;
+}
+
 /*eol@eof*/

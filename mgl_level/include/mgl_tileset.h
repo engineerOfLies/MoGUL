@@ -95,4 +95,11 @@ MglDict *mgl_tileset_get_tile_custom_info(MglTileSet *set,MglUint index);
  */
 MglBool mgl_tileset_tile_solid(MglTileSet *set,MglUint index);
 
+/**
+ * @brief get the tile size for a given tile map
+ * @param set the tile set to check
+ * @param size [output] the tile size of the tile map in pixels
+ */
+void mgl_tileset_get_tile_size(MglTileSet *set, MglVec2D *size);
+
 #endif

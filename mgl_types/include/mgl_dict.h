@@ -126,6 +126,14 @@ MglDict *mgl_dict_new_hash();
 MglBool mgl_dict_get_line(MglLine output,MglDict *key);
 
 /**
+ * @brief returns the direct pointer to the string data
+ * NOTE: this is the direct pointer to the string data
+ * @param string the dictionary containing the string data
+ * @return NULL if not a string or on error, the string data otherwise
+ */
+const char * mgl_dict_get_string(MglDict *string);
+
+/**
 * @brief appends a list item to the MglDict list value.
 * if its not a pointer to a list, it will return without doing anything.
 * @param list the typed pointer of a glist

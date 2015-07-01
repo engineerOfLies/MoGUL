@@ -32,4 +32,17 @@
 
 typedef struct MglTileMap_S MglTileMap;
 
+/**
+ * @brief free the loaded tilemap
+ * @param tileset a pointer to your tilemap pointer, set to NULL on completion
+ */
+void mgl_tilemap_free(MglTileMap **tilemap);
+
+/**
+ * @brief load a tilemap from a config file
+ * @param filename the config file to load
+ * @return NULL on error or the loaded tilemap otherwise
+ */
+MglTileMap *mgl_tilemap_load(char * filename);
+
 #endif

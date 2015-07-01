@@ -46,7 +46,7 @@ int main(int argc,char *argv[])
     
     mgl_camera_set_bounds(cam,mgl_rect(0,0,bgw,bgh));
     
-    tileset = mgl_tileset_load("test/images/tiles/tileset.def");
+    tileset = mgl_tileset_load("test/maps/tileset.def");
     
     fprintf(stdout,"mgl_level_test begin\n");
     while (!done)

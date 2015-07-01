@@ -616,6 +616,13 @@ MglBool mgl_dict_get_hash_value_as_rectfloat(MglRectFloat *output, MglDict *hash
   return MglTrue;
 }
 
+const char * mgl_dict_get_string(MglDict *string)
+{
+    if (!string)return NULL;
+    if (string->keyType != MGL_DICT_STRING)return NULL;
+    return (const char *)string->keyValue;
+}
+
 void mgl_dict_print_string(MglDict *link,MglUint depth)
 {
   int i;
