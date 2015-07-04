@@ -294,6 +294,7 @@ MglBool mgl_actor_next_frame(MglActor * actor)
     MglAction *action;
     MglCallback *cb;
     MglUint now,diff;
+    MglUint frame;
     MglFloat timefactor;
     if (!actor)return MglFalse;
     if (!actor->action)return MglFalse;
@@ -314,6 +315,7 @@ MglBool mgl_actor_next_frame(MglActor * actor)
         actor->frame = actor->frame + (actor->frameRate * action->frameRate * actor->frameDirection)*timefactor;
         actor->lastTime = now;
     }
+    frame = (MglUint)actor->frame;
     if (actor->frame > action->end)
     {
         switch(actor->action->type)
@@ -331,7 +333,7 @@ MglBool mgl_actor_next_frame(MglActor * actor)
         }
         if (action->onEnd.function != NULL)
         {
-            action->onEnd.function(action->onEnd.data);
+            action->onEnd.function(action->onEnd.data,&frame);
         }
     }
     if (actor->frame < actor->action->begin)
@@ -351,7 +353,7 @@ MglBool mgl_actor_next_frame(MglActor * actor)
         }
         if (action->onBegin.function != NULL)
         {
-            action->onBegin.function(action->onBegin.data);
+            action->onBegin.function(action->onBegin.data,&frame);
         }
     }
     if ((MglUint)actor->lastFrame != (MglUint)actor->frame)
@@ -361,7 +363,7 @@ MglBool mgl_actor_next_frame(MglActor * actor)
         {
             if (cb->function)
             {
-                cb->function(cb->data);
+                cb->function(cb->data,&frame);
             }
         }
     }

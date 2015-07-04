@@ -27,6 +27,7 @@
  */
 
 #include "mgl_types.h"
+#include "mgl_callback.h"
 #include "mgl_text.h"
 #include "mgl_sprite.h"
 
@@ -210,5 +211,44 @@ void mgl_actor_draw_to_surface(
     SDL_Surface *surface
 );
 
+/**
+ * @brief register a callback to be called on a specific action frame
+ * @param actor the actor to register a callback for.
+ * @param actionName the action to register a callback with.
+ * @param frame which frame the action will be called on.
+ * @param cb the callback to be registered NOTE: context will be a MglUint containing the frame number
+ */
+void mgl_actor_set_action_frame_callback(
+    MglActor *actor,
+    MglLine actionName,
+    MglUint frame,
+    MglCallback cb
+);
+
+/**
+ * @brief register a callback to be called on when an action starts.  For looping or oscillating actions,
+ *        this happens every time the first frame is hit.
+ * @param actor the actor to register a callback for.
+ * @param actionName the action to register a callback with.
+ * @param cb the callback to be registered NOTE: context will be a MglUint containing the frame number
+ */
+void mgl_actor_set_action_begin_callback(
+    MglActor *actor,
+    MglLine actionName,
+    MglCallback cb
+);
+
+/**
+ * @brief register a callback to be called on when an action ends.  For oscillating actions,
+ *        this happens every time the last frame is hit.
+ * @param actor the actor to register a callback for.
+ * @param actionName the action to register a callback with.
+ * @param cb the callback to be registered NOTE: context will be a MglUint containing the frame number
+ */
+void mgl_actor_set_action_end_callback(
+    MglActor *actor,
+    MglLine actionName,
+    MglCallback cb
+);
 
 #endif
