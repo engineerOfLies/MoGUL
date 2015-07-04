@@ -32,6 +32,17 @@
 
 typedef struct MglTileMap_S MglTileMap;
 
+
+/**
+ * @brief initialize tile map system
+ * @param maxMaps how many tilemaps you want to support in memory at the same time
+ * @param renderToSurface if true, tilemap is precached to surface, otherwise just to texture
+ */
+void mgl_tilemap_init(
+    MglUint maxMaps,
+    MglBool renderToSurface);
+
+
 /**
  * @brief free the loaded tilemap
  * @param tileset a pointer to your tilemap pointer, set to NULL on completion
@@ -44,5 +55,25 @@ void mgl_tilemap_free(MglTileMap **tilemap);
  * @return NULL on error or the loaded tilemap otherwise
  */
 MglTileMap *mgl_tilemap_load(char * filename);
+
+/**
+ * @brief create a new empty tilemap
+ * @param tileset if provided, this will tile set will be associated with the map
+ * @param width create the tilemap this many tiles wide
+ * @param height create the tilemap this many tiles high
+ * @return NULL on error or a new blank tilemap
+ */
+MglTileMap *mgl_tilemap_new(
+    MglTileSet *tileset,
+    MglUint     width,
+    MglUint     height);
+
+
+/**
+ * @brief rebuild tilemap rendering surface / texture based on current tile data
+ * This process may take some time, so it is best not to do it unless tile data has changed.
+ * @param tilemap the tile map to render
+ */
+void mgl_tilemap_render(MglTileMap *tilemap);
 
 #endif
