@@ -6,7 +6,7 @@
 #include "mgl_graphics.h"
 #include "mgl_actor.h"
 #include "mgl_font.h"
-#include "mgl_tileset.h"
+#include "mgl_tilemap.h"
 #include <string.h>
 #include <SDL.h>
 
@@ -25,7 +25,7 @@ int main(int argc,char *argv[])
     MglParallax *par;
     MglUint bgw,bgh;
     MglVec2D pos = {0,0};
-    MglTileSet *tileset;
+    MglTileMap *tilemap;
     
     if ((argc == 2) && (strcmp(argv[1],"-h")==0))
     {
@@ -46,7 +46,7 @@ int main(int argc,char *argv[])
     
     mgl_camera_set_bounds(cam,mgl_rect(0,0,bgw,bgh));
     
-    tileset = mgl_tileset_load("test/maps/tileset.def");
+    tilemap = mgl_tilemap_load("test/maps/testtilemap.def");
     
     fprintf(stdout,"mgl_level_test begin\n");
     while (!done)
@@ -55,9 +55,7 @@ int main(int argc,char *argv[])
         mgl_graphics_clear_screen();
 
         mgl_parallax_draw_all_layers(par,mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0)));
-        mgl_tileset_draw_tile(tileset,0,mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0)));
-        mgl_tileset_draw_tile(tileset,1,mgl_camera_get_adjusted_position(cam,mgl_vec2d(32,0)));
-        mgl_tileset_draw_tile(tileset,2,mgl_camera_get_adjusted_position(cam,mgl_vec2d(96,0)));
+        mgl_tilemap_draw(tilemap, mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0)));
 
         SDL_PumpEvents();
         keys = SDL_GetKeyboardState(NULL);
@@ -120,4 +118,5 @@ void init_all()
     mgl_camera_init(1);
     mgl_parallax_init(5,NULL);
     mgl_tileset_init(2);
+    mgl_tilemap_init(10,MglFalse);
 }

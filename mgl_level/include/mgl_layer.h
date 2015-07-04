@@ -21,7 +21,8 @@
     SOFTWARE.
  */
 #include "mgl_tilemap.h"
-#include "mgl_parallax"
+#include "mgl_parallax.h"
+#include "mgl_actor.h"
 /**
  * @purpose layers are part of the level, a level will be made up of one or more layers.
  * This lets the game support parallax backgrounds interlaced with tilemaps.
@@ -35,15 +36,17 @@ typedef enum {
     MglLayerCustom
 }MglLayerType;
 
+typedef union
+{
+    MglTileMap  * map;
+    MglParallax * par;      /**<if this layer uses a parallax background*/
+    MglParallax * parLayer; /**<if this layer uses a parallax background*/
+    MglSprite   * image;    /**<if this layer is a simple image*/
+}MglLayerSelection;
+
 typedef struct
 {
-    union layer
-    {
-        MglTileMap  * map;
-        MglParallax * par;      /**<if this layer uses a parallax background*/
-        MglParallax * parLayer; /**<if this layer uses a parallax background*/
-        MglSprite   * image;    /**<if this layer is a simple image*/
-    };
+    MglLayerSelection layer;
     MglLayerType selection; /**<which layer type this layer is*/
     MglUint bglayer;        /**<if this layer is parLayer, which layer should be drawn*/
     MglBool useParallax;    /**<if true, this layer uses the parallax adjusted drawing position*/

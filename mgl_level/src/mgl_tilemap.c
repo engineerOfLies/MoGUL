@@ -21,7 +21,7 @@ struct MglTileMap_S
 
 
 static MglResourceManager * __mgl_tilemap_resource_manager = NULL;
-static MglBool              __mgl_tilemap_render_to_surface = MglFalse;
+static MglBool              __mgl_tilemap_cache_surface = MglFalse;
 
 void mgl_tilemap_close();
 MglBool mgl_tilemap_load_resource(char *filename,void *data);
@@ -29,7 +29,7 @@ void mgl_tilemap_delete(void *data);
 
 void mgl_tilemap_init(
     MglUint maxMaps,
-    MglBool renderToSurface)
+    MglBool cacheSurface)
 {
     __mgl_tilemap_resource_manager = mgl_resource_manager_init(
         "mgl tilemap",
@@ -39,7 +39,7 @@ void mgl_tilemap_init(
         mgl_tilemap_delete,
         mgl_tilemap_load_resource
     );
-    __mgl_tilemap_render_to_surface = renderToSurface;
+    __mgl_tilemap_cache_surface = cacheSurface;
     atexit(mgl_tilemap_close);
 }
 
@@ -77,6 +77,36 @@ void mgl_tilemap_free(MglTileMap **tilemap)
     mgl_resource_free_element(__mgl_tilemap_resource_manager,(void **)tilemap);
 }
 
+void mgl_tilemap_draw(MglTileMap *tilemap, MglVec2D position)
+{
+    int w,h;
+    SDL_Rect target;
+    if ((!tilemap) ||
+        (!tilemap->texture))
+    {
+        return;
+    }
+    SDL_QueryTexture(tilemap->texture,
+                     NULL,
+                     NULL,
+                     &w,
+                     &h);
+    
+    mgl_rect_set(
+        &target,
+        position.x,
+        position.y,
+        w,
+        h);
+    SDL_RenderCopyEx(mgl_graphics_get_renderer(),
+                     tilemap->texture,
+                     NULL,
+                     &target,
+                     0,
+                     NULL,
+                     0);    
+}
+
 void mgl_tilemap_render(MglTileMap *tilemap)
 {
     MglUint i,j;
@@ -87,14 +117,14 @@ void mgl_tilemap_render(MglTileMap *tilemap)
     mgl_tileset_get_tile_size(tilemap->tileSet, &size);
     if (!tilemap->surface)
     {
-        tilemap->surface = mgl_graphics_create_surface(tilemap->mapWidth,tilemap->mapHeight);
+        tilemap->surface = mgl_graphics_create_surface(tilemap->mapWidth*size.x,tilemap->mapHeight*size.y);
         if (!tilemap->surface)return;
     }
     if ((tilemap->surface->w != tilemap->mapWidth)||
         (tilemap->surface->h != tilemap->mapHeight))
     {
         SDL_FreeSurface(tilemap->surface);
-        tilemap->surface = mgl_graphics_create_surface(tilemap->mapWidth,tilemap->mapHeight);
+        tilemap->surface = mgl_graphics_create_surface(tilemap->mapWidth*size.x,tilemap->mapHeight*size.y);
         if (!tilemap->surface)return;
     }
     /*clear the image*/
@@ -117,17 +147,17 @@ void mgl_tilemap_render(MglTileMap *tilemap)
             }
         }
     }
-    if (!__mgl_tilemap_render_to_surface)
+    tilemap->texture = SDL_CreateTextureFromSurface(mgl_graphics_get_renderer(),tilemap->surface);
+    if (tilemap->texture)
     {
-        tilemap->texture = SDL_CreateTextureFromSurface(mgl_graphics_get_renderer(),tilemap->surface);
-        if (tilemap->texture)
-        {
-            SDL_SetTextureBlendMode(tilemap->texture,SDL_BLENDMODE_BLEND);        
-            SDL_UpdateTexture(tilemap->texture,
-                                NULL,
-                                tilemap->surface->pixels,
-                                tilemap->surface->pitch);
-        }
+        SDL_SetTextureBlendMode(tilemap->texture,SDL_BLENDMODE_BLEND);        
+        SDL_UpdateTexture(tilemap->texture,
+                            NULL,
+                            tilemap->surface->pixels,
+                            tilemap->surface->pitch);
+    }
+    if (!__mgl_tilemap_cache_surface)
+    {
         SDL_FreeSurface(tilemap->surface);
         tilemap->surface = NULL;
     }
@@ -136,13 +166,18 @@ void mgl_tilemap_render(MglTileMap *tilemap)
 MglInt *mgl_tilemap_new_mapdata(MglUint width,MglUint height)
 {
     MglInt *tilemap;
-    tilemap = g_new(MglInt,(height*width));
+    if ((!width)||(!height))
+    {
+        mgl_logger_error("cannot allocate a zero size map!");
+        return NULL;
+    }
+    tilemap = (MglInt*)malloc(sizeof(MglInt)*(width*height));
     if (!tilemap)
     {
         mgl_logger_error("failed to allocate tile map data!");
         return NULL;
     }
-    memset(tilemap,0,sizeof(MglInt)*height,*width);
+    memset(tilemap,0,sizeof(MglInt)*height*width);
     return tilemap;
 }
 
@@ -180,10 +215,20 @@ MglTileMap *mgl_tilemap_load_from_dict(MglTileMap *tilemap,MglDict *def)
         mgl_logger_warn("no tileMap specified in map",filename);
         return NULL;
     }
-    mgl_dict_get_hash_value_as_uint(&mapWidth, def, "mapWidth");
-    mgl_dict_get_hash_value_as_uint(&mapHeight, def, "mapHeight");
-
-    tileData = mgl_tilemap_new_mapdata(tilemap->mapWidth,tilemap->mapHeight);
+    if ((!mgl_dict_get_hash_value_as_uint(&mapWidth, def, "mapWidth"))||
+        (mapWidth == 0))
+    {
+        mgl_logger_warn("no mapWidth provided!");
+        return NULL;
+    }
+    if ((!mgl_dict_get_hash_value_as_uint(&mapHeight, def, "mapHeight"))||
+        (mapHeight == 0))
+    {
+        mgl_logger_warn("no mapHeight provided!");
+        return NULL;
+    }
+    
+    tileData = mgl_tilemap_new_mapdata(mapWidth,mapHeight);
     if (!tileData)
     {
         mgl_logger_warn("failed to allocat tile data");
@@ -198,21 +243,23 @@ MglTileMap *mgl_tilemap_load_from_dict(MglTileMap *tilemap,MglDict *def)
             return NULL;
         }
     }
+    tilemap->mapHeight = mapHeight;
+    tilemap->mapWidth = mapWidth;
     tilemap->tileSet = tileSet;
     tilemap->tileMap = tileData;
     count = mgl_dict_get_list_count(map);
     if (count != tilemap->mapHeight)
     {
-        mgl_logger_warn("row count does not match mapHeight");
+        mgl_logger_warn("row count (%i)  does not match mapHeight (%i)",count,tilemap->mapHeight);
     }
     
-    for (j = 0; j < count;j++)
+    for (j = 0; j < tilemap->mapHeight;j++)
     {
         row = mgl_dict_get_hash_value(mgl_dict_get_list_nth(map,j),"row");
         if (!row)continue;
         tiles = mgl_dict_get_string(row);
         if (!tiles)continue;
-        for (i = 0;i < strlen(tiles);i++)
+        for (i = 0;i < tilemap->mapWidth;i++)
         {
             sscanf(tiles,"%i",&tileData[(j*mapWidth)+i]);
             if (i < (strlen(tiles) - 1))
@@ -240,9 +287,10 @@ MglTileMap *mgl_tilemap_new(
     tilemap->tileMap = mgl_tilemap_new_mapdata(tilemap->mapWidth,tilemap->mapHeight);
     if (!tilemap->tileMap)
     {
-        mgl_resource_free_element(tilemap);
-        return;
+        mgl_resource_free_element(__mgl_tilemap_resource_manager,(void **)tilemap);
+        return NULL;
     }
+    return tilemap;
 }
 
 MglBool mgl_tilemap_load_resource(char *filename,void *data)

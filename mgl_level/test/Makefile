@@ -19,7 +19,7 @@ PROJECT = mgl_level_test
 CC      = gcc
 #CC	= clang
 MGL_LIBS = 
-MGL_STATIC_LIBS = libmgl_config.a libmgl_logger.a libmgl_resource.a libmgl_graphics.a libmgl_types.a libmgl_audio.a libmgl_level.a
+MGL_STATIC_LIBS = libmgl_level.a libmgl_config.a libmgl_logger.a libmgl_resource.a libmgl_graphics.a libmgl_types.a libmgl_audio.a
 MGL_LIB_PATH = ../../libs
 MGL_LDFLAGS = -L$(MGL_LIB_PATH) $(foreach d, $(MGL_STATIC_LIBS),$(MGL_LIB_PATH)/$d)
 

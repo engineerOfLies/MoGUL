@@ -24,6 +24,7 @@
 #include "mgl_types.h"
 #include "mgl_vector.h"
 #include "mgl_dict.h"
+#include "mgl_tileset.h"
 
 /**
  * @brief the MglTileMap holds information about the layout of the tiles that make up an individual tile level
@@ -36,11 +37,11 @@ typedef struct MglTileMap_S MglTileMap;
 /**
  * @brief initialize tile map system
  * @param maxMaps how many tilemaps you want to support in memory at the same time
- * @param renderToSurface if true, tilemap is precached to surface, otherwise just to texture
+ * @param cacheSurface if true, tilemap data is cached in a surface, otherwise only to texture
  */
 void mgl_tilemap_init(
     MglUint maxMaps,
-    MglBool renderToSurface);
+    MglBool cacheSurface);
 
 
 /**
@@ -75,5 +76,12 @@ MglTileMap *mgl_tilemap_new(
  * @param tilemap the tile map to render
  */
 void mgl_tilemap_render(MglTileMap *tilemap);
+
+/**
+ * @brief draw the pre-rendered tile map to the current rendering context
+ * @param tilemap the tilemap to draw
+ * @param position where to draw the tilemap to
+ */
+void mgl_tilemap_draw(MglTileMap *tilemap, MglVec2D position);
 
 #endif
