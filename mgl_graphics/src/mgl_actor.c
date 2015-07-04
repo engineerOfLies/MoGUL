@@ -1,4 +1,5 @@
 #include "mgl_actor.h"
+#include "mgl_callback.h"
 #include "mgl_config.h"
 #include "mgl_dict.h"
 #include "mgl_resource.h"

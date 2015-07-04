@@ -16,8 +16,10 @@ typedef struct
     MglSprite *image; /**<the image to draw*/
     MglActor  *actor; /**<optionally an actor can be used instead*/
     MglVec2D   size;  /**<size of the layer*/
+    MglVec2D   offset;/**<position offset to draw layer*/
     MglVec2D   aspect;/**<the percent offset from the camera position this should be drawn at.  This is calculated*/
     MglBool    cameraPlane; /**<if true, this layer is drawn 1:1 to camera position*/
+    MglBool    placeholder; /**<if true, this layer is calculated, but not drawn.  Used by other systems to keep in synce with parallax*/
 }MglLayer;
 
 /**
@@ -100,22 +102,30 @@ MglLayer *mgl_parallax_load_layer(MglDict *data)
         return NULL;
     }
     memset(layer,0,sizeof(MglLayer));
-    if (mgl_dict_get_hash_value_as_line(file, data, "image"))
+    
+    mgl_dict_get_hash_value_as_bool(&layer->placeholder,data,"placeholder");
+    if (!layer->placeholder)
     {
-        mgl_logger_info("loading layer image: %s",file);
-        layer->image = mgl_sprite_load_image(file);
-        mgl_sprite_get_size(layer->image,&sw,&sh);
-        layer->size.x = sw;
-        layer->size.y = sh;
+        if (mgl_dict_get_hash_value_as_line(file, data, "image"))
+        {
+            mgl_logger_info("loading layer image: %s",file);
+            layer->image = mgl_sprite_load_image(file);
+            mgl_sprite_get_size(layer->image,&sw,&sh);
+            layer->size.x = sw;
+            layer->size.y = sh;
+        }
+        if (mgl_dict_get_hash_value_as_line(file, data, "actor"))
+        {
+            mgl_logger_info("loading layer actor: %s",file);
+            layer->actor =  mgl_actor_load(file);
+            mgl_actor_get_size(layer->actor,&sw,&sh);
+            layer->size.x = sw;
+            layer->size.y = sh;
+        }
     }
-    if (mgl_dict_get_hash_value_as_line(file, data, "actor"))
-    {
-        mgl_logger_info("loading layer actor: %s",file);
-        layer->actor =  mgl_actor_load(file);
-        mgl_actor_get_size(layer->actor,&sw,&sh);
-        layer->size.x = sw;
-        layer->size.y = sh;
-    }
+    /*if size is specified, it will override the image/actor size*/
+    mgl_dict_get_hash_value_as_vec2d(&layer->size, data, "size");
+    mgl_dict_get_hash_value_as_vec2d(&layer->offset, data, "offset");
     mgl_dict_get_hash_value_as_bool(&layer->cameraPlane, data, "cameraPlane");
     return layer;
 }
@@ -128,6 +138,12 @@ void mgl_parallax_change_camera(MglParallax *par,MglCamera *cam)
     }
     par->cam = cam;
     mgl_parallax_change_camera_plane(par, par->cameraLayer);
+}
+
+void mgl_parallax_layer_calc_aspect(MglLayer *layer,MglVec2D camerSize,MglVec2D cameraPlaneSize)
+{
+    layer->aspect.x = ((layer->size.x - camerSize.x) / (cameraPlaneSize.x - camerSize.x));
+    layer->aspect.y = ((layer->size.y - camerSize.y) / (cameraPlaneSize.y - camerSize.y));    
 }
 
 void mgl_parallax_change_camera_plane(MglParallax *par, MglUint n)
@@ -159,8 +175,7 @@ void mgl_parallax_change_camera_plane(MglParallax *par, MglUint n)
     {
         layer = g_list_nth_data(par->layers,i);
         if (layer == par->cameraPlane)continue;
-        layer->aspect.x = ((layer->size.x - w) / (par->cameraPlane->size.x - w));
-        layer->aspect.y = ((layer->size.y - h) / (par->cameraPlane->size.y - h));
+        mgl_parallax_layer_calc_aspect(layer,mgl_vec2d(w,h),par->cameraPlane->size);
     }
 }
 
@@ -235,6 +250,10 @@ void mgl_parallax_draw_layer(MglParallax *par,MglUint l,MglVec2D position)
         mgl_logger_error("layer %i does not exist",l);
         return;
     }
+    if (layer->placeholder)
+    {
+        return;
+    }
     if (layer->actor)
     {
         mgl_actor_draw(
@@ -287,6 +306,82 @@ void mgl_parallax_get_size(MglParallax *par,MglUint *w,MglUint *h)
     {
         *h = par->cameraPlane->size.y;
     }
+}
+
+/**
+ * @brief insert a new layer into the parallax background
+ * @param par the parallax background to insert into
+ * @param index the layer position to insert at
+ * @param image [optional] a loaded sprite to draw
+ * @param actor [optional] a loaded actor to draw
+ * @param size [optional] if provided this will be the size of the layer
+ * @param offset [optional] if provideds this will be the draw position offset
+ * @param cameraPlane if true, the layer will move 1:1 relative to the camera
+ * @param placeholder if true, this layer expects no graphics and is just used as a placeholder
+ */
+void mgl_parallax_insert_layer(
+    MglParallax * par,
+    MglUint       index,
+    MglSprite   * image,
+    MglActor    * actor,
+    MglVec2D    * size,
+    MglVec2D    * offset,
+    MglBool       cameraPlane,
+    MglBool       placeholder)
+{
+    MglUint w = 0,h = 0;
+    MglUint sw = 0,sh = 0;
+    MglLayer *layer;
+    if (!par)
+    {
+        return;
+    }
+    /*build the layer*/
+    layer = (MglLayer *)malloc(sizeof(MglLayer));
+    if (!layer)
+    {
+        mgl_logger_error("failed to allocate layer data");
+        return;
+    }
+    memset(layer,0,sizeof(MglLayer));
+    layer->placeholder = placeholder;
+    if (!placeholder)
+    {
+        if (image)
+        {
+            layer->image = image;
+            mgl_sprite_get_size(layer->image,&sw,&sh);
+            layer->size.x = sw;
+            layer->size.y = sh;
+        }
+        if (actor)
+        {
+            layer->actor = actor;
+            mgl_actor_get_size(layer->actor,&sw,&sh);
+            layer->size.x = sw;
+            layer->size.y = sh;
+        }
+    }
+    if (size)
+    {
+        layer->size.x = size->x;
+        layer->size.y = size->y;
+    }
+    if (offset)
+    {
+        layer->offset.x = offset->x;
+        layer->offset.y = offset->y;
+    }
+    layer->cameraPlane = cameraPlane;
+    
+    if (par->cam)
+    {
+        mgl_camera_get_size(par->cam,&w, &h);
+    }
+    mgl_parallax_layer_calc_aspect(layer,mgl_vec2d(w,h),par->cameraPlane->size);
+    
+    /*add it to the rest*/
+    par->layers = g_list_insert(par->layers,layer,index);
 }
 
 /*eol@eof*/
