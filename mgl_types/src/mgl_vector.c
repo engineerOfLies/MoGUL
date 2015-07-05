@@ -518,5 +518,15 @@ void mgl_vec3d_cross_product(MglVec3D *out, MglVec3D v1, MglVec3D v2)
   out->z = v1.x*v2.y - v1.y*v2.x;
 }
 
+MglColor mgl_color_shift(MglColor src, MglColor shift)
+{
+    MglColor out;
+    out.x = src.x * (shift.x/255);
+    out.y = src.y * (shift.y/255);
+    out.z = src.z * (shift.z/255);
+    out.w = src.w * (shift.w/255);
+    return out;
+}
+
 
 /*eol@eof*/

@@ -381,6 +381,27 @@ void mgl_sprite_draw_image(MglSprite *image,MglVec2D position)
         0);
 }
 
+void mgl_sprite_draw_image_full(
+    MglSprite *image,
+    MglVec2D position,
+    MglVec2D * scale,
+    MglVec2D * scaleCenter,
+    MglVec3D * rotation,
+    MglVec2D * flip,
+    MglVec4D * colorShift)
+{
+    mgl_sprite_draw(
+        image,
+        position,
+        scale,
+        scaleCenter,
+        rotation,
+        flip,
+        colorShift,
+        0);
+}
+
+
 void mgl_sprite_draw(
     MglSprite * sprite,
     MglVec2D position,

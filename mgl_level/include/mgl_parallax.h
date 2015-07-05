@@ -58,8 +58,18 @@ void mgl_parallax_draw_all_layers(MglParallax *par,MglVec2D position);
  * @param par the parallax background to draw
  * @param l the layer index to draw
  * @param position the position to draw the layer at
+ * @param color adjust the layer's color by this.
  */
-void mgl_parallax_draw_layer(MglParallax *par,MglUint l,MglVec2D position);
+void mgl_parallax_draw_layer(MglParallax *par,MglUint l,MglVec2D position,MglVec4D * color);
+
+/**
+ * @brief mutate the provided position based on the parallax layer's relative position
+ * @param par the parallax context to adjust to
+ * @param l the layer index to adjust by
+ * @param position the position to change
+ * @return a new position made relative to the parallax context
+ */
+MglVec2D mgl_parallax_layer_adjust_position(MglParallax *par,MglUint l,MglVec2D position);
 
 /**
  * @brief change which plane will be used as the camera 1:1 layer

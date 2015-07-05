@@ -25,6 +25,7 @@ int main(int argc,char *argv[])
     MglParallax *par;
     MglUint bgw,bgh;
     MglVec2D pos = {0,0};
+    MglVec4D clear = {255,255,255,128};
     MglTileMap *tilemap;
     
     if ((argc == 2) && (strcmp(argv[1],"-h")==0))
@@ -54,9 +55,18 @@ int main(int argc,char *argv[])
         pos = mgl_camera_get_position(cam);
         mgl_graphics_clear_screen();
 
-        mgl_parallax_draw_all_layers(par,mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0)));
-        mgl_tilemap_draw(tilemap, mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0)));
-
+        mgl_parallax_draw_layer(par,0,mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0)),NULL);
+        mgl_parallax_draw_layer(par,1,mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0)),NULL);
+        mgl_parallax_draw_layer(par,2,mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0)),NULL);
+        mgl_tilemap_draw(
+            tilemap,
+            mgl_parallax_layer_adjust_position(
+                par,
+                3,
+                mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0))));
+        mgl_parallax_draw_layer(par,4,mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0)),&clear);
+        mgl_parallax_draw_layer(par,5,mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0)),&clear);
+        
         SDL_PumpEvents();
         keys = SDL_GetKeyboardState(NULL);
         if (keys[SDL_SCANCODE_RIGHT])

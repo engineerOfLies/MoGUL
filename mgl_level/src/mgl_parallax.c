@@ -15,6 +15,11 @@ typedef struct
 {
     MglSprite *image; /**<the image to draw*/
     MglActor  *actor; /**<optionally an actor can be used instead*/
+    MglVec2D   scale;
+    MglVec3D   rotation;
+    MglVec2D   scaleCenter;
+    MglVec2D   flip;
+    MglVec4D   color;
     MglVec2D   size;  /**<size of the layer*/
     MglVec2D   offset;/**<position offset to draw layer*/
     MglVec2D   aspect;/**<the percent offset from the camera position this should be drawn at.  This is calculated*/
@@ -125,6 +130,17 @@ MglLayer *mgl_parallax_load_layer(MglDict *data)
     }
     /*if size is specified, it will override the image/actor size*/
     mgl_dict_get_hash_value_as_vec2d(&layer->size, data, "size");
+    mgl_dict_get_hash_value_as_vec2d(&layer->flip, data, "flip");
+    mgl_dict_get_hash_value_as_vec3d(&layer->rotation, data, "rotation");
+    mgl_dict_get_hash_value_as_vec3d(&layer->rotation, data, "rotation");
+    if (!mgl_dict_get_hash_value_as_vec2d(&layer->scale, data, "scale"))
+    {
+        layer->scale = mgl_vec2d(1,1);
+    }
+    if (!mgl_dict_get_hash_value_as_vec4d(&layer->color, data, "color"))
+    {
+        layer->color = mgl_vec4d(255,255,255,255);
+    }
     mgl_dict_get_hash_value_as_vec2d(&layer->offset, data, "offset");
     mgl_dict_get_hash_value_as_bool(&layer->cameraPlane, data, "cameraPlane");
     return layer;
@@ -231,9 +247,32 @@ MglParallax *mgl_parallax_load(char * filename,MglCamera *cam)
     return par;
 }
 
-void mgl_parallax_draw_layer(MglParallax *par,MglUint l,MglVec2D position)
+MglVec2D mgl_parallax_layer_adjust_position(MglParallax *par,MglUint l,MglVec2D position)
 {
     MglLayer *layer;
+    if (!par)
+    {
+        mgl_logger_error("no parallax background provided");
+        return mgl_vec2d(0,0);
+    }
+    if (l >= par->layerCount)
+    {
+        mgl_logger_error("layer is out of range");
+        return mgl_vec2d(0,0);
+    }
+    layer = g_list_nth_data(par->layers,l);
+    if (!layer)
+    {
+        mgl_logger_error("layer %i does not exist",l);
+        return mgl_vec2d(0,0);
+    }
+    return mgl_vec2d(layer->aspect.x * position.x,layer->aspect.y * position.y);
+}
+
+void mgl_parallax_draw_layer(MglParallax *par,MglUint l,MglVec2D position,MglVec4D * color)
+{
+    MglLayer *layer;
+    MglVec4D drawColor;
     if (!par)
     {
         mgl_logger_error("no parallax background provided");
@@ -254,21 +293,34 @@ void mgl_parallax_draw_layer(MglParallax *par,MglUint l,MglVec2D position)
     {
         return;
     }
+    if (color)
+    {
+        drawColor = mgl_color_shift(layer->color, *color);
+    }
+    else
+    {
+        drawColor = layer->color;
+    }
     if (layer->actor)
     {
         mgl_actor_draw(
             layer->actor,
-            mgl_vec2d(layer->aspect.x * position.x,layer->aspect.y * position.y),
-            0,
-            NULL,
-            NULL,
-            NULL);
+            mgl_vec2d(layer->aspect.x * (position.x + layer->offset.x),layer->aspect.y * (position.y + layer->offset.y)),
+            layer->rotation.z,
+            &layer->scale,
+            &layer->flip,
+            &drawColor);
     }
     if (layer->image)
     {
-         mgl_sprite_draw_image(
+         mgl_sprite_draw_image_full(
              layer->image,
-             mgl_vec2d(layer->aspect.x * position.x,layer->aspect.y * position.y));
+             mgl_vec2d(layer->aspect.x * (position.x + layer->offset.x),layer->aspect.y * (position.y + layer->offset.y)),
+             &layer->scale,
+             &layer->scaleCenter,
+             &layer->rotation,
+             &layer->flip,
+             &drawColor);
     }
 }
 
@@ -282,7 +334,7 @@ void mgl_parallax_draw_all_layers(MglParallax *par,MglVec2D position)
     }
     for (i = 0;i < par->layerCount; i++)
     {
-       mgl_parallax_draw_layer(par,i,position); 
+       mgl_parallax_draw_layer(par,i,position,NULL);
     }
 }
 

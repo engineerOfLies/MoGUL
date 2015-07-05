@@ -48,6 +48,7 @@ typedef struct
   MglDouble w;
 }MglVec4D;
 
+typedef MglVec4D MglColor;
 #define mgl_vec_in_rect(v, r)  ((v.x >= r.x)&&(v.x < (r.x + r.w))&&(v.y >= r.y)&&(v.y < (r.y + r.h)))
 
 /**
@@ -233,6 +234,8 @@ MglVec4D *mgl_vec4d_new();
 MglVec2D *mgl_vec2d_dup(MglVec2D old);
 MglVec3D *mgl_vec3d_dup(MglVec3D old);
 MglVec4D *mgl_vec4d_dup(MglVec4D old);
+
+MglColor mgl_color_shift(MglColor src, MglColor shift);
 
 /**
  * @brief reflect a vector about a normal.  Simulates "Bounce"

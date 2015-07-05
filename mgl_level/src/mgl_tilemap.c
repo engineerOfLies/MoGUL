@@ -262,9 +262,9 @@ MglTileMap *mgl_tilemap_load_from_dict(MglTileMap *tilemap,MglDict *def)
         for (i = 0;i < tilemap->mapWidth;i++)
         {
             sscanf(tiles,"%i",&tileData[(j*mapWidth)+i]);
-            if (i < (strlen(tiles) - 1))
-            {   
-                tiles = strstr(tiles,",");
+            tiles = strstr(tiles,",");
+            if (tiles)
+            {
                 tiles++;
             }
         }
