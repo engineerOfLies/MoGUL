@@ -29,27 +29,67 @@
  */
 
 typedef enum {
-    MglLayerTiles,
-    MglLayerParallax,
-    MglLayerParallaxLayer,
-    MglLayerImage,
-    MglLayerCustom
+    MglLayerNone,       /**<Not specified*/
+    MglLayerTiles,      /**<Layer uses tile map*/
+    MglLayerParallax,   /**<Layer uses a parallax background layer or set*/
+    MglLayerImage,      /**<A flat Image as background*/
+    MglLayerCollision   /**<a collision mask made from either a tile layer or shapes list*/
 }MglLayerType;
 
 typedef union
 {
-    MglTileMap  * map;
+    MglTileMap  * map;      /**<if this layer uses a tilemap background*/
     MglParallax * par;      /**<if this layer uses a parallax background*/
-    MglParallax * parLayer; /**<if this layer uses a parallax background*/
     MglSprite   * image;    /**<if this layer is a simple image*/
 }MglLayerSelection;
 
 typedef struct
 {
-    MglLayerSelection layer;
+    MglLayerSelection layer;/**<*/
     MglLayerType selection; /**<which layer type this layer is*/
-    MglUint bglayer;        /**<if this layer is parLayer, which layer should be drawn*/
     MglBool useParallax;    /**<if true, this layer uses the parallax adjusted drawing position*/
+    MglUint bglayer;        /**<if this layer usesParallax, this is the layer to use*/
+    MglColor color;         /**<color shift for the layer, 255,255,255,255 is no change*/
 }MglLayer;
+
+
+/**
+ * @brief deletes a layer and cleans up all its data
+ * @param layer a pointer to your layer pointer
+ */
+void mgl_layer_free(MglLayer **layer);
+
+/**
+ * @brief load a layer from a definition dictionary
+ * @param def the data definition dictionary
+ * @return NULL on error, or the layer otherwise
+ */
+MglLayer *mgl_layer_load_from_def(MglDict *def);
+
+/**
+ * @brief make a new tilemap level layer
+ * @param map a pointer to the loaded map layer
+ * @param useParallax if true, this layer will be treated as if it were part of the level's parallax context
+ * @param bglayer if using parallax context, use this layer.  Otherwise this value is ignored
+ * @return NULL on error or the allocated layer when done
+ */
+MglLayer *mgl_layer_new_tile_layer(
+    MglTileMap *map,
+    MglBool useParallax,
+    MglUint bglayer
+);
+
+/**
+ * @brief make a new parallax level layer
+ * @param par the parallax context to draw the layer from
+ * @param useParallax if true, this parallax layer will be treated as if it were part of the level's parallax context, if false, it will use its own context for all of its layers.
+ * @param bglayer which layer this will use
+ * @return NULL on error or the allocated layer when done
+ */
+MglLayer *mgl_layer_new_parallax_layer(
+    MglParallax *par,
+    MglBool useParallax,
+    MglUint bglayer
+);
 
 #endif

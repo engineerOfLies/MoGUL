@@ -22,6 +22,7 @@
  */
 #include "mgl_vector.h"
 #include "mgl_rect.h"
+#include "mgl_dict.h"
 
 /**
  * @purpose the camera library provides a viewing context for viewing game levels.
@@ -42,9 +43,24 @@ void mgl_camera_init(
 /**
  * @brief create a new camera context
  * @param size the width and height of the camera to create
+ * @return a newly allocated camera or NULL on error
  */
 MglCamera *mgl_camera_new(
     MglVec2D size);
+
+/**
+ * @brief loads camera information from the provided definition dictionary
+ * @param def the data definition dictionary
+ * @return a newly allocated camera or NULL on error
+ */
+MglCamera *mgl_camera_load_from_def(MglDict *def);
+
+/**
+ * @brief loads camera information from the specified config file
+ * @param filename the config file to load
+ * @return a newly allocated camera or NULL on error
+ */
+MglCamera *mgl_camera_load_from_config(char * filename);
 
 /**
  * @brief frees a camera context, setting your pointer to NULL

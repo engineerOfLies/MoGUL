@@ -35,7 +35,7 @@ void mgl_tilemap_init(
         "mgl tilemap",
         maxMaps,
         sizeof(struct MglTileMap_S),
-        MglFalse,
+        MglTrue,
         mgl_tilemap_delete,
         mgl_tilemap_load_resource
     );
@@ -181,10 +181,9 @@ MglInt *mgl_tilemap_new_mapdata(MglUint width,MglUint height)
     return tilemap;
 }
 
-
 MglTileMap *mgl_tilemap_load_from_dict(MglTileMap *tilemap,MglDict *def)
 {
-    MglDict *map,*row;
+    MglDict *map,*row,*tileset;
     MglLine filename;
     MglTileSet *tileSet;
     MglUint count,i,j;
@@ -203,6 +202,10 @@ MglTileMap *mgl_tilemap_load_from_dict(MglTileMap *tilemap,MglDict *def)
             mgl_logger_warn("could not load tileSet %s! Cannot create map!",filename);
             return NULL;
         }
+    }
+    else if ((tileset = mgl_dict_get_hash_value(def,"tileSet")) != NULL)
+    {
+        tileSet = mgl_tileset_load_from_def(tileset);
     }
     else
     {
@@ -273,6 +276,25 @@ MglTileMap *mgl_tilemap_load_from_dict(MglTileMap *tilemap,MglDict *def)
     return tilemap;
 }
 
+MglTileMap *mgl_tilemap_load_from_def(MglDict *def)
+{
+    MglTileMap * map;
+    const char *filename;
+    filename = mgl_dict_get_string(def);
+    if (filename != NULL)
+    {
+        return mgl_tilemap_load((char *)filename);
+    }
+    map = mgl_resource_new_element(__mgl_tilemap_resource_manager);
+    if (!map)return NULL;
+    if (mgl_tilemap_load_from_dict(map,def))
+    {
+        return map;
+    }
+    mgl_tilemap_free(&map);
+    return NULL;
+}
+
 MglTileMap *mgl_tilemap_new(
     MglTileSet *tileset,
     MglUint     width,
@@ -308,7 +330,7 @@ MglBool mgl_tilemap_load_resource(char *filename,void *data)
     {
         return MglFalse;
     }
-    def = mgl_config_get_dictionary(conf);
+    def = mgl_config_get_object_dictionary(conf,"tilemap");
     tilemap = mgl_tilemap_load_from_dict(tilemap,def);    
     mgl_config_free(&conf);
     if (!tilemap)

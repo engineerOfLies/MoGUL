@@ -186,7 +186,7 @@ MglBool mgl_tileset_load_resource(char *filename,void *data)
     {
         return MglFalse;
     }
-    def = mgl_config_get_dictionary(conf);
+    def = mgl_config_get_object_dictionary(conf,"tileset");
     tileset = mgl_tileset_load_from_dict(tileset,def);    
     mgl_config_free(&conf);
     if (!tileset)
@@ -194,6 +194,11 @@ MglBool mgl_tileset_load_resource(char *filename,void *data)
         return MglFalse;
     }
     return MglTrue;
+}
+
+MglTileSet *mgl_tileset_load_from_def(MglDict *def)
+{
+    return mgl_tileset_load_from_dict(NULL,def);
 }
 
 MglTileSet *mgl_tileset_load(char * filename)

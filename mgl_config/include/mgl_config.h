@@ -54,5 +54,13 @@ void mgl_config_free(MglConfig **config);
  */
 MglDict *mgl_config_get_dictionary(MglConfig *config);
 
+/**
+ * @brief get a specific object from the config dictionary
+ * Note: Do NOT free the dictionary, it is owned by the config loader
+ * @param config the config loaded.
+ * @param obj the name of the object to get
+ * @return a pointer to the config file's object data as a dictionary if found in the top level
+ */
+MglDict *mgl_config_get_object_dictionary(MglConfig *config,MglLine obj);
 
 #endif

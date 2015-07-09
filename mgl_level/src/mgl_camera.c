@@ -1,6 +1,7 @@
 #include "mgl_camera.h"
 #include "mgl_resource.h"
 #include "mgl_logger.h"
+#include "mgl_config.h"
 
 struct MglCamera_S
 {
@@ -23,7 +24,7 @@ void mgl_camera_init(
         "mgl camera",
         maxCameras,
         sizeof(struct MglCamera_S),
-        MglFalse,
+        MglTrue,
         mgl_camera_delete,
         mgl_camera_load_resource
     );
@@ -60,6 +61,28 @@ MglCamera *mgl_camera_new(
     cam = (MglCamera *)mgl_resource_new_element(__mgl_camera_resource_manager);
     if (!cam)return NULL;
     mgl_vec2d_copy(cam->size,size);
+    return cam;
+}
+
+MglCamera *mgl_camera_load_from_def(MglDict *def)
+{
+    MglVec2D size = {0,0};
+    if (!def)return NULL;
+    if (!mgl_dict_get_hash_value_as_vec2d(&size,def,"size"))
+    {
+        return NULL;
+    }
+    return mgl_camera_new(size);
+}
+
+MglCamera *mgl_camera_load_from_config(char * filename)
+{
+    MglCamera *cam;
+    MglConfig *conf;
+    conf = mgl_config_load(filename);
+    if (!conf)return NULL;
+    cam = mgl_camera_load_from_def(mgl_config_get_object_dictionary(conf,"camera"));
+    mgl_config_free(&conf);
     return cam;
 }
 

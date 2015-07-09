@@ -69,6 +69,13 @@ MglTileMap *mgl_tilemap_new(
     MglUint     width,
     MglUint     height);
 
+/**
+ * @brief load a tilemap from a definition dictionary
+ * @param def the definition contain tilemap data
+ * @return NULL on error or the loaded tilemap otherwise
+ */
+MglTileMap *mgl_tilemap_load_from_def(MglDict *def);
+
 
 /**
  * @brief rebuild tilemap rendering surface / texture based on current tile data

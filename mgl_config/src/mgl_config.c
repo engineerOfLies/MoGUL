@@ -75,4 +75,10 @@ MglDict *mgl_config_get_dictionary(MglConfig *config)
   if (!config)return NULL;
   return config->_dictionary;
 }
+
+MglDict *mgl_config_get_object_dictionary(MglConfig *config,MglLine obj)
+{
+    if (!config)return NULL;
+    return mgl_dict_get_hash_value(mgl_config_get_dictionary(config),obj);
+}
 /*eol@eof*/

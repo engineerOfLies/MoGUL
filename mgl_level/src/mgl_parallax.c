@@ -54,7 +54,7 @@ void mgl_parallax_init(
         "mgl parallax",
         maxParallaxs,
         sizeof(struct MglParallax_S),
-        MglFalse,
+        MglTrue,
         mgl_parallax_delete,
         mgl_parallax_load_resource
     );
@@ -92,6 +92,18 @@ void mgl_parallax_free(MglParallax **parallax)
 {
     if (!parallax)return;
     mgl_resource_free_element(__mgl_parallax_resource_manager,(void **)parallax);
+}
+
+MglParallax *mgl_parallax_new()
+{
+    MglParallax *par;
+    par = mgl_resource_new_element(__mgl_parallax_resource_manager);
+    if (!par)
+    {
+        mgl_logger_error("failed to create new parallax context");
+        return NULL;
+    }
+    return par;
 }
 
 MglLayer *mgl_parallax_load_layer(MglDict *data)
@@ -195,23 +207,18 @@ void mgl_parallax_change_camera_plane(MglParallax *par, MglUint n)
     }
 }
 
-MglBool mgl_parallax_load_resource(char *filename,void *data)
+
+MglBool mgl_parallax_create_from_def(MglParallax *par,MglDict *def)
 {
-    MglParallax *par;
+    MglUint count,i;
     MglLayer *layer;
-    MglConfig *conf;
-    MglDict *dict;
     MglDict *layerList;
     MglInt cameraLayer = -1;
-    MglUint count,i;
-    par = (MglParallax *)data;
-    conf = mgl_config_load(filename);
-    if (!conf)return MglFalse;
-    dict = mgl_config_get_dictionary(conf);
-    layerList = mgl_dict_get_hash_value(dict,"layers");
+    layerList = mgl_dict_get_hash_value(def,"layers");
     if (!layerList)
     {
         mgl_logger_warn("parallax config contains no layers object");
+        return MglFalse;
     }
     
     /*parse the conf file*/
@@ -233,6 +240,38 @@ MglBool mgl_parallax_load_resource(char *filename,void *data)
         mgl_parallax_change_camera_plane(par, (MglUint)cameraLayer);
     }
     return MglTrue;
+}
+
+MglParallax * mgl_parallax_load_from_def(MglDict *def)
+{
+    MglParallax * par;
+    const char *filename;
+    filename = mgl_dict_get_string(def);
+    if (filename != NULL)
+    {
+        return mgl_parallax_load((char *)filename,NULL);
+    }
+    par = mgl_parallax_new();
+    if (!par)return NULL;
+    if (mgl_parallax_create_from_def(par,def))
+    {
+        return par;
+    }
+    mgl_parallax_free(&par);
+    return NULL;
+}
+
+MglBool mgl_parallax_load_resource(char *filename,void *data)
+{
+    MglParallax *par;
+    MglConfig *conf;
+    MglBool success;
+    par = (MglParallax *)data;
+    conf = mgl_config_load(filename);
+    if (!conf)return MglFalse;
+    success = mgl_parallax_create_from_def(par,mgl_config_get_object_dictionary(conf,"parallax"));
+    mgl_config_free(&conf);
+    return success;
 }
 
 MglParallax *mgl_parallax_load(char * filename,MglCamera *cam)

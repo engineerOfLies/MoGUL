@@ -23,6 +23,8 @@
 
 #include "mgl_vector.h"
 #include "mgl_camera.h"
+#include "mgl_dict.h"
+
 /**
  * @purpose parallax backgrounds are drawn in such a way that different layers 
  */
@@ -45,6 +47,19 @@ void mgl_parallax_init(
  * @return NULL on error or a parallax background on success.
  */
 MglParallax *mgl_parallax_load(char * filename,MglCamera *cam);
+
+/**
+ * @brief load a parallax background from a definition file using default camera
+ * @param def the dictionary containing parallax information
+ * @return NULL on error or a parallax background on success
+ */
+MglParallax * mgl_parallax_load_from_def(MglDict *def);
+
+/**
+ * @brief free a parallax context
+ * @param parallax a pointer to your parallax pointer
+ */
+void mgl_parallax_free(MglParallax **parallax);
 
 /**
  * @brief draw all parallax background layers back to front

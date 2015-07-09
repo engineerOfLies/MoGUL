@@ -54,6 +54,13 @@ void mgl_tileset_free(MglTileSet **tileset);
 MglTileSet *mgl_tileset_load(char * filename);
 
 /**
+ * @brief load a tileset based on dictionary
+ * @param def the definition dictionary
+ * @return NULL on error or the loaded tileset otherwise
+ */
+MglTileSet *mgl_tileset_load_from_def(MglDict *def);
+
+/**
  * @brief draws a tile to the provided surface
  * @param tileset the tileset to draw from
  * @param index which tile number to draw
