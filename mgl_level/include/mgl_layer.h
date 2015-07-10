@@ -76,7 +76,8 @@ MglLayer *mgl_layer_load_from_def(MglDict *def);
 MglLayer *mgl_layer_new_tile_layer(
     MglTileMap *map,
     MglBool useParallax,
-    MglUint bglayer
+    MglUint bglayer,
+    MglColor color
 );
 
 /**
@@ -89,7 +90,17 @@ MglLayer *mgl_layer_new_tile_layer(
 MglLayer *mgl_layer_new_parallax_layer(
     MglParallax *par,
     MglBool useParallax,
-    MglUint bglayer
+    MglUint bglayer,
+    MglColor color
 );
+
+/**
+ * @brief draw a single layer
+ * @param layer the layer to draw
+ * @param par the parallax context to use to adjust the layer
+ * @param cam the camera to use for it
+ * @param position the positional offset 
+ */
+void mgl_layer_draw(MglLayer *layer,MglParallax *par,MglCamera *cam,MglVec2D position);
 
 #endif

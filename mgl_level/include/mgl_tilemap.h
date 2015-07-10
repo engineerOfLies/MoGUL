@@ -88,7 +88,8 @@ void mgl_tilemap_render(MglTileMap *tilemap);
  * @brief draw the pre-rendered tile map to the current rendering context
  * @param tilemap the tilemap to draw
  * @param position where to draw the tilemap to
+ * @param color the color to adjust the layer to
  */
-void mgl_tilemap_draw(MglTileMap *tilemap, MglVec2D position);
+void mgl_tilemap_draw(MglTileMap *tilemap, MglVec2D position,MglVec4D color);
 
 #endif

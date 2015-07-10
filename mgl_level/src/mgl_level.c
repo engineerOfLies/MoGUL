@@ -2,6 +2,7 @@
 #include "mgl_resource.h"
 #include "mgl_audio.h"
 #include "mgl_config.h"
+#include "mgl_logger.h"
 #include <glib.h>
 
 struct MglLevel_S
@@ -15,13 +16,16 @@ struct MglLevel_S
 
 
 static MglResourceManager * __mgl_level_resource_manager = NULL;
+static MglCamera          * __mgl_level_default_camera = NULL;
 
 void mgl_level_close();
 MglBool mgl_level_load_resource(char *filename,void *data);
 void mgl_level_delete(void *data);
 
 void mgl_level_init(
-    MglUint maxLevels)
+    MglUint maxLevels,
+    MglCamera *defaultCamera
+                   )
 {
     __mgl_level_resource_manager = mgl_resource_manager_init(
         "mgl level",
@@ -31,6 +35,7 @@ void mgl_level_init(
         mgl_level_delete,
         mgl_level_load_resource
     );
+    __mgl_level_default_camera = defaultCamera;
     atexit(mgl_level_close);    
 }
 
@@ -39,14 +44,23 @@ void mgl_level_close()
     mgl_resource_manager_free(&__mgl_level_resource_manager);
 }
 
+MglLevel *mgl_level_load(char *filename)
+{
+    return mgl_resource_manager_load_resource(__mgl_level_resource_manager,filename);
+}
+
 MglBool mgl_level_create_from_def(MglLevel *level,MglDict *def)
 {
     MglDict *layers;
     int count,i;
     if (!level)return MglFalse;
     if (!def)return MglFalse;
-
+    
     level->cam = mgl_camera_load_from_def(mgl_dict_get_hash_value(def,"camera"));
+    if (level->cam == NULL)
+    {
+        level->cam = __mgl_level_default_camera;
+    }
     level->par = mgl_parallax_load_from_def(mgl_dict_get_hash_value(def,"parallax"));
     if (level->par)
     {
@@ -54,11 +68,16 @@ MglBool mgl_level_create_from_def(MglLevel *level,MglDict *def)
     }
     
     layers = mgl_dict_get_hash_value(def,"layers");
-    if (!layers)return MglFalse;
+    if (!layers)
+    {
+        mgl_logger_warn("no layers specified for level");
+        return MglFalse;
+    }
     
     count = mgl_dict_get_list_count(layers);
     for (i = 0;i < count;i++)
     {
+        mgl_logger_warn("appending layer %i",i);
         level->layers = g_list_append(level->layers,mgl_layer_load_from_def(mgl_dict_get_list_nth(layers,i)));
     }
     
@@ -80,9 +99,9 @@ MglBool mgl_level_load_resource(char *filename,void *data)
     conf = mgl_config_load(filename);
     if (!conf)
     {
-        mgl_level_create_from_def(level,mgl_config_get_object_dictionary(conf,"level"));
         return MglFalse;
     }
+    mgl_level_create_from_def(level,mgl_config_get_object_dictionary(conf,"level"));
     mgl_config_free(&conf);
     return MglTrue;
 }
@@ -117,6 +136,20 @@ void mgl_level_free(MglLevel **level)
 {
     if (!level)return;
     mgl_resource_free_element(__mgl_level_resource_manager,(void **)level);
+}
+
+void mgl_level_draw(MglLevel *level)
+{
+    int i,count;
+    MglLayer *layer;
+    if (!level)return;
+    count = g_list_length(level->layers);
+    for (i = 0;i < count;i++)
+    {
+        layer = g_list_nth_data(level->layers,i);
+        if (!layer)continue;
+        mgl_layer_draw(layer,level->par,level->cam,level->position);
+    }    
 }
 
 /*eol@eof*/

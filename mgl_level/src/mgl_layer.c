@@ -43,7 +43,16 @@ MglLayer *mgl_layer_load_from_def(MglDict *def)
     MglParallax *par;
     MglTileMap *map;
     MglUint     selection = MglLayerNone;
+    MglBool     useParallax = MglFalse;
+    MglUint     bglayer = 0;
+    MglColor color = {255,255,255,255};
+    MglLayer *layer = NULL;
     if (!def)return NULL;
+
+    mgl_dict_get_hash_value_as_uint(&bglayer,def,"bglayer");
+    mgl_dict_get_hash_value_as_bool(&useParallax,def,"useParallax");
+    mgl_dict_get_hash_value_as_vec4d(&color,def,"color");
+
     if (!mgl_dict_get_hash_value_as_line(layerType,def,"layerType"))
     {
         return NULL;
@@ -55,7 +64,7 @@ MglLayer *mgl_layer_load_from_def(MglDict *def)
         {
             return NULL;
         }
-        selection = MglLayerParallax;
+        return mgl_layer_new_parallax_layer(par,useParallax,bglayer,color);
     }
     else if (mgl_line_cmp(layerType,"tilemap")==0)
     {
@@ -64,7 +73,7 @@ MglLayer *mgl_layer_load_from_def(MglDict *def)
         {
             return NULL;
         }
-        selection = MglLayerTiles;
+        return mgl_layer_new_tile_layer(map,useParallax,bglayer,color);
     }
     else if (mgl_line_cmp(layerType,"image")==0)
     {
@@ -74,13 +83,19 @@ MglLayer *mgl_layer_load_from_def(MglDict *def)
     {
         selection = MglLayerCollision;
     }
-    return NULL;
+    layer = mgl_layer_new();
+    if (!layer)return NULL;
+    layer->selection = selection;
+    layer->useParallax = useParallax;
+    layer->bglayer = bglayer;
+    return layer;
 }
 
 MglLayer *mgl_layer_new_tile_layer(
     MglTileMap *map,
     MglBool useParallax,
-    MglUint bglayer
+    MglUint bglayer,
+    MglColor color
 )
 {
     MglLayer *layer;
@@ -90,13 +105,15 @@ MglLayer *mgl_layer_new_tile_layer(
     layer->layer.map = map;
     layer->useParallax = useParallax;
     layer->bglayer = bglayer;
+    mgl_vec4d_copy(layer->color,color);
     return layer;
 }
 
 MglLayer *mgl_layer_new_parallax_layer(
     MglParallax *par,
     MglBool useParallax,
-    MglUint bglayer
+    MglUint bglayer,
+    MglColor color
 )
 {
     MglLayer *layer;
@@ -106,13 +123,15 @@ MglLayer *mgl_layer_new_parallax_layer(
     layer->layer.par = par;
     layer->useParallax = useParallax;
     layer->bglayer = bglayer;
+    mgl_vec4d_copy(layer->color,color);
     return layer;
 }
 
 MglLayer *mgl_layer_new_image_layer(
     MglSprite *image,
     MglBool useParallax,
-    MglUint bglayer
+    MglUint bglayer,
+    MglColor color
 )
 {
     MglLayer *layer;
@@ -122,6 +141,7 @@ MglLayer *mgl_layer_new_image_layer(
     layer->layer.image = image;
     layer->useParallax = useParallax;
     layer->bglayer = bglayer;
+    mgl_vec4d_copy(layer->color,color);
     return layer;
 }
 
@@ -140,16 +160,17 @@ void mgl_layer_draw(MglLayer *layer,MglParallax *par,MglCamera *cam,MglVec2D pos
                     mgl_parallax_layer_adjust_position(
                         par,
                         layer->bglayer,
-                        mgl_camera_get_adjusted_position(cam,position))
+                        mgl_camera_get_adjusted_position(cam,position)),
+                    layer->color
                 );
             }
             else
             {
-                mgl_tilemap_draw(layer->layer.map, mgl_camera_get_adjusted_position(cam,position));
+                mgl_tilemap_draw(layer->layer.map, mgl_camera_get_adjusted_position(cam,position),layer->color);
             }
             return;
         case MglLayerParallax:
-            if (par)
+            if (!layer->useParallax)
             {
                 mgl_parallax_draw_all_layers(
                     layer->layer.par,
@@ -163,7 +184,7 @@ void mgl_layer_draw(MglLayer *layer,MglParallax *par,MglCamera *cam,MglVec2D pos
                 mgl_parallax_draw_layer(
                     layer->layer.par,
                     layer->bglayer,
-                    mgl_camera_get_adjusted_position(cam,position),NULL);
+                    mgl_camera_get_adjusted_position(cam,position),&layer->color);
             }
             return;
         case MglLayerImage:
@@ -179,7 +200,7 @@ void mgl_layer_draw(MglLayer *layer,MglParallax *par,MglCamera *cam,MglVec2D pos
                     NULL,
                     NULL,
                     NULL,
-                    NULL,
+                    &layer->color,
                     0
                 );
             }
@@ -192,7 +213,7 @@ void mgl_layer_draw(MglLayer *layer,MglParallax *par,MglCamera *cam,MglVec2D pos
                     NULL,
                     NULL,
                     NULL,
-                    NULL,
+                    &layer->color,
                     0
                 );
             }

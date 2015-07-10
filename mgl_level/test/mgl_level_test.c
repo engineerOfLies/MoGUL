@@ -25,8 +25,7 @@ int main(int argc,char *argv[])
     MglParallax *par;
     MglUint bgw,bgh;
     MglVec2D pos = {0,0};
-    MglVec4D clear = {255,255,255,128};
-    MglTileMap *tilemap;
+    MglLevel *level;
     
     if ((argc == 2) && (strcmp(argv[1],"-h")==0))
     {
@@ -47,7 +46,9 @@ int main(int argc,char *argv[])
     
     mgl_camera_set_bounds(cam,mgl_rect(0,0,bgw,bgh));
     
-    tilemap = mgl_tilemap_load("test/maps/testtilemap.def");
+    mgl_level_init(5,cam);
+    
+    level = mgl_level_load("test/maps/testmap.def");
     
     fprintf(stdout,"mgl_level_test begin\n");
     while (!done)
@@ -55,17 +56,7 @@ int main(int argc,char *argv[])
         pos = mgl_camera_get_position(cam);
         mgl_graphics_clear_screen();
 
-        mgl_parallax_draw_layer(par,0,mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0)),NULL);
-        mgl_parallax_draw_layer(par,1,mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0)),NULL);
-        mgl_parallax_draw_layer(par,2,mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0)),NULL);
-        mgl_tilemap_draw(
-            tilemap,
-            mgl_parallax_layer_adjust_position(
-                par,
-                3,
-                mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0))));
-        mgl_parallax_draw_layer(par,4,mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0)),&clear);
-        mgl_parallax_draw_layer(par,5,mgl_camera_get_adjusted_position(cam,mgl_vec2d(0,0)),&clear);
+        mgl_level_draw(level);
         
         SDL_PumpEvents();
         keys = SDL_GetKeyboardState(NULL);

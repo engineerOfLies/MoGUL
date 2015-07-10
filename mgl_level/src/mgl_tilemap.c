@@ -53,7 +53,11 @@ void mgl_tilemap_delete(void *data)
     MglTileMap *map;
     if (!data)return;
     map = (MglTileMap*)data;
-    if (map->tileMap)free(map->tileMap);
+    if (map->tileMap)
+    {
+        free(map->tileMap);
+        map->tileMap = NULL;
+    }
     if (map->surface)
     {
         SDL_FreeSurface(map->surface);
@@ -77,7 +81,7 @@ void mgl_tilemap_free(MglTileMap **tilemap)
     mgl_resource_free_element(__mgl_tilemap_resource_manager,(void **)tilemap);
 }
 
-void mgl_tilemap_draw(MglTileMap *tilemap, MglVec2D position)
+void mgl_tilemap_draw(MglTileMap *tilemap, MglVec2D position,MglVec4D color)
 {
     int w,h;
     SDL_Rect target;
@@ -98,6 +102,16 @@ void mgl_tilemap_draw(MglTileMap *tilemap, MglVec2D position)
         position.y,
         w,
         h);
+    
+    SDL_SetTextureColorMod(
+        tilemap->texture,
+        color.x,
+        color.y,
+        color.z);
+    SDL_SetTextureAlphaMod(
+        tilemap->texture,
+        color.w);
+
     SDL_RenderCopyEx(mgl_graphics_get_renderer(),
                      tilemap->texture,
                      NULL,
@@ -105,6 +119,14 @@ void mgl_tilemap_draw(MglTileMap *tilemap, MglVec2D position)
                      0,
                      NULL,
                      0);    
+    SDL_SetTextureColorMod(
+        tilemap->texture,
+        255,
+        255,
+        255);
+    SDL_SetTextureAlphaMod(
+        tilemap->texture,
+        255);
 }
 
 void mgl_tilemap_render(MglTileMap *tilemap)

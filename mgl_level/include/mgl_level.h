@@ -31,9 +31,12 @@ typedef struct MglLevel_S MglLevel;
 /**
  * @brief initialize the level resource manager and configure it
  * Must be run before the rest of the level functions are used.
+ * @param maxLevels how many concurrent layers you wish to support
+ * @param defaultCamera if specified, use this camera as default
  */
 void mgl_level_init(
-    MglUint maxLevels);
+    MglUint maxLevels,
+    MglCamera *defaultCamera);
 
 /**
  * @brief create a new level, initialized to zero.
@@ -47,5 +50,17 @@ MglLevel *mgl_level_new();
  */
 void mgl_level_free(MglLevel **level);
 
+/**
+ * @brief load a level from the file provided
+ * @param the filename to load
+ * @return NULL on error, or the loaded file otherwise
+ */
+MglLevel *mgl_level_load(char *filename);
+
+/**
+ * @brief draw the level
+ * @param level the level to draw
+ */
+void mgl_level_draw(MglLevel *level);
 
 #endif

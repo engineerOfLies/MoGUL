@@ -54,7 +54,7 @@ void mgl_parallax_init(
         "mgl parallax",
         maxParallaxs,
         sizeof(struct MglParallax_S),
-        MglTrue,
+        MglFalse,
         mgl_parallax_delete,
         mgl_parallax_load_resource
     );
@@ -319,7 +319,7 @@ void mgl_parallax_draw_layer(MglParallax *par,MglUint l,MglVec2D position,MglVec
     }
     if (l >= par->layerCount)
     {
-        mgl_logger_error("layer is out of range");
+        mgl_logger_error("layer %i is out of range",l);
         return;
     }
     layer = g_list_nth_data(par->layers,l);
