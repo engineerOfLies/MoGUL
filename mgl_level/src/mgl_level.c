@@ -48,7 +48,10 @@ MglBool mgl_level_create_from_def(MglLevel *level,MglDict *def)
 
     level->cam = mgl_camera_load_from_def(mgl_dict_get_hash_value(def,"camera"));
     level->par = mgl_parallax_load_from_def(mgl_dict_get_hash_value(def,"parallax"));
-
+    if (level->par)
+    {
+        mgl_parallax_change_camera(level->par,level->cam);
+    }
     
     layers = mgl_dict_get_hash_value(def,"layers");
     if (!layers)return MglFalse;
@@ -56,7 +59,7 @@ MglBool mgl_level_create_from_def(MglLevel *level,MglDict *def)
     count = mgl_dict_get_list_count(layers);
     for (i = 0;i < count;i++)
     {
-        g_list_append(level->layers,mgl_layer_load_from_def(mgl_dict_get_list_nth(layers,i)));
+        level->layers = g_list_append(level->layers,mgl_layer_load_from_def(mgl_dict_get_list_nth(layers,i)));
     }
     
     mgl_dict_get_hash_value_as_vec2d(&level->position,def,"position");
