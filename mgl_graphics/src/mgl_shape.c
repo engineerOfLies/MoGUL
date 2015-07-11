@@ -5,7 +5,26 @@
 
 struct MglLines_S
 {
+    MglVec2D position;
     MglDict *_points;
+};
+
+struct MglCircle_S
+{
+    MglVec2D center;
+    MglFloat radius;
+};
+
+struct MglTriangle_S
+{
+    MglVec2D position;
+    MglVec2D point[3];
+};
+
+struct MglPolygon_S
+{
+    MglVec2D position;
+    MglDict *_points;    
 };
 
 MglLines *mgl_shape_lines_new()

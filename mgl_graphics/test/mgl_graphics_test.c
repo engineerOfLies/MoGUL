@@ -136,10 +136,10 @@ int main(int argc,char *argv[])
 
     /*circles*/
     draw_candle(mgl_vec2d(sw - sw/5,sh/4+10));
-    mgl_draw_bezier(mgl_vec2d(500,sh), mgl_vec2d(swoosh,1),mgl_vec2d(sw-100,sh),mgl_vec4d(255,128,64,255));
+    /*mgl_draw_bezier(mgl_vec2d(500,sh), mgl_vec2d(swoosh,1),mgl_vec2d(sw-100,sh),mgl_vec4d(255,128,64,255));*/
 
-    draw_trinity(mgl_vec2d(sw/2,sh/2),100,mgl_vec4d(0,255,0,255));
-    draw_trinity(mgl_vec2d(sw/2,sh/2),120,mgl_vec4d(0,255,0,255));
+    /*draw_trinity(mgl_vec2d(sw/2,sh/2),100,mgl_vec4d(0,255,0,255));
+    draw_trinity(mgl_vec2d(sw/2,sh/2),120,mgl_vec4d(0,255,0,255));*/
     /*mgl_draw_line_sequence(lines,mgl_vec4d(255,0,0,255));*/
     rotation.z+=0.5;
     scale.x = scale.y = (scale.x + 0.1);
@@ -158,6 +158,10 @@ int main(int argc,char *argv[])
         &color,
         frame);
     mgl_draw_pixel(mgl_vec2d(sw/2,sh/4),mgl_vec4d(255,0,255,255));
+    
+    mgl_draw_triangle_solid(mgl_vec2d(sw/2,sh/4),mgl_vec2d(sw/3,sh/3),mgl_vec2d(sw,sh/2),mgl_vec4d(255,0,255,64));
+    
+    /*mgl_draw_triangle(mgl_vec2d(sw/2,sh/4),mgl_vec2d(sw/3,sh/3),mgl_vec2d(sw,sh/2),mgl_vec4d(255,128,128,255));*/
     
     mgl_draw_solid_rect(mgl_rect(0,sh/2-10,sw,48),mgl_vec4d(255,255,255,128));
     mgl_actor_next_frame(actor);
@@ -209,7 +213,7 @@ int main(int argc,char *argv[])
       done = 1;
     }
     mgl_grahics_next_frame();
-    /*printf("fps:%f\n",mgl_graphics_get_frames_per_second());*/
+    printf("fps:%f\n",mgl_graphics_get_frames_per_second());
   }
   mgl_shape_lines_free(&lines);
   mgl_logger_message("mgl_graphics_test end\n");

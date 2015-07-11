@@ -241,6 +241,30 @@ void mgl_grahics_next_frame()
     mgl_graphics_frame_delay();
 }
 
+void mgl_graphics_render_lines(MglVec2D *p1,MglVec2D *p2, MglUint lines,MglVec4D color)
+{
+    int i;
+    SDL_SetRenderDrawColor(__mgl_graphics_renderer,
+                           color.x,
+                           color.y,
+                           color.z,
+                           color.w);
+    SDL_SetRenderDrawBlendMode(__mgl_graphics_renderer,SDL_BLENDMODE_BLEND);
+    for (i = 0; i < lines;i++)
+    {
+        SDL_RenderDrawLine(__mgl_graphics_renderer,
+                           p1[i].x,
+                           p1[i].y,
+                           p2[i].x,
+                           p2[i].y);
+    }
+    SDL_SetRenderDrawColor(__mgl_graphics_renderer,
+                           255,
+                           255,
+                           255,
+                           255);
+}
+
 void mgl_graphics_render_line(MglVec2D p1,MglVec2D p2, MglVec4D color)
 {
     SDL_SetRenderDrawColor(__mgl_graphics_renderer,
@@ -248,11 +272,17 @@ void mgl_graphics_render_line(MglVec2D p1,MglVec2D p2, MglVec4D color)
                            color.y,
                            color.z,
                            color.w);
+    SDL_SetRenderDrawBlendMode(__mgl_graphics_renderer,SDL_BLENDMODE_BLEND);
     SDL_RenderDrawLine(__mgl_graphics_renderer,
                        p1.x,
                        p1.y,
                        p2.x,
                        p2.y);
+    SDL_SetRenderDrawColor(__mgl_graphics_renderer,
+                           255,
+                           255,
+                           255,
+                           255);
 }
 
 void mgl_graphics_render_pixel(MglVec2D pixel,MglVec4D color)

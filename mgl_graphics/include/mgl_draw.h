@@ -164,4 +164,22 @@ void mgl_draw_bezier(MglVec2D p0, MglVec2D p1,MglVec2D p2,MglVec4D color);
  */
 void mgl_draw_bezier_to_surface(SDL_Surface *surface, MglVec2D p0, MglVec2D p1, MglVec2D p2, MglVec4D color);
 
+/**
+ * @brief draw an arbtitrary solid triangle to the screen
+ * @param p1 one corner of the triangle
+ * @param p2 one corner of the triangle
+ * @param p3 one corner of the triangle
+ * @param color the color (including alpha) to draw with
+ */
+void mgl_draw_triangle_solid(MglVec2D p1,MglVec2D p2,MglVec2D p3,MglColor color);
+
+/**
+ * @brief draw an arbtitrary triangle to the screen
+ * @param p1 one corner of the triangle
+ * @param p2 one corner of the triangle
+ * @param p3 one corner of the triangle
+ * @param color the color (including alpha) to draw with
+ */
+void mgl_draw_triangle(MglVec2D p1,MglVec2D p2,MglVec2D p3,MglColor color);
+
 #endif

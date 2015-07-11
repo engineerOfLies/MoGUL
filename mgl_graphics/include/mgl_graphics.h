@@ -212,6 +212,14 @@ void mgl_graphics_render_pixel(MglVec2D pixel,MglVec4D color);
 void mgl_graphics_render_line(MglVec2D p1,MglVec2D p2, MglVec4D color);
 
 /**
+ * @brief draws a series lines to the active rendering context
+ * @param p1 list of end point 1's of the lines
+ * @param p2 list of end point 2's of the lines
+ * @param color the color to draw
+ */
+void mgl_graphics_render_lines(MglVec2D *p1,MglVec2D *p2, MglUint lines,MglVec4D color);
+
+/**
  * @brief get the currect render screen surface resolution
  * 
  * @param w [output] if provided, this will be populated with the screen's width
