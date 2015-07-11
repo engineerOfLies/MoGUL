@@ -15,6 +15,7 @@
 
 void init_all();
 
+
 void draw_trinity(MglVec2D position,MglFloat r,MglVec4D color)
 {
     MglVec2D top = {position.x,position.y-r};
@@ -142,7 +143,7 @@ int main(int argc,char *argv[])
     draw_trinity(mgl_vec2d(sw/2,sh/2),120,mgl_vec4d(0,255,0,255));*/
     /*mgl_draw_line_sequence(lines,mgl_vec4d(255,0,0,255));*/
     rotation.z+=0.5;
-    scale.x = scale.y = (scale.x + 0.1);
+    scale.x = scale.y = (scale.x + 0.01);
     if (scale.x >= 4)
     {
         scale.x = scale.y = 0.1;
@@ -159,8 +160,13 @@ int main(int argc,char *argv[])
         frame);
     mgl_draw_pixel(mgl_vec2d(sw/2,sh/4),mgl_vec4d(255,0,255,255));
     
-    mgl_draw_triangle_solid(mgl_vec2d(sw/2,sh/4),mgl_vec2d(sw/3,sh/3),mgl_vec2d(sw,sh/2),mgl_vec4d(255,0,255,64));
+    //mgl_draw_triangle_solid(mgl_vec2d(sw/2,sh/4),mgl_vec2d(sw/3,sh/3),mgl_vec2d(swoosh,sh/2),mgl_vec4d(255,0,255,64));
     
+    //mgl_draw_triangle_solid(mgl_vec2d(sw/4,sh/4),mgl_vec2d(sw/3,sh/4),mgl_vec2d(swoosh/2,sh/2),mgl_vec4d(255,0,255,64));
+    
+    mgl_draw_triangle_solid(mgl_vec2d(sw/4,swoosh/3),mgl_vec2d(sw/5,sh * scale.x * 0.25),mgl_vec2d(sw/2,sh/4),mgl_vec4d(255,0,255,64));
+
+//    mgl_draw_triangle_solid(mgl_vec2d(sw/2,sh/2),mgl_vec2d(sw/3,sh/4),mgl_vec2d(swoosh/2,sh/2),mgl_vec4d(255,0,255,64));
     /*mgl_draw_triangle(mgl_vec2d(sw/2,sh/4),mgl_vec2d(sw/3,sh/3),mgl_vec2d(sw,sh/2),mgl_vec4d(255,128,128,255));*/
     
     mgl_draw_solid_rect(mgl_rect(0,sh/2-10,sw,48),mgl_vec4d(255,255,255,128));

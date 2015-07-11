@@ -212,12 +212,27 @@ void mgl_graphics_render_pixel(MglVec2D pixel,MglVec4D color);
 void mgl_graphics_render_line(MglVec2D p1,MglVec2D p2, MglVec4D color);
 
 /**
- * @brief draws a series lines to the active rendering context
+ * @brief draws a series of lines to the active rendering context
  * @param p1 list of end point 1's of the lines
  * @param p2 list of end point 2's of the lines
  * @param color the color to draw
  */
 void mgl_graphics_render_lines(MglVec2D *p1,MglVec2D *p2, MglUint lines,MglVec4D color);
+
+/**
+ * @brief draws a rectangle to the active rendering context
+ * @param rect the rectangle to draw to the screen
+ * @param color the color to draw
+ */
+void mgl_graphics_render_rect(MglRect rect,MglVec4D color);
+
+/**
+ * @brief draws a series of rectangles to the active rendering context
+ * @param rect the rectangle list to draw to the screen
+ * @param count how many rectangles to draw
+ * @param color the color to draw
+ */
+void mgl_graphics_render_rects(MglRect *rects,MglUint count,MglVec4D color);
 
 /**
  * @brief get the currect render screen surface resolution

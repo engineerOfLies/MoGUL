@@ -27,6 +27,12 @@ struct MglPolygon_S
     MglDict *_points;    
 };
 
+struct MglLine_S
+{
+    MglVec2D position;
+    MglVec2D point[2];
+};
+
 MglLines *mgl_shape_lines_new()
 {
     MglLines *lines;
@@ -133,6 +139,16 @@ MglDict *mgl_lines_get_data(MglLines *lines)
 {
     if (!lines)return NULL;
     return lines->_points;
+}
+
+MglRect mgl_line_segment_to_rect(MglVec2D p1,MglVec2D p2)
+{
+    MglRect rect;
+    rect.x = MIN(p1.x,p2.x);
+    rect.y = MIN(p1.y,p2.y);
+    rect.w = abs(p1.x - p2.x)+1;
+    rect.h = abs(p1.y - p2.y)+1;
+    return rect;
 }
 
 /*eol@eof*/

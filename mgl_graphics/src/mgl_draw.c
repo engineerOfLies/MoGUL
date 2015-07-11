@@ -490,39 +490,57 @@ void mgl_draw_triangle(MglVec2D p1,MglVec2D p2,MglVec2D p3,MglColor color)
     mgl_draw_line(p3,p1,color);
 }
 
-
-void mgl_draw_triangle_top(MglVec2D v1, MglVec2D v2, MglVec2D v3,MglColor color,SDL_Surface *surface)
+MglRect *mgl_draw_triangle_bottom(MglVec2D v1, MglVec2D v2, MglVec2D v3,MglRect *rects)
 {
     int scanlineY;
-    float invslope1 = (v3.x - v1.x) / (v3.y - v1.y);
-    float invslope2 = (v3.x - v2.x) / (v3.y - v2.y);
-    
-    float curx1 = v3.x;
-    float curx2 = v3.x;
-    
-    for (scanlineY = v3.y; scanlineY > v1.y; scanlineY--)
-    {
-        curx1 -= invslope1;
-        curx2 -= invslope2;
-        mgl_draw_line_to_surface(surface,mgl_vec2d(curx1, scanlineY),mgl_vec2d(curx2, scanlineY),color);
-    }
-}
-
-void mgl_draw_triangle_bottom(MglVec2D v1, MglVec2D v2, MglVec2D v3,MglColor color, SDL_Surface *surface)
-{
-    int scanlineY;
+    int count = 0,i;
+    MglRect rect;
     float invslope1 = (v2.x - v1.x) / (v2.y - v1.y);
     float invslope2 = (v3.x - v1.x) / (v3.y - v1.y);
     
     float curx1 = v1.x;
     float curx2 = v1.x;
-    
-    for (scanlineY = (int)v1.y; scanlineY <= (int)v2.y; scanlineY++)
+    count = abs(v2.y-v1.y);
+    if (!count)return rects;
+    for (scanlineY = v1.y,i = 0; scanlineY <= v2.y; scanlineY++,i++)
     {
-        mgl_draw_line_to_surface(surface,mgl_vec2d(curx1, scanlineY),mgl_vec2d(curx2, scanlineY),color);
+        if (curx2 < 0)
+        {
+            mgl_logger_warn("negative x: %f",curx1);
+        }
+        rect = mgl_line_segment_to_rect(mgl_vec2d(curx1, scanlineY),mgl_vec2d(curx2, scanlineY));
+        mgl_rect_copy(&rects[i],rect);
         curx1 += invslope1;
         curx2 += invslope2;
     }
+    return &rects[i];
+}
+
+MglRect *mgl_draw_triangle_top(MglVec2D v1, MglVec2D v2, MglVec2D v3,MglRect *rects)
+{
+    int scanlineY;
+    int count = 0,i;
+    float invslope1 = (v3.x - v1.x) / (v3.y - v1.y);
+    float invslope2 = (v3.x - v2.x) / (v3.y - v2.y);
+    MglRect rect;
+    
+    float curx1 = v3.x;
+    float curx2 = v3.x;
+    count = abs(v1.y-v3.y);
+    if (!count)return rects;
+    
+    for (scanlineY = v3.y-1,i = 0; scanlineY > (int)v1.y; scanlineY--,i++)
+    {
+        if (curx2 < 0)
+        {
+            mgl_logger_warn("negative x: %f",curx1);
+        }
+        curx1 -= invslope1;
+        curx2 -= invslope2;
+        rect = mgl_line_segment_to_rect(mgl_vec2d(curx1, scanlineY),mgl_vec2d(curx2, scanlineY));
+        mgl_rect_copy(&rects[i],rect);
+    }
+    return &rects[i];
 }
 
 gint mgl_vec2d_ysort (gconstpointer a, gconstpointer b)
@@ -538,78 +556,113 @@ gint mgl_vec2d_ysort (gconstpointer a, gconstpointer b)
     {
         return 1;
     }
-    return 0;
+    return -1;
 }
 
 void mgl_draw_triangle_solid(MglVec2D p1,MglVec2D p2,MglVec2D p3,MglColor color)
 {
-    SDL_Surface *surface;
-    MglRect area;
-    MglUint clearColor;
-    GList *vertices = NULL;
-    MglUint minx,miny,maxx,maxy;
+    MglRect *rects,*it;
+    MglUint miny,maxy;
     MglVec2D *v1,*v2,*v3;
     MglVec2D v4;
+    MglUint count;
     
-    minx = MIN(MIN(p1.x,p2.x),p3.x);
     miny = MIN(MIN(p1.y,p2.y),p3.y);
-    maxx = MAX(MAX(p1.x,p2.x),p3.x);
     maxy = MAX(MAX(p1.y,p2.y),p3.y);
-    vertices = g_list_append (vertices,&p1);
-    vertices = g_list_insert_sorted (vertices,&p2,mgl_vec2d_ysort);
-    vertices = g_list_insert_sorted (vertices,&p3,mgl_vec2d_ysort);
-    v1 = g_list_nth_data(vertices,2);
-    v2 = g_list_nth_data(vertices,1);
-    v3 = g_list_nth_data(vertices,0);
     
-    
-    /*make an empty surface*/
-    surface = mgl_graphics_get_temp_buffer(maxx - minx,maxy - miny);
-    clearColor = mgl_graphics_vec_to_surface_color(surface,mgl_vec4d(0,0,0,0));
-    SDL_FillRect(surface,NULL,clearColor);
-    
-    if (v2->y == v3->y)
+    if (p1.y <= p2.y)
     {
-        mgl_draw_triangle_bottom(
-            mgl_vec2d(v1->x - minx,v1->y-miny),
-            mgl_vec2d(v2->x - minx,v2->y-miny),
-            mgl_vec2d(v3->x - minx,v3->y-miny),
-            color,
-            surface);
-    }
-    /* check for trivial case of top-flat triangle */
-    else if (v1->y == v2->y)
-    {
-        mgl_draw_triangle_top(
-            mgl_vec2d(v1->x - minx,v1->y-miny),
-            mgl_vec2d(v2->x - minx,v2->y-miny),
-            mgl_vec2d(v3->x - minx,v3->y-miny),
-            color,
-            surface);
+        if (p3.y < p1.y)
+        {
+            v1 = &p3;
+            v2 = &p1;
+            v3 = &p2;
+        }
+        else if (p3.y < p2.y)
+        {
+            v1 = &p1;
+            v2 = &p3;
+            v3 = &p2;
+        }
+        else
+        {
+            v1 = &p1;
+            v2 = &p2;
+            v3 = &p3;
+        }
     }
     else
     {
-        /* general case - split the triangle in a topflat and bottom-flat one */
-    
-        mgl_vec2d_set(v4,(v1->x + ((float)(v2->y - v1->y) / (float)(v3->y - v1->y)) * (v3->x - v1->x)), v2->y);
-        mgl_draw_triangle_bottom(
-            mgl_vec2d(v1->x - minx,v1->y-miny),
-            mgl_vec2d(v2->x - minx,v2->y-miny),
-            mgl_vec2d(v4.x - minx,v4.y-miny),
-            color,
-            surface);
-        mgl_draw_triangle_top(
-            mgl_vec2d(v2->x - minx,v2->y-miny),
-            mgl_vec2d(v4.x - minx,v4.y-miny),
-            mgl_vec2d(v3->x - minx,v3->y-miny),
-            color,
-            surface);
+        if (p3.y < p1.y)
+        {
+            v1 = &p3;
+            v2 = &p2;
+            v3 = &p1;
+        }
+        else if (p3.y < p2.y)
+        {
+            v1 = &p2;
+            v2 = &p3;
+            v3 = &p1;
+        }
+        else
+        {
+            v1 = &p2;
+            v2 = &p1;
+            v3 = &p3;
+        }
     }
-    g_list_free(vertices);
-    /*draw circle to the new surface*/
-    mgl_rect_set(&area,0,0,maxx - minx,maxy - miny);
-    /*blit surface to the screen surface*/
-    mgl_graphics_render_surface_to_screen(surface,area,mgl_vec2d(minx,miny),mgl_vec2d(1,1),mgl_vec3d(0,0,0));
+
+    count = abs(maxy - miny);
+    
+    rects = g_new(MglRect,count+2);
+    if (!rects)
+    {
+        mgl_logger_error("failed to allocate data for triangle rendering");
+        return;
+    }
+    memset(rects,0,sizeof(MglRect) * count+2);
+        
+    if ((int)v2->y == (int)v3->y)
+    {
+        mgl_draw_triangle_bottom(
+            mgl_vec2d(v1->x,v1->y),
+            mgl_vec2d(v2->x,v2->y),
+            mgl_vec2d(v3->x,v3->y),
+            rects);
+        mgl_logger_info("flat bottom");
+    }
+    /* check for trivial case of top-flat triangle */
+    else if ((int)v1->y == (int)v2->y)
+    {
+        mgl_draw_triangle_top(
+            mgl_vec2d(v1->x,v1->y),
+            mgl_vec2d(v2->x,v2->y),
+            mgl_vec2d(v3->x,v3->y),
+            rects);
+        mgl_logger_info("flat top");
+    }
+    else
+    {
+        mgl_logger_info("not flat");
+        
+        /* general case - split the triangle in a topflat and bottom-flat one */
+        v4.y = v2->y;
+        v4.x = (v1->x + ((v2->y - v1->y) / (v3->y - v1->y)) * (v3->x - v1->x));
+
+        it = mgl_draw_triangle_bottom(
+            *v1,
+            *v2,
+            v4,
+            rects);
+        mgl_draw_triangle_top(
+            *v2,
+            v4,
+            *v3,
+            it);
+    }
+    mgl_graphics_render_rects(rects,count,color);
+    free(rects);
 }
 
 /*eol@eof*/

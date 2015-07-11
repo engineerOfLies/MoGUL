@@ -285,6 +285,28 @@ void mgl_graphics_render_line(MglVec2D p1,MglVec2D p2, MglVec4D color)
                            255);
 }
 
+void mgl_graphics_render_rect(MglRect rect,MglVec4D color)
+{
+    SDL_SetRenderDrawColor(__mgl_graphics_renderer,
+                           color.x,
+                           color.y,
+                           color.z,
+                           color.w);
+    SDL_SetRenderDrawBlendMode(__mgl_graphics_renderer,SDL_BLENDMODE_BLEND);
+    SDL_RenderDrawRect(__mgl_graphics_renderer,(const struct SDL_Rect *)&rect);
+}
+
+void mgl_graphics_render_rects(MglRect *rects,MglUint count,MglVec4D color)
+{
+    SDL_SetRenderDrawColor(__mgl_graphics_renderer,
+                           color.x,
+                           color.y,
+                           color.z,
+                           color.w);
+    SDL_SetRenderDrawBlendMode(__mgl_graphics_renderer,SDL_BLENDMODE_BLEND);
+    SDL_RenderDrawRects(__mgl_graphics_renderer,rects,count);
+}
+
 void mgl_graphics_render_pixel(MglVec2D pixel,MglVec4D color)
 {
     SDL_SetRenderDrawColor(__mgl_graphics_renderer,
@@ -292,6 +314,7 @@ void mgl_graphics_render_pixel(MglVec2D pixel,MglVec4D color)
                            color.y,
                            color.z,
                            color.w);
+    SDL_SetRenderDrawBlendMode(__mgl_graphics_renderer,SDL_BLENDMODE_BLEND);
     SDL_RenderDrawPoint(__mgl_graphics_renderer,
                         pixel.x,
                         pixel.y);
@@ -413,11 +436,13 @@ MglInt mgl_graphics_get_screen_resolution(MglUint *w,MglUint *h)
 SDL_Surface *mgl_graphics_create_surface(MglUint w,MglUint h)
 {
     SDL_Surface *surface;
-    surface = SDL_CreateRGBSurface(0, w, h, __mgl_bitdepth,
-                                        __mgl_rmask,
-                                    __mgl_gmask,
-                                    __mgl_bmask,
-                                    __mgl_amask);
+    surface = SDL_CreateRGBSurface(
+        0,w, h,
+        __mgl_bitdepth,
+        __mgl_rmask,
+        __mgl_gmask,
+        __mgl_bmask,
+        __mgl_amask);
     return surface;
 }
 

@@ -28,6 +28,7 @@
 
 #include "mgl_dict.h"
 #include "mgl_vector.h"
+#include "mgl_rect.h"
 
 typedef struct MglLines_S MglLines;
 
@@ -87,5 +88,13 @@ void mgl_lines_subdivide_line(MglLines *lines,MglUint n);
  * @return NULL on error, or the data dictionary
  */
 MglDict *mgl_lines_get_data(MglLines *lines);
+
+/**
+ * @brief get the bounding rect for a line segment
+ * @param p1 one end point of the line segment
+ * @param p2 another end point of the line segment
+ * @return the bounding rectangle
+ */
+MglRect mgl_line_segment_to_rect(MglVec2D p1,MglVec2D p2);
 
 #endif
