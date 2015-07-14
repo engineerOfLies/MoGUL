@@ -91,6 +91,6 @@ void mgl_particle_draw();
  * @param color what color (with some error)
  * @param colorSpread error introduced to color
  */
-void mgl_particle_spray(MglVec2D position,MglVec2D direction,MglFloat spread,MglUint count,MglUint life, MglVec4D color, MglFloat colorSpread);
+void mgl_particle_spray(MglVec2D position,MglVec2D direction,MglVec2D spread,MglUint count,MglUint life, MglVec4D color, MglFloat colorSpread);
 
 #endif

@@ -140,19 +140,19 @@ void mgl_particle_draw()
     }
 }
 
-void mgl_particle_spray(MglVec2D position,MglVec2D direction,MglFloat spread,MglUint count,MglUint life, MglVec4D color, MglFloat colorSpread)
+void mgl_particle_spray(MglVec2D position,MglVec2D direction,MglVec2D spread,MglUint count,MglUint life, MglVec4D color, MglFloat colorSpread)
 {
     int i;
     MglParticle *particle;
     for (i = 0;i < count;i++)
     {
-        particle = mgl_particle_new(life);
+        particle = mgl_particle_new((life + (mgl_crandom() * 3)));
         if (!particle)return;
         mgl_vec2d_copy(particle->position,position);
         mgl_vec2d_set(
             particle->velocity,
-            direction.x + mgl_crandom() * spread,
-            direction.y + mgl_crandom() * spread
+            direction.x + mgl_crandom() * spread.x,
+            direction.y + mgl_crandom() * spread.y
         );
         mgl_vec4d_set(
             particle->color,

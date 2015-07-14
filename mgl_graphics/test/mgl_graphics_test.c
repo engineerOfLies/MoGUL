@@ -199,6 +199,7 @@ int main(int argc,char *argv[])
         NULL,
         NULL
     );
+      mgl_particle_spray(mgl_vec2d(sw/2,sh/4),mgl_vec2d(0,4),mgl_vec2d(1.3,0.3),10,40, mgl_vec4d(0,0,200,255), 255);
     
     mgl_font_draw_text_basic(
         mgl_vec2d(50,50),
@@ -223,7 +224,8 @@ int main(int argc,char *argv[])
     }
     if (keys[SDL_SCANCODE_RETURN])
     {
-      mgl_particle_spray(mgl_vec2d(sw/2,sh/2),mgl_vec2d(5,-0.1),4.3,200,20, mgl_vec4d(240,0,0,255), 100);
+      mgl_particle_spray(mgl_vec2d(sw/2,sh/2),mgl_vec2d(5,-0.1),mgl_vec2d(2.3,1.3),100,20, mgl_vec4d(240,0,0,255), 100);
+      mgl_particle_spray(mgl_vec2d(sw/2,sh/2+2),mgl_vec2d(5,0.1),mgl_vec2d(2.3,1.3),100,20, mgl_vec4d(240,0,0,255), 100);
     }
     mgl_grahics_next_frame();
     printf("fps:%f\n",mgl_graphics_get_frames_per_second());
