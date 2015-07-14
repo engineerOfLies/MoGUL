@@ -129,5 +129,12 @@ MglBool mgl_equals(MglDouble a, MglDouble b);
 #define MAX(a,b)          (a>=b?a:b)
 #endif
 
+/**
+ * @brief a generic memory data swapping function.  Copies the memory from a to b and b to a
+ * @param a a pointer to data to swap
+ * @param b a pointer to data to swap
+ * @param size memory size of the data to swap.  sizeof() should suffice.
+ */
+void mgl_swap(void *a,void *b,size_t size);
 
 #endif

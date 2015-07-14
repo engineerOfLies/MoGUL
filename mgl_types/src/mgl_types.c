@@ -33,4 +33,15 @@ MglInt mgl_bool_from_string(char * truth)
   return -1;
 }
 
+void mgl_swap(void *a,void *b,size_t size)
+{
+    void *tmp;
+    if ((!a)||(!b))return;
+    tmp = malloc(size);
+    memcpy(tmp,a,size);
+    memcpy(a,b,size);
+    memcpy(b,tmp,size);
+    free(tmp);
+}
+
 /*eol@eof*/

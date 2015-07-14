@@ -570,49 +570,23 @@ void mgl_draw_triangle_solid(MglVec2D p1,MglVec2D p2,MglVec2D p3,MglColor color)
     miny = MIN(MIN(p1.y,p2.y),p3.y);
     maxy = MAX(MAX(p1.y,p2.y),p3.y);
     
-    if (p1.y <= p2.y)
+    if (p2.y > p3.y)
     {
-        if (p3.y < p1.y)
-        {
-            v1 = &p3;
-            v2 = &p1;
-            v3 = &p2;
-        }
-        else if (p3.y < p2.y)
-        {
-            v1 = &p1;
-            v2 = &p3;
-            v3 = &p2;
-        }
-        else
-        {
-            v1 = &p1;
-            v2 = &p2;
-            v3 = &p3;
-        }
+        mgl_swap(&p2,&p3,sizeof(MglVec2D));
     }
-    else
+    if (p1.y > p2.y)
     {
-        if (p3.y < p1.y)
-        {
-            v1 = &p3;
-            v2 = &p2;
-            v3 = &p1;
-        }
-        else if (p3.y < p2.y)
-        {
-            v1 = &p2;
-            v2 = &p3;
-            v3 = &p1;
-        }
-        else
-        {
-            v1 = &p2;
-            v2 = &p1;
-            v3 = &p3;
-        }
+        mgl_swap(&p1,&p2,sizeof(MglVec2D));
+    }
+    if (p2.y > p3.y)
+    {
+        mgl_swap(&p2,&p3,sizeof(MglVec2D));
     }
 
+    v1 = &p1;
+    v2 = &p2;
+    v3 = &p3;
+    
     count = abs(maxy - miny);
     
     rects = g_new(MglRect,count+2);
@@ -630,7 +604,6 @@ void mgl_draw_triangle_solid(MglVec2D p1,MglVec2D p2,MglVec2D p3,MglColor color)
             mgl_vec2d(v2->x,v2->y),
             mgl_vec2d(v3->x,v3->y),
             rects);
-        mgl_logger_info("flat bottom");
     }
     /* check for trivial case of top-flat triangle */
     else if ((int)v1->y == (int)v2->y)
@@ -640,12 +613,9 @@ void mgl_draw_triangle_solid(MglVec2D p1,MglVec2D p2,MglVec2D p3,MglColor color)
             mgl_vec2d(v2->x,v2->y),
             mgl_vec2d(v3->x,v3->y),
             rects);
-        mgl_logger_info("flat top");
     }
     else
     {
-        mgl_logger_info("not flat");
-        
         /* general case - split the triangle in a topflat and bottom-flat one */
         v4.y = v2->y;
         v4.x = (v1->x + ((v2->y - v1->y) / (v3->y - v1->y)) * (v3->x - v1->x));
