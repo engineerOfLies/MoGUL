@@ -204,6 +204,14 @@ void mgl_graphics_set_surface_pixel(SDL_Surface *surface,MglVec2D position,MglUi
 void mgl_graphics_render_pixel(MglVec2D pixel,MglVec4D color);
 
 /**
+ * @brief draws a list of pixels to the active rendering context
+ * @param pixels a list of pixels to draw
+ * @param count how many pixels to draw
+ * @param color the color to se tthe pixels to
+ */
+void mgl_graphics_render_pixel_list(SDL_Point * pixels,MglUint count,MglVec4D color);
+
+/**
  * @brief draws a line to the active rendering context
  * @param p1 end point 1 of the line
  * @param p2 end point 2 of the line

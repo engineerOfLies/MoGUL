@@ -109,14 +109,14 @@ MglBool mgl_equals(MglDouble a, MglDouble b);
  * This macro exposes the more random bits from the rand() function
  * @return a random float between 0 and 1.0
  */
-#define mgl_random()  ((rand () & 0x7fff) / ((MglFloat)0x7fff))
+#define mgl_random()  ((rand ()%1000)/(float)1000.0)
 
 /**
  * @brief random macro taken from Id Software's Quake 2 Source.
  * This macro exposes the more random bits from the rand() function
  * @return a random float between -1.0 and 1.0
  */
-#define mgl_crandom() (2.0 * (random() - 0.5))
+#define mgl_crandom() (((float)((rand()%1000)/(float)1000.0) * 2.0) - 1.0)
 
 /**
  * basic operations

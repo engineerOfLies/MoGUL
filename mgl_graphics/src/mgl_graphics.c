@@ -42,6 +42,7 @@ void mgl_graphics_init(
     MglBool fullscreen
 )
 {
+    int a;
     MglUint flags = 0;
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
@@ -123,7 +124,7 @@ void mgl_graphics_init(
     __mgl_graphics_background_color = SDL_MapRGB(__mgl_graphics_surface->format, bgcolor.x,bgcolor.y,bgcolor.z);
     mgl_vec4d_set(__mgl_graphics_background_color_v,bgcolor.x,bgcolor.y,bgcolor.z,bgcolor.w);
     
-    
+    srand(a);
     atexit(mgl_graphics_close);
     mgl_logger_info("graphics initialized");
 }
@@ -318,6 +319,19 @@ void mgl_graphics_render_pixel(MglVec2D pixel,MglVec4D color)
     SDL_RenderDrawPoint(__mgl_graphics_renderer,
                         pixel.x,
                         pixel.y);
+}
+
+void mgl_graphics_render_pixel_list(SDL_Point * pixels,MglUint count,MglVec4D color)
+{
+    SDL_SetRenderDrawColor(__mgl_graphics_renderer,
+                           color.x,
+                           color.y,
+                           color.z,
+                           color.w);
+    SDL_SetRenderDrawBlendMode(__mgl_graphics_renderer,SDL_BLENDMODE_BLEND);
+    SDL_RenderDrawPoints(__mgl_graphics_renderer,
+                        pixels,
+                        count);
 }
 
 MglUint mgl_graphics_get_render_time()

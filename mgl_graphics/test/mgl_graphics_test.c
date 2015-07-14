@@ -6,6 +6,7 @@
 #include "mgl_logger.h"
 #include "mgl_actor.h"
 #include "mgl_font.h"
+#include "mgl_particle.h"
 
 #include <string.h>
 #include <SDL.h>
@@ -94,7 +95,8 @@ int main(int argc,char *argv[])
       "test/fonts/Exo-Regular.otf",
       16
   );
-  
+  mgl_particle_init(8000,MglParticleZNone,NULL);
+
   sprite = mgl_sprite_load_from_image(
       "test/rotationscale.png",
       32,
@@ -128,6 +130,7 @@ int main(int argc,char *argv[])
   patrol.x = sw/2-24;
   while (!done)
   {
+    mgl_particle_update();
     mgl_graphics_clear_screen();
     mgl_sprite_draw_image(bgimage,mgl_vec2d(0,0));
     
@@ -211,12 +214,16 @@ int main(int argc,char *argv[])
     
     mgl_draw_line_curved(lines,mgl_vec4d(255,0,255,255));
     
-    
+    mgl_particle_draw();
     SDL_PumpEvents();
     keys = SDL_GetKeyboardState(NULL);
     if (keys[SDL_SCANCODE_ESCAPE])
     {
       done = 1;
+    }
+    if (keys[SDL_SCANCODE_RETURN])
+    {
+      mgl_particle_spray(mgl_vec2d(sw/2,sh/2),mgl_vec2d(5,-0.1),4.3,200,20, mgl_vec4d(240,0,0,255), 100);
     }
     mgl_grahics_next_frame();
     printf("fps:%f\n",mgl_graphics_get_frames_per_second());

@@ -2,7 +2,7 @@
 #define __MGL_CONFIG__
 
 /**
- * mgl_types
+ * mgl_dict
  * @license The MIT License (MIT)
    @copyright Copyright (c) 2015 EngineerOfLies
     Permission is hereby granted, free of charge, to any person obtaining a copy

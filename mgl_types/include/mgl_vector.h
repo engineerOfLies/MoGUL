@@ -325,4 +325,6 @@ void mgl_vec3d_rotate_about_x(MglVec3D *vect, MglFloat angle);
 void mgl_vec3d_rotate_about_y(MglVec3D *vect, MglFloat angle);
 void mgl_vec3d_rotate_about_z(MglVec3D *vect, MglFloat angle);
 
+#define mgl_color_clamp(a) (a.x = MAX(MIN(a.x,255),0),a.y = MAX(MIN(a.y,255),0),a.z = MAX(MIN(a.z,255),0),a.w = MAX(MIN(a.w,255),0))
+
 #endif
