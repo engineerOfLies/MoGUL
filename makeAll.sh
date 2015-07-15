@@ -41,4 +41,10 @@ cd ../../mgl_level/src
 make
 make static
 
+echo "building entity MoGUL lib..."
+
+cd ../../mgl_entity/src
+make
+make static
+
 echo "done"
