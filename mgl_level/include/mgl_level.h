@@ -21,6 +21,9 @@
     SOFTWARE.
  */
 #include "mgl_layer.h"
+#include "mgl_camera.h"
+#include "mgl_tilemap.h"
+#include "mgl_parallax.h"
 
 /**
  * @brief the level structure keeps a context for rendering a single game level.

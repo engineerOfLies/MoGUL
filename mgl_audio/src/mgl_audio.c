@@ -58,7 +58,11 @@ void mgl_audio_init_from_config(char *filename)
     MglBool enableOgg = MglTrue;
     
     config = mgl_config_load(filename);
-    if (!config)return;
+    if (!config)
+    {
+        mgl_logger_error("config file did not load");
+        return;
+    }
     data = mgl_config_get_dictionary(config);
     
     mgl_dict_get_hash_value_as_uint(&maxSounds, data, "maxSounds");

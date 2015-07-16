@@ -25,14 +25,14 @@ int main(int argc,char *argv[])
     }
     init_all();
     
-    mgl_audio_init_from_config(argv[1]);
+    mgl_audio_init_from_config("../test_data/audio/audio.def");
     
     fprintf(stdout,"mgl_audio_test begin\n");
     sound = mgl_sound_sound_load(
-        "test/audio/Fuse-Burning.wav",
+        "../test_data/audio/Fuse-Burning.wav",
         NULL,
         NULL);
-    music = mgl_music_load("test/audio/Holst-_mars.ogg");
+    music = mgl_music_load("../test_data/audio/Holst-_mars.ogg");
     
     mgl_sound_play(
         sound,
@@ -64,7 +64,7 @@ void init_all()
     mgl_logger_set_stdout_echo(MglTrue);
     mgl_logger_set_threshold(MGL_LOG_ALL);
     mgl_config_init();
-    if (mgl_graphics_init_by_config("test/graphics.def") != 0)
+    if (mgl_graphics_init_by_config("../test_data/graphics.def") != 0)
     {
         mgl_logger_info("failed to load graphics, exiting...");
         return;

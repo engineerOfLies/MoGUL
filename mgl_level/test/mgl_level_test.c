@@ -39,7 +39,7 @@ int main(int argc,char *argv[])
     mgl_graphics_get_screen_resolution(&sw,&sh);
 
     cam = mgl_camera_new(mgl_vec2d(sw,sh));
-    par = mgl_parallax_load("test/images/testlevel/testbg.def",cam);
+    par = mgl_parallax_load("../test_data/images/testlevel/testbg.def",cam);
     mgl_parallax_get_size(par,&bgw,&bgh);
         mgl_logger_info("camera layer size: (%i,%i)",bgw,bgh);
     
@@ -48,7 +48,7 @@ int main(int argc,char *argv[])
     
     mgl_level_init(5,cam);
     
-    level = mgl_level_load("test/maps/testmap.def");
+    level = mgl_level_load("../test_data/maps/testmap.def");
     
     fprintf(stdout,"mgl_level_test begin\n");
     while (!done)
@@ -92,12 +92,12 @@ void init_all()
     mgl_logger_set_stdout_echo(MglTrue);
     mgl_logger_set_threshold(MGL_LOG_ALL);
     mgl_config_init();
-    if (mgl_graphics_init_by_config("test/graphics.def") != 0)
+    if (mgl_graphics_init_by_config("../test_data/graphics.def") != 0)
     {
         mgl_logger_info("failed to load graphics, exiting...");
         return;
     }
-    mgl_sprite_init_from_config("test/graphics.def");
+    mgl_sprite_init_from_config("../test_data/graphics.def");
     mgl_actor_init(
         1000,
         0,
@@ -105,7 +105,7 @@ void init_all()
     );
     mgl_font_init(
         10,
-        "test/fonts/Exo-Regular.otf",
+        "../test_data/fonts/Exo-Regular.otf",
         16
     );
 

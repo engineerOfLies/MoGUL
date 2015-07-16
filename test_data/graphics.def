@@ -1,0 +1,13 @@
+{
+  "windowName" : "test window",
+  "backgroundColor" : "0, 0, 0, 255",
+  "viewWidth" : 0,
+  "viewHeight" : 0,
+  "fullscreen" : "FALSE",
+  "renderWidth" : 640,
+  "renderHeight" : 480,
+  "frameDelay" : 17,
+  "printFPS" : "TRUE",
+  "maxSprites" : 1024,
+  "defaultFramesPerLine" : 16
+}

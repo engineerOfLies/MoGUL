@@ -62,6 +62,7 @@ MglBool mgl_sound_load_resource(char *filename,void *data)
     if (!sound->chunk)
     {
         mgl_logger_error("failed to load sound chunk: %s re:%s",filename,SDL_GetError());
+        return MglFalse;
     }
     sound->volume = 1;
     sound->defaultChannel = -1;

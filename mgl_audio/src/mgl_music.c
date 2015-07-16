@@ -55,6 +55,11 @@ MglBool mgl_music_load_resource(char *filename,void *data)
     if (!data)return MglFalse;
     music = (MglMusic *)data;
     music->music = Mix_LoadMUS(filename);
+    if (!music->music)
+    {
+        mgl_logger_error("failed to load music file: %s",filename);
+        return MglFalse;
+    }
     return MglTrue;
 }
 

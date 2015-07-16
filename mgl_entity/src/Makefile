@@ -30,7 +30,7 @@ INC_PARAMS =$(foreach d, $(INC_PATHS), -I$d)
 GLIB_CFLAGS = `pkg-config --cflags glib-2.0`
 GLIB_LDFLAGS = `pkg-config --libs glib-2.0`
 SDL_CFLAGS = `sdl2-config --cflags` $(INC_PARAMS)
-SDL_LDFLAGS = `sdl2-config --libs` -lglib-2.0 -ljansson -lyaml
+SDL_LDFLAGS = `sdl2-config --libs` -lglib-2.0 -ljansson -lyaml -lchipmunk
 LFLAGS = -g -shared -Wl,-soname,lib$(PROJECT).so.1 -o $(MGL_LIB_PATH)/lib$(PROJECT).so.1.0.1
 CFLAGS = -g  -fPIC -Wall -pedantic -Wno-unknown-pragmas -Wno-variadic-macros
 # -fgnu89-inline 

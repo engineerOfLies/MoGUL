@@ -92,13 +92,13 @@ int main(int argc,char *argv[])
   );
   mgl_font_init(
       10,
-      "test/fonts/Exo-Regular.otf",
+      "../test_data/fonts/Exo-Regular.otf",
       16
   );
   mgl_particle_init(8000,MglParticleZNone,NULL);
 
   sprite = mgl_sprite_load_from_image(
-      "test/rotationscale.png",
+      "../test_data/images/rotationscale.png",
       32,
       64,
       16,
@@ -106,8 +106,8 @@ int main(int argc,char *argv[])
       NULL,
       NULL,
       &colorKey);
-  bgimage = mgl_sprite_load_image("test/images/linux_desktop.png");
-  actor = mgl_actor_load("test/actors/mecha.actor");
+  bgimage = mgl_sprite_load_image("../test_data/images/linux_desktop.png");
+  actor = mgl_actor_load("../test_data/actors/mecha.actor");
 
   mgl_graphics_get_screen_resolution(&sw,&sh);
 
