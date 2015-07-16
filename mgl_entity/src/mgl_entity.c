@@ -11,6 +11,8 @@ struct MglEntity_S
     MglVec2D acceleration;
     MglVec2D scale;
     MglFloat rotation;
+    MglVec2D flip;
+    MglColor color;
     
     MglActor *actor;
     
@@ -71,7 +73,10 @@ void mgl_entity_delete(void *data)
     MglEntity *ent;
     if (!data)return;
     ent = (MglEntity *)data;
-    mgl_actor_free(&ent->actor);
+    if (ent->actor)
+    {
+        mgl_actor_free(&ent->actor);
+    }
     mgl_dict_free(&ent->dict);
     if (__mgl_entity_custom_delete.function != NULL)
     {
@@ -106,7 +111,31 @@ MglEntity *mgl_entity_new()
     {
         ent->data = &ent[1];
     }
+    mgl_vec4d_set(ent->color,255,255,255,255);
+    mgl_vec2d_set(ent->scale,1,1);
     return ent;
+}
+
+void mgl_entity_set_position(MglEntity *ent,MglVec2D position)
+{
+    if (!ent)return;
+    mgl_vec2d_copy(ent->position,position);
+}
+
+MglActor *mgl_entity_get_actor(MglEntity *ent)
+{
+    if (!ent)return NULL;
+    return ent->actor;
+}
+
+void mgl_entity_set_actor(MglEntity *ent, MglActor *actor)
+{
+    if (!ent)return;
+    if (ent->actor)
+    {
+        mgl_actor_free(&ent->actor);
+    }
+    ent->actor = actor;
 }
 
 void * mgl_entity_get_custom_data(MglEntity *ent)
@@ -179,6 +208,37 @@ void mgl_entity_update_all()
         if (ent->update.function != NULL)
         {
             ent->update.function(ent->update.data,ent);
+        }
+        if (ent->actor)
+        {
+            mgl_actor_next_frame(ent->actor);
+        }
+    }
+}
+
+void mgl_entity_draw_all()
+{
+    MglEntity *ent;
+    for (
+        ent = mgl_resource_get_next_data(__mgl_entity_resource_manager,NULL);
+        ent != NULL;
+        ent = mgl_resource_get_next_data(__mgl_entity_resource_manager,ent)
+    )
+    {
+        if (ent->draw.function != NULL)
+        {
+            ent->draw.function(ent->draw.data,ent);
+        }
+        else if (ent->actor != NULL)
+        {
+            mgl_actor_draw(
+                ent->actor,
+                ent->position,
+                ent->rotation,
+                &ent->scale,
+                &ent->flip,
+                &ent->color);
+
         }
     }
 }

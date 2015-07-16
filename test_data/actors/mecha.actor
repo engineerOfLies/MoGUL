@@ -1,10 +1,10 @@
 {
   "name" : "mecha",
   "spriteFile" : "../test_data/images/mecha.sprite",
-  "frameRate" : 3,
+  "frameRate" : 0.3,
   "scaleCenter" : "24,24",
   "rotationCenter" : "24,24",
-  "color" : "255,0,0,255",
+  "color" : "255,255,255,255",
   "actionList" :
   [
         {

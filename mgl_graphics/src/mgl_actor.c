@@ -149,7 +149,10 @@ MglBool mgl_actor_load_resource(char *filename,void *data)
             memset(action,0,sizeof(MglAction));
             actionConf = mgl_dict_get_list_nth(actionList,i);
             if (!actionConf)break;
-            mgl_dict_get_hash_value_as_line(action->name,actionConf,"name");
+            if (!mgl_dict_get_hash_value_as_line(action->name,actionConf,"name"))
+            {
+                break;
+            }
             mgl_dict_get_hash_value_as_uint(&action->begin,actionConf,"begin");
             mgl_dict_get_hash_value_as_uint(&action->end,actionConf,"end");
             mgl_dict_get_hash_value_as_float(&action->frameRate,actionConf,"frameRate");
@@ -166,8 +169,8 @@ MglBool mgl_actor_load_resource(char *filename,void *data)
             {
                 action->type = MglActionOsci;
             }
-            actor->actionList = g_list_append(actor->actionList,action);
             action->callbacks = g_hash_table_new (g_direct_hash,g_direct_equal);
+            actor->actionList = g_list_append(actor->actionList,action);
         }
     }
     mgl_config_free(&conf);
@@ -191,15 +194,23 @@ void mgl_actor_delete(void *data)
     {
         if (!it->data)continue;
         action = (MglAction *)it->data;
-        hvalues = g_hash_table_get_values (action->callbacks);
-        for (hit = hvalues;hit != NULL;hit = hit->next)
+        if (action->callbacks)
         {
-            cb = (MglCallback *)hit->data;
-            mgl_callback_free(&cb);
-            hit->data = NULL;
+            hvalues = g_hash_table_get_values (action->callbacks);
+            if (hvalues)
+            {
+                for (hit = hvalues;hit != NULL;hit = hit->next)
+                {
+                    if (!hit->data)continue;
+                    cb = (MglCallback *)hit->data;
+                    mgl_callback_free(&cb);
+                    hit->data = NULL;
+                }
+                g_list_free(hvalues);
+            }
+            g_hash_table_destroy (action->callbacks);
+            action->callbacks = NULL;
         }
-        g_list_free(hvalues);
-        g_hash_table_destroy (action->callbacks);
         free(action);
     }
     g_list_free(actor->actionList);
@@ -450,7 +461,9 @@ MglActor *mgl_actor_load(char * filename)
 
 void mgl_actor_free(MglActor **actor)
 {
+    if (!actor)return;
     mgl_resource_free_element(__mgl_actor_resource_manager,(void **)actor);
+    
 }
 
 void mgl_actor_get_size(MglActor *actor,MglUint *w,MglUint *h)

@@ -328,10 +328,6 @@ void mgl_resource_free_element(MglResourceManager *manager,void **data)
   element = mgl_resource_get_header_by_data(*data);
   if (manager->_data_unique)
   {
-    if (manager->data_delete != NULL)
-    {
-      manager->data_delete(*data);
-    }
     mgl_resource_delete_element(manager,element);
     element->timeFree = 0;
     manager->_data_count--;

@@ -14,6 +14,21 @@
 
 void init_all();
 
+
+MglEntity *spawn_mech(MglVec2D position)
+{
+    MglEntity * ent;
+    MglActor *actor;
+    ent = mgl_entity_new();
+    if (!ent)return NULL;
+    actor = mgl_actor_load("../test_data/actors/mecha.actor");
+    mgl_actor_set_action(actor,"idle");
+    mgl_entity_set_actor(ent, actor);
+    mgl_entity_set_position(ent,position);
+    
+    return ent;
+}
+
 int main(int argc,char *argv[])
 {
     int done = 0;
@@ -48,14 +63,21 @@ int main(int argc,char *argv[])
     
     level = mgl_level_load("../test_data/maps/testmap.def");
     
+    spawn_mech(mgl_vec2d(64,64));
+    
     fprintf(stdout,"mgl_entity_test begin\n");
     while (!done)
     {
+        /* system updating */
+        mgl_entity_update_all();
         pos = mgl_camera_get_position(cam);
-        mgl_graphics_clear_screen();
-
-        mgl_level_draw(level);
         
+        /*drawing*/
+        mgl_graphics_clear_screen();
+        mgl_level_draw(level);
+        mgl_entity_draw_all();
+        
+        /*input updating*/
         SDL_PumpEvents();
         keys = SDL_GetKeyboardState(NULL);
         if (keys[SDL_SCANCODE_RIGHT])
@@ -118,4 +140,10 @@ void init_all()
     mgl_parallax_init(5,NULL);
     mgl_tileset_init(2);
     mgl_tilemap_init(10,MglFalse);
+    
+    mgl_entity_init(
+        1024,
+        MglFalse,
+        0,
+        NULL);
 }
