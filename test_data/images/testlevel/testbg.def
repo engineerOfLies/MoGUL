@@ -19,7 +19,7 @@
             {
                 "placeholder" : "true",
                 "size":"1216,736",
-                "cameraPlane" : "false"
+                "cameraPlane" : "true"
             },
             {
                 "image" : "../test_data/images/testlevel/bg_3.png",
@@ -27,7 +27,7 @@
             },
             {
                 "image" : "../test_data/images/testlevel/bg_4.png",
-                "cameraPlane" : "true",
+                "cameraPlane" : "false",
                 "offset":"0,480",
                 "size":"1600,1200",
                 "scale":"1.34,1"

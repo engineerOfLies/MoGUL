@@ -40,6 +40,8 @@ void mgl_entity_close();
 MglBool mgl_entity_load_resource(char *filename,void *data);
 void mgl_entity_delete(void *data);
 
+void mgl_entity_draw_to_parallax_layer(MglEntity *ent,MglParallax *par,MglUint layer,MglCamera *cam);
+
 void mgl_entity_init(
     MglUint maxEntities,
     MglBool useCustomData,
@@ -116,10 +118,30 @@ MglEntity *mgl_entity_new()
     return ent;
 }
 
+MglVec2D mgl_entity_get_position(MglEntity *ent)
+{
+    MglVec2D position = {0,0};
+    if (!ent)return position;
+    return ent->position;
+}
+
 void mgl_entity_set_position(MglEntity *ent,MglVec2D position)
 {
     if (!ent)return;
     mgl_vec2d_copy(ent->position,position);
+}
+
+MglVec2D mgl_entity_get_velocity(MglEntity *ent)
+{
+    MglVec2D velocity = {0,0};
+    if (!ent)return velocity;
+    return ent->velocity;
+}
+
+void mgl_entity_set_velocity(MglEntity *ent,MglVec2D velocity)
+{
+    if (!ent)return;
+    mgl_vec2d_copy(ent->velocity,velocity);
 }
 
 MglActor *mgl_entity_get_actor(MglEntity *ent)
@@ -209,10 +231,125 @@ void mgl_entity_update_all()
         {
             ent->update.function(ent->update.data,ent);
         }
+        else
+        {
+            mgl_vec2d_add(ent->position,ent->position,ent->velocity);
+            mgl_vec2d_add(ent->velocity,ent->acceleration,ent->velocity);
+        }
         if (ent->actor)
         {
             mgl_actor_next_frame(ent->actor);
         }
+    }
+}
+
+MglBool mgl_entity_validate(void *data)
+{
+    if (mgl_resource_element_get_index(__mgl_entity_resource_manager,data) == -1)
+    {
+        return MglFalse;
+    }
+    return MglTrue;
+}
+
+void mgl_entity_draw_layer_entities(void *data,void *context)
+{
+    MglLevelParallaxContext *layerContext;
+    MglLayer *layer;
+    MglEntity *ent;
+    GList *it;
+    layerContext = data;
+    if (!context) return;
+    layer = (MglLayer *)context;
+    if (mgl_layer_get_type(layer) != MglLayerDrawList)return;
+
+    for (it = layer->layer.list;it != NULL;it = it->next)
+    {
+        if (!it->data)continue;
+        if (!mgl_entity_validate(it->data))continue;
+        ent = (MglEntity *)it->data;
+        if (layer->useParallax)
+        {
+            if (layerContext == NULL)continue;
+            mgl_entity_draw_to_parallax_layer(ent,layerContext->par,layerContext->layer,layerContext->cam);
+        }
+        else
+        {
+            mgl_entity_draw_to_parallax_layer(ent,NULL,layer->bglayer,NULL);
+        }
+    }
+}
+
+void mgl_entity_draw_to_parallax_layer(MglEntity *ent,MglParallax *par,MglUint layer,MglCamera *cam)
+{
+    MglLevelParallaxContext context;
+    if (!ent)return;
+    if (ent->draw.function != NULL)
+    {
+        context.par = par;
+        context.cam = cam;
+        context.layer = layer;
+        context.data = ent->draw.data;
+        ent->draw.function(&context,ent);
+    }
+    else if (ent->actor != NULL)
+    {
+        if (cam != NULL)
+        {
+            if (par != NULL)
+            {
+                mgl_actor_draw(
+                    ent->actor,
+                    mgl_parallax_layer_adjust_position(
+                        par,
+                        layer,
+                        mgl_camera_get_adjusted_position(cam,ent->position)),
+                    ent->rotation,
+                    &ent->scale,
+                    &ent->flip,
+                    &ent->color);
+            }
+            else
+            {
+                mgl_actor_draw(
+                    ent->actor,
+                    mgl_camera_get_adjusted_position(cam,ent->position),
+                    ent->rotation,
+                    &ent->scale,
+                    &ent->flip,
+                    &ent->color);
+            }
+        }
+        else
+        {
+            mgl_actor_draw(
+                ent->actor,
+                ent->position,
+                ent->rotation,
+                &ent->scale,
+                &ent->flip,
+                &ent->color);
+        }
+    }
+}
+
+void mgl_entity_draw(MglEntity *ent)
+{
+    if (!ent)return;
+    if (ent->draw.function != NULL)
+    {
+        ent->draw.function(ent->draw.data,ent);
+    }
+    else if (ent->actor != NULL)
+    {
+        mgl_actor_draw(
+            ent->actor,
+            ent->position,
+            ent->rotation,
+            &ent->scale,
+            &ent->flip,
+            &ent->color);
+
     }
 }
 
@@ -225,21 +362,7 @@ void mgl_entity_draw_all()
         ent = mgl_resource_get_next_data(__mgl_entity_resource_manager,ent)
     )
     {
-        if (ent->draw.function != NULL)
-        {
-            ent->draw.function(ent->draw.data,ent);
-        }
-        else if (ent->actor != NULL)
-        {
-            mgl_actor_draw(
-                ent->actor,
-                ent->position,
-                ent->rotation,
-                &ent->scale,
-                &ent->flip,
-                &ent->color);
-
-        }
+        mgl_entity_draw(ent);
     }
 }
 
@@ -302,6 +425,11 @@ void mgl_entity_post_physics_all()
             }
         }
     }
+}
+
+void mgl_entity_register_layer_draw(MglLevel *level,MglLine layername)
+{
+    mgl_level_register_list_draw_function(level,layername, mgl_callback(mgl_entity_draw_layer_entities,NULL));
 }
 
 /*eol@eof*/

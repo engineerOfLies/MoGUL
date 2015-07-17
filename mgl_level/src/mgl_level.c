@@ -152,4 +152,47 @@ void mgl_level_draw(MglLevel *level)
     }    
 }
 
+void mgl_level_remove_draw_item_from_layer(MglLevel *level,MglLine layername,void *item)
+{
+    MglLayer *layer;
+    layer = mgl_level_get_layer_by_name(level,layername);
+    mgl_layer_remove_draw_item(layer,item);
+}
+
+void mgl_level_append_draw_item_to_layer(MglLevel *level,MglLine layername,void *item)
+{
+    MglLayer *layer;
+    layer = mgl_level_get_layer_by_name(level,layername);
+    mgl_layer_add_draw_item(layer,item);
+}
+
+MglLayer *mgl_level_get_layer_by_name(MglLevel *level,MglLine name)
+{
+    GList *it;
+    MglLayer *layer;
+    if (!level)
+    {
+        mgl_logger_info("provided null level");
+        return NULL;
+    }
+    for (it = level->layers;it != NULL; it = it->next)
+    {
+        if (!it->data)continue;
+        layer = (MglLayer *)it->data;
+        if (mgl_line_cmp(layer->name,name)== 0)
+        {
+            return layer;
+        }
+    }
+    mgl_logger_info("level does not contain layer %s",name);
+    return NULL;
+}
+
+void mgl_level_register_list_draw_function(MglLevel *level,MglLine name, MglCallback draw)
+{
+    MglLayer *layer;
+    layer = mgl_level_get_layer_by_name(level,name);
+    mgl_layer_draw_list_register_draw_function(layer,draw);
+}
+
 /*eol@eof*/

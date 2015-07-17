@@ -9,6 +9,9 @@ void mgl_layer_free(MglLayer **layer)
     {
         case MglLayerNone:
             break;
+        case MglLayerDrawList:
+            g_list_free((*layer)->layer.list);
+            break;
         case MglLayerTiles:
             mgl_tilemap_free(&(*layer)->layer.map);
             break;
@@ -42,6 +45,7 @@ MglLayer *mgl_layer_load_from_def(MglDict *def)
     MglLine layerType;
     MglParallax *par;
     MglTileMap *map;
+    MglLine name;
     MglUint     selection = MglLayerNone;
     MglBool     useParallax = MglFalse;
     MglUint     bglayer = 0;
@@ -50,6 +54,7 @@ MglLayer *mgl_layer_load_from_def(MglDict *def)
     if (!def)return NULL;
 
     mgl_dict_get_hash_value_as_uint(&bglayer,def,"bglayer");
+    mgl_dict_get_hash_value_as_line(name,def,"name");
     mgl_dict_get_hash_value_as_bool(&useParallax,def,"useParallax");
     mgl_dict_get_hash_value_as_vec4d(&color,def,"color");
 
@@ -83,11 +88,16 @@ MglLayer *mgl_layer_load_from_def(MglDict *def)
     {
         selection = MglLayerCollision;
     }
+    else if (mgl_line_cmp(layerType,"drawlist")==0)
+    {
+        selection = MglLayerDrawList;
+    }
     layer = mgl_layer_new();
     if (!layer)return NULL;
     layer->selection = selection;
     layer->useParallax = useParallax;
     layer->bglayer = bglayer;
+    mgl_line_cpy(layer->name,name);
     return layer;
 }
 
@@ -103,6 +113,24 @@ MglLayer *mgl_layer_new_tile_layer(
     if (!layer)return NULL;
     layer->selection = MglLayerTiles;
     layer->layer.map = map;
+    layer->useParallax = useParallax;
+    layer->bglayer = bglayer;
+    mgl_vec4d_copy(layer->color,color);
+    return layer;
+}
+
+MglLayer *mgl_layer_new_draw_list(
+    MglCallback draw,
+    MglBool useParallax,
+    MglUint bglayer,
+    MglColor color
+)
+{
+    MglLayer *layer;
+    layer = mgl_layer_new();
+    if (!layer)return NULL;
+    layer->selection = MglLayerDrawList;
+    mgl_callback_copy(&layer->draw,draw);
     layer->useParallax = useParallax;
     layer->bglayer = bglayer;
     mgl_vec4d_copy(layer->color,color);
@@ -147,11 +175,22 @@ MglLayer *mgl_layer_new_image_layer(
 
 void mgl_layer_draw(MglLayer *layer,MglParallax *par,MglCamera *cam,MglVec2D position)
 {
+    MglLevelParallaxContext context;
     if (!layer)return;
     switch(layer->selection)
     {
         case MglLayerNone:
             return;
+        case MglLayerDrawList:
+            if (layer->draw.function != NULL)
+            {
+                context.par = par;
+                context.cam = cam;
+                context.layer = layer->bglayer;
+                context.data = layer->draw.data;
+                layer->draw.function(&context,layer);
+            }
+            break;
         case MglLayerTiles:
             if ((layer->useParallax) && (par != NULL))
             {
@@ -221,6 +260,53 @@ void mgl_layer_draw(MglLayer *layer,MglParallax *par,MglCamera *cam,MglVec2D pos
         case MglLayerCollision:
             return;
     }
+}
+
+void mgl_layer_remove_draw_item(MglLayer *layer,void *item)
+{
+    GList *it;
+    if (!layer)return;
+    if (!item)return;
+    if (layer->selection != MglLayerDrawList)return;
+    for (it = layer->layer.list;it != NULL;it = it->next)
+    {
+        if (!it->data)continue;
+        if (it->data == item)
+        {
+            layer->layer.list = g_list_delete_link(layer->layer.list,it);
+            return;
+        }
+    }
+}
+
+MglLayerType mgl_layer_get_type(MglLayer *layer)
+{
+    if (!layer)return MglLayerNone;
+    return layer->selection;
+}
+
+void mgl_layer_add_draw_item(MglLayer *layer,void *item)
+{
+    if (!layer)return;
+    if (!item)return;
+    if (layer->selection != MglLayerDrawList)return;
+    layer->layer.list = g_list_append(layer->layer.list,item);
+}
+
+void mgl_layer_draw_list_register_draw_function(MglLayer * layer,MglCallback cb)
+{
+    if (!layer)
+    {
+        mgl_logger_info("provided null layer");
+        return;
+    }
+    if (layer->selection != MglLayerDrawList)
+    {
+        mgl_logger_info("layer is not draw list");
+        return;
+    }
+    mgl_logger_info("registering draw function for layer %s",layer->name);
+    mgl_callback_copy(&layer->draw,cb);
 }
 
 /*eol@eof*/

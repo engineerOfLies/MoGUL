@@ -33,7 +33,8 @@ typedef enum {
     MglLayerTiles,      /**<Layer uses tile map*/
     MglLayerParallax,   /**<Layer uses a parallax background layer or set*/
     MglLayerImage,      /**<A flat Image as background*/
-    MglLayerCollision   /**<a collision mask made from either a tile layer or shapes list*/
+    MglLayerCollision,  /**<a collision mask made from either a tile layer or shapes list*/
+    MglLayerDrawList    /**<a list of custom items to be drawn.  This can be used by the entity system and anything custom*/
 }MglLayerType;
 
 typedef union
@@ -41,16 +42,32 @@ typedef union
     MglTileMap  * map;      /**<if this layer uses a tilemap background*/
     MglParallax * par;      /**<if this layer uses a parallax background*/
     MglSprite   * image;    /**<if this layer is a simple image*/
+    GList       * list;     /**<list of items to draw*/
 }MglLayerSelection;
 
 typedef struct
 {
-    MglLayerSelection layer;/**<*/
+    MglLine name;           /**<a searchable name,  this should be unique, but is not enforced*/
+    MglLayerSelection layer;/**<which layer type this*/
     MglLayerType selection; /**<which layer type this layer is*/
     MglBool useParallax;    /**<if true, this layer uses the parallax adjusted drawing position*/
     MglUint bglayer;        /**<if this layer usesParallax, this is the layer to use*/
     MglColor color;         /**<color shift for the layer, 255,255,255,255 is no change*/
+    MglCallback draw;       /**<custom draw funciton for the draw list layer*/
 }MglLayer;
+
+
+/**
+ * @brief this structure is used to pass parallax and camera information about the level to any custom layer
+ * drawing functions
+ */
+typedef struct
+{
+    MglParallax *par;       /**<the parallax context for the level*/
+    MglCamera *cam;         /**<the camera context for the level*/
+    MglUint layer;          /**<the layer of the parallax context*/
+    void *data;             /**<custom data*/
+}MglLevelParallaxContext;
 
 
 /**
@@ -95,6 +112,27 @@ MglLayer *mgl_layer_new_parallax_layer(
 );
 
 /**
+ * @brief make a new layer of custom objects to draw
+ * @param draw the draw callback function
+ * @param useParallax if true, this layer will be treated as if it were part of the level's parallax context
+ * @param bglayer if using parallax context, use this layer.  Otherwise this value is ignored
+ * @return NULL on error or the allocated layer when done
+ */
+MglLayer *mgl_layer_new_draw_list(
+    MglCallback draw,
+    MglBool useParallax,
+    MglUint bglayer,
+    MglColor color
+);
+
+/**
+ * @brief get the type of the layer specified
+ * @param layer the layer to query
+ * @return the MglLayerType of the layer or MglLayerNone on error
+ */
+MglLayerType mgl_layer_get_type(MglLayer *layer);
+
+/**
  * @brief draw a single layer
  * @param layer the layer to draw
  * @param par the parallax context to use to adjust the layer
@@ -102,5 +140,28 @@ MglLayer *mgl_layer_new_parallax_layer(
  * @param position the positional offset 
  */
 void mgl_layer_draw(MglLayer *layer,MglParallax *par,MglCamera *cam,MglVec2D position);
+
+/**
+ * @brief add a draw item to the layer.  This should be the same type of data in the rest of the layer, though no type checking will be done
+ * NOTE: items are not considered to be owned by the draw layer and will not be cleaned up by the layer should it be deleted.
+ * @param layer the draw layer to add too.  If the layer is not a MglLayerDrawList, this will be a no-op
+ * @param item the item to add to the list, if this is NULL the function will be a no-op
+ */
+void mgl_layer_add_draw_item(MglLayer *layer,void *item);
+
+/**
+ * @brief remove an item from the draw layer.
+ * NOTE: items are not considered to be owned by the draw layer and will not be cleaned up by this call, just the reference to it by the list
+ * @param layer the draw layer to remove the item from
+ * @param item the item to remove from the list.  If not found, nothing will be done.
+ */
+void mgl_layer_remove_draw_item(MglLayer *layer,void *item);
+
+/**
+ * @brief register a custom draw function with the draw list layer
+ * @param layer the layer to register a draw function with
+ * @param cb the draw function.  This will receive a copy of your callback.data as well as a pointero the layer as the context
+ */
+void mgl_layer_draw_list_register_draw_function(MglLayer *layer,MglCallback cb);
 
 #endif

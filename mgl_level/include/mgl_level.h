@@ -66,4 +66,31 @@ MglLevel *mgl_level_load(char *filename);
  */
 void mgl_level_draw(MglLevel *level);
 
+/**
+ * @brief get a level layer by name
+ * @param level the level to get the layer from
+ * @param name the name of the layer to find
+ * @return NULL on error or not found, a layer pointer otherwise
+ */
+MglLayer *mgl_level_get_layer_by_name(MglLevel *level,MglLine name);
+
+/**
+ * @brief register a custom draw function for the draw list layer of the level
+ * @param level the level to set the layer information for
+ * @param name the name of the layer to set the callback for
+ * @param cb the draw function.  this function will receive the layer pointer as the context and MglLevelParallaxContext as the data.
+ *  The user data will be a provided though the context.data
+ */
+void mgl_level_register_list_draw_function(MglLevel *level,MglLine name, MglCallback draw);
+
+/**
+ * @brief add a draw item to the level layer.  This should be the same type of data in the rest of the layer, though no type checking will be done
+ * NOTE: items are not considered to be owned by the draw layer and will not be cleaned up by the layer should it be deleted.
+ * @param level the level to add to.
+ * @param layername the draw layer to add too.  If the layer is not a MglLayerDrawList or is not found, this will be a no-op
+ * @param item the item to add to the list, if this is NULL the function will be a no-op
+ */
+void mgl_level_append_draw_item_to_layer(MglLevel *level,MglLine layername,void *item);
+
+
 #endif

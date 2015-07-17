@@ -1,7 +1,7 @@
 {
   "name" : "mecha",
   "spriteFile" : "../test_data/images/mecha.sprite",
-  "frameRate" : 0.3,
+  "frameRate" : 0.4,
   "scaleCenter" : "24,24",
   "rotationCenter" : "24,24",
   "color" : "255,255,255,255",
@@ -88,7 +88,7 @@
             "name" : "walk_left",
             "begin" : 33,
             "end" : 39,
-            "frameRate": 0.5,
+            "frameRate": 0.25,
             "type": "loop"
         },
         {

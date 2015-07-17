@@ -14,17 +14,56 @@
 
 void init_all();
 
+MglUint sw = 0,sh = 0;
+
+void mecha_think(void *data,void *context)
+{
+    MglEntity *ent;
+    MglVec2D position;
+    MglActor *actor;
+    ent = context;
+    if (!ent)return;
+    position = mgl_entity_get_position(ent);
+    actor = mgl_entity_get_actor(ent);
+    if (position.x > (32 * 32))
+    {
+        mgl_entity_set_velocity(ent,mgl_vec2d(-1,0));
+        mgl_actor_set_action(
+            actor,
+            "walk_left"
+        );
+    }
+    if (position.x < (32 * 14))
+    {
+        mgl_entity_set_velocity(ent,mgl_vec2d(1,0));
+        mgl_actor_set_action(
+            actor,
+            "walk_right"
+        );
+    }
+
+}
 
 MglEntity *spawn_mech(MglVec2D position)
 {
     MglEntity * ent;
     MglActor *actor;
+    MglCallback think = mgl_callback(mecha_think,NULL);
     ent = mgl_entity_new();
     if (!ent)return NULL;
     actor = mgl_actor_load("../test_data/actors/mecha.actor");
-    mgl_actor_set_action(actor,"idle");
+    mgl_actor_set_action(actor,"walk_right");
     mgl_entity_set_actor(ent, actor);
     mgl_entity_set_position(ent,position);
+    mgl_entity_set_velocity(ent,mgl_vec2d(1,0));
+    mgl_entity_set_callbacks(
+        ent,
+        &think,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL);
     
     return ent;
 }
@@ -34,11 +73,11 @@ int main(int argc,char *argv[])
     int done = 0;
     const Uint8 *keys = NULL;
     MglCamera *cam;
-    MglUint sw = 0,sh = 0;
     MglParallax *par;
     MglUint bgw,bgh;
     MglVec2D pos = {0,0};
     MglLevel *level;
+    MglEntity *ent;
     
     if ((argc == 2) && (strcmp(argv[1],"-h")==0))
     {
@@ -62,20 +101,23 @@ int main(int argc,char *argv[])
     mgl_level_init(5,cam);
     
     level = mgl_level_load("../test_data/maps/testmap.def");
+    mgl_entity_register_layer_draw(level,"entityLayer");
     
-    spawn_mech(mgl_vec2d(64,64));
+
+    ent = spawn_mech(mgl_vec2d(32 * 15,32*5 + 16));
+    mgl_level_append_draw_item_to_layer(level,"entityLayer",ent);
     
     fprintf(stdout,"mgl_entity_test begin\n");
     while (!done)
     {
         /* system updating */
+        mgl_entity_think_all();
         mgl_entity_update_all();
         pos = mgl_camera_get_position(cam);
         
         /*drawing*/
         mgl_graphics_clear_screen();
         mgl_level_draw(level);
-        mgl_entity_draw_all();
         
         /*input updating*/
         SDL_PumpEvents();

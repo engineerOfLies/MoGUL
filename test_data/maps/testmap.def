@@ -6,6 +6,7 @@
         [
             {
                 "layerType" : "parallax",
+                "name":"background01",
                 "parallax" : "../test_data/images/testlevel/testbg.def",
                 "useParallax" : "true",
                 "bglayer": "0",
@@ -13,6 +14,7 @@
             },
             {
                 "layerType" : "parallax",
+                "name":"background02",
                 "parallax" : "../test_data/images/testlevel/testbg.def",
                 "useParallax" : "true",
                 "bglayer": "1",
@@ -20,6 +22,7 @@
             },
             {
                 "layerType" : "parallax",
+                "name":"background03",
                 "parallax" : "../test_data/images/testlevel/testbg.def",
                 "useParallax" : "true",
                 "bglayer": "2",
@@ -27,13 +30,22 @@
             },
             {
                 "layerType" : "tilemap",
+                "name":"tileLayer",
                 "tilemap" : "../test_data/maps/testtilemap.def",
                 "useParallax" : "true",
                 "bglayer": "3",
                 "color" : "255,255,255,255"
             },
             {
+                "layerType" : "drawlist",
+                "name":"entityLayer",
+                "useParallax" : "true",
+                "bglayer": "3",
+                "color" : "255,255,255,255"
+            },
+            {
                 "layerType" : "parallax",
+                "name":"foreground01",
                 "parallax" : "../test_data/images/testlevel/testbg.def",
                 "useParallax" : "true",
                 "bglayer": "4",
@@ -41,6 +53,7 @@
             },
             {
                 "layerType" : "parallax",
+                "name":"foreground02",
                 "parallax" : "../test_data/images/testlevel/testbg.def",
                 "useParallax" : "true",
                 "bglayer": "5",
