@@ -195,4 +195,10 @@ void mgl_level_register_list_draw_function(MglLevel *level,MglLine name, MglCall
     mgl_layer_draw_list_register_draw_function(layer,draw);
 }
 
+MglTileMap *mgl_level_get_layer_tilemap_by_name(MglLevel *level,MglLine name)
+{
+    MglLayer *layer;
+    layer = mgl_level_get_layer_by_name(level,name);
+    return mgl_layer_get_tile_map(layer);
+}
 /*eol@eof*/

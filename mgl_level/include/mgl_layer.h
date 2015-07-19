@@ -164,4 +164,11 @@ void mgl_layer_remove_draw_item(MglLayer *layer,void *item);
  */
 void mgl_layer_draw_list_register_draw_function(MglLayer *layer,MglCallback cb);
 
+/**
+ * @brief get the tilemap of the layer specified
+ * @param layer the layer to query
+ * @return NULL on error or the layer is not a tile map, a tilemap pointer otherwise
+ */
+MglTileMap *mgl_layer_get_tile_map(MglLayer * layer);
+
 #endif

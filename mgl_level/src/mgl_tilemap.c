@@ -362,4 +362,61 @@ MglBool mgl_tilemap_load_resource(char *filename,void *data)
     return MglTrue;
 }
 
+MglDict * mgl_tilemap_get_tile_info_by_position(MglTileMap *map,MglVec2D position)
+{
+    MglInt index;
+    index = mgl_tilemap_get_tile_index_by_position(map,position);
+    if (index == -1)
+    {
+        return NULL;
+    }
+    if (!index)
+    {
+        return NULL;
+    }
+    return mgl_tileset_get_tile_custom_info(map->tileSet,index - 1);
+}
+
+MglBool mgl_tilemap_get_tile_solid_by_position(MglTileMap *map,MglVec2D position)
+{
+    MglInt index;
+    index = mgl_tilemap_get_tile_index_by_position(map,position);
+    if (index == -1)
+    {
+        return MglTrue;
+    }
+    if (!index)
+    {
+        return MglFalse;
+    }
+    return mgl_tileset_tile_solid(map->tileSet,index - 1);
+}
+
+MglInt mgl_tilemap_get_tile_index_by_position(MglTileMap *map,MglVec2D position)
+{
+    MglVec2D tilepos;
+    MglVec2D tilesize;
+    if (!map)return -1;
+    if (!map->tileSet)return -1;
+    mgl_tileset_get_tile_size(map->tileSet, &tilesize);
+    if ((tilesize.x == 0) || (tilesize.y == 0))return -1;
+    tilepos.x = (int)(position.x / tilesize.x);
+    tilepos.y = (int)(position.y / tilesize.y);
+    if ((tilepos.x < 0) || (tilepos.y < 0) || (tilepos.x >= map->mapWidth) || (tilepos.y >= map->mapHeight))
+    {
+        return -1;
+    }
+    while (map->tileMap[(int)((tilepos.y * map->mapWidth)+tilepos.x)] < 0)
+    {
+        if (map->tileMap[(int)((tilepos.y * map->mapWidth)+tilepos.x)] == -1)
+        {
+            tilepos.x -= 1;
+        }
+        else if (map->tileMap[(int)((tilepos.y * map->mapWidth)+tilepos.x)] == -2)
+        {
+            tilepos.y -= 1;
+        }
+    }
+    return map->tileMap[(int)((tilepos.y * map->mapWidth)+tilepos.x)];
+}
 /*eol@eof*/

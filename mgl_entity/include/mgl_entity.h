@@ -178,4 +178,11 @@ void mgl_entity_set_callbacks(
     MglCallback * pre_physics,
     MglCallback * post_physics);
 
+/**
+ * @brief assign a tilemap to an entity for tile awareness
+ * @param ent the entity to set
+ * @param map the map to assign,  If NULL, it un-assigns
+ */
+void mgl_entity_assign_tilemap(MglEntity *ent,MglTileMap *map);
+
 #endif

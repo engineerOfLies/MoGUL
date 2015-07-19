@@ -27,8 +27,11 @@ struct MglEntity_S
     MglCallback pre_physics;
     MglCallback post_physics;
     
-    cpShape *shape;
-    cpBody *body;
+    MglTileMap *map;        /**<the map that this entity is a part of*/
+    
+    cpSpace *space;         /**<the physics space that this entity is a part of*/
+    cpShape *shape;         /**<the collision shape for this entity*/
+    cpBody *body;           /**<the collision body for this entity*/
 };
 
 
@@ -425,6 +428,12 @@ void mgl_entity_post_physics_all()
             }
         }
     }
+}
+
+void mgl_entity_assign_tilemap(MglEntity *ent,MglTileMap *map)
+{
+    if (!ent)return;
+    ent->map = map;
 }
 
 void mgl_entity_register_layer_draw(MglLevel *level,MglLine layername)

@@ -105,6 +105,7 @@ int main(int argc,char *argv[])
     
 
     ent = spawn_mech(mgl_vec2d(32 * 15,32*5 + 16));
+    mgl_entity_assign_tilemap(ent,mgl_level_get_layer_tilemap_by_name(level,"tileLayer"));
     mgl_level_append_draw_item_to_layer(level,"entityLayer",ent);
     
     fprintf(stdout,"mgl_entity_test begin\n");

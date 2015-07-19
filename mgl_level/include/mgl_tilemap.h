@@ -92,4 +92,30 @@ void mgl_tilemap_render(MglTileMap *tilemap);
  */
 void mgl_tilemap_draw(MglTileMap *tilemap, MglVec2D position,MglVec4D color);
 
+/**
+ * @brief get the index of the tile found at the position provided
+ * NOTE: a Zero index implies no tile.  this (index - 1) maps to the tile set
+ * @param map the tile mape to query
+ * @param position the position to check
+ * @return -1 on error or the tile index otherwise
+ */
+MglInt mgl_tilemap_get_tile_index_by_position(MglTileMap *map,MglVec2D position);
+
+/**
+ * @brief Check if the position in the tilemap is considered solid.
+ * @param map the tilemap to query
+ * @param position the position to check
+ * @return MglTrue if the tile is solid or if the tile is off the map, MglFalse if there is no tile or the tile is not solid
+ */
+MglBool mgl_tilemap_get_tile_solid_by_position(MglTileMap *map,MglVec2D position);
+
+/**
+ * @brief get the data definition dictionary associated with the tile a the map position
+ * NOTE: Tiles might now have data associated with them
+ * @param map the tilemap to query
+ * @param position the position to check
+ * @return NULL if not found or error.  A pointer to a diction IF there is data associated with the tile
+ */
+MglDict * mgl_tilemap_get_tile_info_by_position(MglTileMap *map,MglVec2D position);
+
 #endif

@@ -309,4 +309,10 @@ void mgl_layer_draw_list_register_draw_function(MglLayer * layer,MglCallback cb)
     mgl_callback_copy(&layer->draw,cb);
 }
 
+MglTileMap *mgl_layer_get_tile_map(MglLayer * layer)
+{
+    if (!layer)return NULL;
+    if (layer->selection != MglLayerTiles)return NULL;
+    return layer->layer.map;
+}
 /*eol@eof*/

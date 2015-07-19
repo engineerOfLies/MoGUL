@@ -92,5 +92,11 @@ void mgl_level_register_list_draw_function(MglLevel *level,MglLine name, MglCall
  */
 void mgl_level_append_draw_item_to_layer(MglLevel *level,MglLine layername,void *item);
 
-
+/**
+ * @brief get the tilemap associated with the level layer
+ * @param level the level to set the layer information for
+ * @param name the name of the layer to set the callback for
+ * @return NULL on error or not a tilemap layer or not found.  The tilemap pointer otherwise
+ */
+MglTileMap *mgl_level_get_layer_tilemap_by_name(MglLevel *level,MglLine name);
 #endif
