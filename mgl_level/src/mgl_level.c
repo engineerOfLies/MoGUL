@@ -195,6 +195,34 @@ void mgl_level_register_list_draw_function(MglLevel *level,MglLine name, MglCall
     mgl_layer_draw_list_register_draw_function(layer,draw);
 }
 
+void mgl_level_register_list_think_function(MglLevel *level,MglLine name, MglCallback think)
+{
+    MglLayer *layer;
+    layer = mgl_level_get_layer_by_name(level,name);
+    mgl_layer_draw_list_register_think_function(layer,think);
+}
+
+void mgl_level_register_list_update_function(MglLevel *level,MglLine name, MglCallback update)
+{
+    MglLayer *layer;
+    layer = mgl_level_get_layer_by_name(level,name);
+    mgl_layer_draw_list_register_update_function(layer,update);
+}
+
+void mgl_level_register_list_preprocess_function(MglLevel *level,MglLine name, MglCallback preprocess)
+{
+    MglLayer *layer;
+    layer = mgl_level_get_layer_by_name(level,name);
+    mgl_layer_draw_list_register_preprocess_function(layer,preprocess);
+}
+
+void mgl_level_register_list_posprocess_function(MglLevel *level,MglLine name, MglCallback postprocess)
+{
+    MglLayer *layer;
+    layer = mgl_level_get_layer_by_name(level,name);
+    mgl_layer_draw_list_register_postprocess_function(layer,postprocess);
+}
+
 MglTileMap *mgl_level_get_layer_tilemap_by_name(MglLevel *level,MglLine name)
 {
     MglLayer *layer;

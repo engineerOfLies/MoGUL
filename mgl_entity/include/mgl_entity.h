@@ -55,11 +55,11 @@ MglEntity *mgl_entity_new();
 MglBool mgl_entity_validate(void *data);
 
 /**
- * @brief register the entity drawing function to a draw list level layer
+ * @brief register the entity callback functions for a draw list level layer
  * @param level the level to register for
  * @param layername the layer to register to
  */
-void mgl_entity_register_layer_draw(MglLevel *level,MglLine layername);
+void mgl_entity_register_layer_callbacks(MglLevel *level,MglLine layername);
 
 /**
  * @brief draw all entities based on their custom draw functions or by drawing their actors

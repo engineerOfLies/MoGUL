@@ -100,6 +100,7 @@ int main(int argc,char *argv[])
     
     mgl_level_init(5,cam);
     
+    /*setup entity layer*/
     level = mgl_level_load("../test_data/maps/testmap.def");
     mgl_entity_register_layer_draw(level,"entityLayer");
     

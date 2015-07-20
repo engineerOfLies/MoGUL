@@ -22,6 +22,7 @@
  */
 #include "mgl_tilemap.h"
 #include "mgl_parallax.h"
+#include "mgl_collision.h"
 #include "mgl_actor.h"
 /**
  * @purpose layers are part of the level, a level will be made up of one or more layers.
@@ -37,12 +38,23 @@ typedef enum {
     MglLayerDrawList    /**<a list of custom items to be drawn.  This can be used by the entity system and anything custom*/
 }MglLayerType;
 
+typedef struct
+{
+    GList *list;
+    MglCallback draw;
+    MglCallback think;
+    MglCallback preprocess;
+    MglCallback update;
+    MglCallback postprocess;
+}MglDrawList;
+
 typedef union
 {
     MglTileMap  * map;      /**<if this layer uses a tilemap background*/
     MglParallax * par;      /**<if this layer uses a parallax background*/
     MglSprite   * image;    /**<if this layer is a simple image*/
-    GList       * list;     /**<list of items to draw*/
+    MglDrawList * drawlist;     /**<list of items to draw*/
+    MglCollision *collision;/**<if the layer is a collision mask*/
 }MglLayerSelection;
 
 typedef struct
@@ -53,7 +65,8 @@ typedef struct
     MglBool useParallax;    /**<if true, this layer uses the parallax adjusted drawing position*/
     MglUint bglayer;        /**<if this layer usesParallax, this is the layer to use*/
     MglColor color;         /**<color shift for the layer, 255,255,255,255 is no change*/
-    MglCallback draw;       /**<custom draw funciton for the draw list layer*/
+    MglBool useCollision;   /**<if this layer uses a collision context*/
+    MglLine collisionLayer; /**<which collision layer to work with*/
 }MglLayer;
 
 
@@ -113,13 +126,11 @@ MglLayer *mgl_layer_new_parallax_layer(
 
 /**
  * @brief make a new layer of custom objects to draw
- * @param draw the draw callback function
  * @param useParallax if true, this layer will be treated as if it were part of the level's parallax context
  * @param bglayer if using parallax context, use this layer.  Otherwise this value is ignored
  * @return NULL on error or the allocated layer when done
  */
 MglLayer *mgl_layer_new_draw_list(
-    MglCallback draw,
     MglBool useParallax,
     MglUint bglayer,
     MglColor color
@@ -140,6 +151,21 @@ MglLayerType mgl_layer_get_type(MglLayer *layer);
  * @param position the positional offset 
  */
 void mgl_layer_draw(MglLayer *layer,MglParallax *par,MglCamera *cam,MglVec2D position);
+
+/**
+ * @brief run all pre-physics simulation update functions
+ */
+void mgl_layer_preprocess(MglLayer *layer);
+
+/**
+ * @brief run all physics simulations & update functions
+ */
+void mgl_layer_update(MglLayer *layer);
+
+/**
+ * @brief run all physics simulations & update functions
+ */
+void mgl_layer_postprocess(MglLayer *layer);
 
 /**
  * @brief add a draw item to the layer.  This should be the same type of data in the rest of the layer, though no type checking will be done
@@ -163,6 +189,10 @@ void mgl_layer_remove_draw_item(MglLayer *layer,void *item);
  * @param cb the draw function.  This will receive a copy of your callback.data as well as a pointero the layer as the context
  */
 void mgl_layer_draw_list_register_draw_function(MglLayer *layer,MglCallback cb);
+void mgl_layer_draw_list_register_think_function(MglLayer *layer,MglCallback cb);
+void mgl_layer_draw_list_register_preprocess_function(MglLayer *layer,MglCallback cb);
+void mgl_layer_draw_list_register_update_function(MglLayer *layer,MglCallback cb);
+void mgl_layer_draw_list_register_postprocess_function(MglLayer *layer,MglCallback cb);
 
 /**
  * @brief get the tilemap of the layer specified

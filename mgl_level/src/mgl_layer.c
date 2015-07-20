@@ -10,7 +10,12 @@ void mgl_layer_free(MglLayer **layer)
         case MglLayerNone:
             break;
         case MglLayerDrawList:
-            g_list_free((*layer)->layer.list);
+            if ((*layer)->layer.drawlist != NULL)
+            {
+                g_list_free((*layer)->layer.drawlist->list);
+                free((*layer)->layer.drawlist);
+                (*layer)->layer.drawlist = NULL;
+            }
             break;
         case MglLayerTiles:
             mgl_tilemap_free(&(*layer)->layer.map);
@@ -51,6 +56,7 @@ MglLayer *mgl_layer_load_from_def(MglDict *def)
     MglUint     bglayer = 0;
     MglColor color = {255,255,255,255};
     MglLayer *layer = NULL;
+    MglDrawList *list= NULL;
     if (!def)return NULL;
 
     mgl_dict_get_hash_value_as_uint(&bglayer,def,"bglayer");
@@ -69,7 +75,9 @@ MglLayer *mgl_layer_load_from_def(MglDict *def)
         {
             return NULL;
         }
-        return mgl_layer_new_parallax_layer(par,useParallax,bglayer,color);
+        layer = mgl_layer_new_parallax_layer(par,useParallax,bglayer,color);
+        mgl_line_cpy(layer->name,name);
+        return layer;
     }
     else if (mgl_line_cmp(layerType,"tilemap")==0)
     {
@@ -78,7 +86,9 @@ MglLayer *mgl_layer_load_from_def(MglDict *def)
         {
             return NULL;
         }
-        return mgl_layer_new_tile_layer(map,useParallax,bglayer,color);
+        layer = mgl_layer_new_tile_layer(map,useParallax,bglayer,color);
+        mgl_line_cpy(layer->name,name);
+        return layer;
     }
     else if (mgl_line_cmp(layerType,"image")==0)
     {
@@ -90,7 +100,23 @@ MglLayer *mgl_layer_load_from_def(MglDict *def)
     }
     else if (mgl_line_cmp(layerType,"drawlist")==0)
     {
+        layer = mgl_layer_new();
+        if (!layer)return NULL;
         selection = MglLayerDrawList;
+        list = (MglDrawList*)malloc(sizeof(MglDrawList));
+        if (!list)
+        {
+            mgl_logger_error("failed to allocate drawlist data");
+            mgl_layer_free(&layer);
+            return NULL;
+        }
+        memset(list,0,sizeof(MglDrawList));
+        layer->selection = selection;
+        layer->useParallax = useParallax;
+        layer->bglayer = bglayer;
+        mgl_line_cpy(layer->name,name);
+        layer->layer.drawlist = list;
+        return layer;
     }
     layer = mgl_layer_new();
     if (!layer)return NULL;
@@ -120,19 +146,35 @@ MglLayer *mgl_layer_new_tile_layer(
 }
 
 MglLayer *mgl_layer_new_draw_list(
-    MglCallback draw,
     MglBool useParallax,
     MglUint bglayer,
     MglColor color
 )
 {
     MglLayer *layer;
+    MglDrawList *list;
+    list = (MglDrawList*)malloc(sizeof(MglDrawList));
+    if (!list)
+    {
+        mgl_logger_error("failed to allocate drawlist data");
+        return NULL;
+    }
     layer = mgl_layer_new();
-    if (!layer)return NULL;
+    if (!layer)
+    {
+        mgl_logger_error("failed to allocate layer data");
+        free(list);
+        return NULL;
+    }
+    memset(list,0,sizeof(MglDrawList));
     layer->selection = MglLayerDrawList;
-    mgl_callback_copy(&layer->draw,draw);
     layer->useParallax = useParallax;
     layer->bglayer = bglayer;
+    layer->layer.drawlist = list;
+    if (!layer->layer.drawlist)
+    {
+        mgl_logger_error("layer->layer.drawlist didn't get set?");
+    }
     mgl_vec4d_copy(layer->color,color);
     return layer;
 }
@@ -173,6 +215,70 @@ MglLayer *mgl_layer_new_image_layer(
     return layer;
 }
 
+void mgl_layer_preprocess(MglLayer *layer)
+{
+    if (!layer)return;
+    switch(layer->selection)
+    {
+        case MglLayerNone:
+            break;
+        case MglLayerTiles:
+            break;
+        case MglLayerParallax:
+            break;
+        case MglLayerImage:
+            break;
+        case MglLayerCollision:
+            break;
+        case MglLayerDrawList:
+            break;
+            
+    }
+}
+
+void mgl_layer_update(MglLayer *layer)
+{
+    if (!layer)return;
+    switch(layer->selection)
+    {
+        case MglLayerNone:
+            break;
+        case MglLayerTiles:
+            break;
+        case MglLayerParallax:
+            break;
+        case MglLayerImage:
+            break;
+        case MglLayerCollision:
+            mgl_collision_update(layer->layer.collision);
+            break;
+        case MglLayerDrawList:
+            break;
+            
+    }
+}
+
+void mgl_layer_postprocess(MglLayer *layer)
+{
+    if (!layer)return;
+    switch(layer->selection)
+    {
+        case MglLayerNone:
+            break;
+        case MglLayerTiles:
+            break;
+        case MglLayerParallax:
+            break;
+        case MglLayerImage:
+            break;
+        case MglLayerCollision:
+            break;
+        case MglLayerDrawList:
+            break;
+            
+    }
+}
+
 void mgl_layer_draw(MglLayer *layer,MglParallax *par,MglCamera *cam,MglVec2D position)
 {
     MglLevelParallaxContext context;
@@ -182,13 +288,18 @@ void mgl_layer_draw(MglLayer *layer,MglParallax *par,MglCamera *cam,MglVec2D pos
         case MglLayerNone:
             return;
         case MglLayerDrawList:
-            if (layer->draw.function != NULL)
+            if (!layer->layer.drawlist)
+            {
+                mgl_logger_info("layer draw list has no data");
+                return;
+            }
+            if (layer->layer.drawlist->draw.function != NULL)
             {
                 context.par = par;
                 context.cam = cam;
                 context.layer = layer->bglayer;
-                context.data = layer->draw.data;
-                layer->draw.function(&context,layer);
+                context.data = layer->layer.drawlist->draw.data;
+                layer->layer.drawlist->draw.function(&context,layer);
             }
             break;
         case MglLayerTiles:
@@ -268,12 +379,12 @@ void mgl_layer_remove_draw_item(MglLayer *layer,void *item)
     if (!layer)return;
     if (!item)return;
     if (layer->selection != MglLayerDrawList)return;
-    for (it = layer->layer.list;it != NULL;it = it->next)
+    for (it = layer->layer.drawlist->list;it != NULL;it = it->next)
     {
         if (!it->data)continue;
         if (it->data == item)
         {
-            layer->layer.list = g_list_delete_link(layer->layer.list,it);
+            layer->layer.drawlist->list = g_list_delete_link(layer->layer.drawlist->list,it);
             return;
         }
     }
@@ -290,7 +401,12 @@ void mgl_layer_add_draw_item(MglLayer *layer,void *item)
     if (!layer)return;
     if (!item)return;
     if (layer->selection != MglLayerDrawList)return;
-    layer->layer.list = g_list_append(layer->layer.list,item);
+    if (!layer->layer.drawlist)
+    {
+        mgl_logger_info("layer draw list has no data");
+        return;
+    }
+    layer->layer.drawlist->list = g_list_append(layer->layer.drawlist->list,item);
 }
 
 void mgl_layer_draw_list_register_draw_function(MglLayer * layer,MglCallback cb)
@@ -305,8 +421,13 @@ void mgl_layer_draw_list_register_draw_function(MglLayer * layer,MglCallback cb)
         mgl_logger_info("layer is not draw list");
         return;
     }
+    if (!layer->layer.drawlist)
+    {
+        mgl_logger_info("layer draw list has no data");
+        return;
+    }
     mgl_logger_info("registering draw function for layer %s",layer->name);
-    mgl_callback_copy(&layer->draw,cb);
+    mgl_callback_copy(&layer->layer.drawlist->draw,cb);
 }
 
 MglTileMap *mgl_layer_get_tile_map(MglLayer * layer)

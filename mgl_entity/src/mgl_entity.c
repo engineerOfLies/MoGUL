@@ -44,6 +44,7 @@ MglBool mgl_entity_load_resource(char *filename,void *data);
 void mgl_entity_delete(void *data);
 
 void mgl_entity_draw_to_parallax_layer(MglEntity *ent,MglParallax *par,MglUint layer,MglCamera *cam);
+void mgl_entity_think(MglEntity *ent);
 
 void mgl_entity_init(
     MglUint maxEntities,
@@ -221,6 +222,23 @@ void mgl_entity_set_callbacks(
     }
 }
 
+void mgl_entity_update(MglEntity *ent)
+{
+    if (ent->update.function != NULL)
+    {
+        ent->update.function(ent->update.data,ent);
+    }
+    else
+    {
+        mgl_vec2d_add(ent->position,ent->position,ent->velocity);
+        mgl_vec2d_add(ent->velocity,ent->acceleration,ent->velocity);
+    }
+    if (ent->actor)
+    {
+        mgl_actor_next_frame(ent->actor);
+    }
+}
+
 void mgl_entity_update_all()
 {
     MglEntity *ent;
@@ -230,19 +248,7 @@ void mgl_entity_update_all()
         ent = mgl_resource_get_next_data(__mgl_entity_resource_manager,ent)
     )
     {
-        if (ent->update.function != NULL)
-        {
-            ent->update.function(ent->update.data,ent);
-        }
-        else
-        {
-            mgl_vec2d_add(ent->position,ent->position,ent->velocity);
-            mgl_vec2d_add(ent->velocity,ent->acceleration,ent->velocity);
-        }
-        if (ent->actor)
-        {
-            mgl_actor_next_frame(ent->actor);
-        }
+        mgl_entity_update(ent);
     }
 }
 
@@ -253,6 +259,24 @@ MglBool mgl_entity_validate(void *data)
         return MglFalse;
     }
     return MglTrue;
+}
+
+void mgl_entity_think_layer_entities(void *data,void *context)
+{
+    MglLayer *layer;
+    MglEntity *ent;
+    GList *it;
+    if (!context) return;
+    layer = (MglLayer *)context;
+    if (mgl_layer_get_type(layer) != MglLayerDrawList)return;
+    
+    for (it = layer->layer.drawlist->list;it != NULL;it = it->next)
+    {
+        if (!it->data)continue;
+        if (!mgl_entity_validate(it->data))continue;
+        ent = (MglEntity *)it->data;
+        mgl_entity_think(ent);
+    }
 }
 
 void mgl_entity_draw_layer_entities(void *data,void *context)
@@ -266,7 +290,7 @@ void mgl_entity_draw_layer_entities(void *data,void *context)
     layer = (MglLayer *)context;
     if (mgl_layer_get_type(layer) != MglLayerDrawList)return;
 
-    for (it = layer->layer.list;it != NULL;it = it->next)
+    for (it = layer->layer.drawlist->list;it != NULL;it = it->next)
     {
         if (!it->data)continue;
         if (!mgl_entity_validate(it->data))continue;
@@ -369,19 +393,24 @@ void mgl_entity_draw_all()
     }
 }
 
+void mgl_entity_think(MglEntity *ent)
+{
+    if (ent->think.function != NULL)
+    {
+        ent->think.function(ent->think.data,ent);
+    }
+}
+
 void mgl_entity_think_all()
 {
-    MglEntity *ent;
+    MglEntity *ent = NULL;
     for (
         ent = mgl_resource_get_next_data(__mgl_entity_resource_manager,NULL);
         ent != NULL;
         ent = mgl_resource_get_next_data(__mgl_entity_resource_manager,ent)
     )
     {
-        if (ent->think.function != NULL)
-        {
-            ent->think.function(ent->think.data,ent);
-        }
+        mgl_entity_think(ent);
     }
 }
 
@@ -436,9 +465,13 @@ void mgl_entity_assign_tilemap(MglEntity *ent,MglTileMap *map)
     ent->map = map;
 }
 
-void mgl_entity_register_layer_draw(MglLevel *level,MglLine layername)
+void mgl_entity_register_layer_callbacks(MglLevel *level,MglLine layername)
 {
     mgl_level_register_list_draw_function(level,layername, mgl_callback(mgl_entity_draw_layer_entities,NULL));
+    mgl_level_register_list_update_function(level,layername, mgl_callback(mgl_entity_update_layer_entities,NULL));
+    mgl_level_register_list_think_function(level,layername, mgl_callback(mgl_entity_think_layer_entities,NULL));
+    mgl_level_register_list_preprocess_function(level,layername, mgl_callback(mgl_entity_preprocess_layer_entities,NULL));
+    mgl_level_register_list_postprocess_function(level,layername, mgl_callback(mgl_entity_postprocess_layer_entities,NULL));
 }
 
 /*eol@eof*/

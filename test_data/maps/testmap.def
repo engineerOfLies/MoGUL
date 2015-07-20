@@ -44,6 +44,12 @@
                 "color" : "255,255,255,255"
             },
             {
+                "layerType" : "collision",
+                "name":"collisionLayer",
+                "useParallax" : "false",
+                "bglayer": "3"
+            },
+            {
                 "layerType" : "parallax",
                 "name":"foreground01",
                 "parallax" : "../test_data/images/testlevel/testbg.def",
