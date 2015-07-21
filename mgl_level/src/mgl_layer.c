@@ -430,6 +430,90 @@ void mgl_layer_draw_list_register_draw_function(MglLayer * layer,MglCallback cb)
     mgl_callback_copy(&layer->layer.drawlist->draw,cb);
 }
 
+void mgl_layer_draw_list_register_update_function(MglLayer * layer,MglCallback cb)
+{
+    if (!layer)
+    {
+        mgl_logger_info("provided null layer");
+        return;
+    }
+    if (layer->selection != MglLayerDrawList)
+    {
+        mgl_logger_info("layer is not draw list");
+        return;
+    }
+    if (!layer->layer.drawlist)
+    {
+        mgl_logger_info("layer draw list has no data");
+        return;
+    }
+    mgl_logger_info("registering update function for layer %s",layer->name);
+    mgl_callback_copy(&layer->layer.drawlist->update,cb);
+}
+
+void mgl_layer_draw_list_register_think_function(MglLayer * layer,MglCallback cb)
+{
+    if (!layer)
+    {
+        mgl_logger_info("provided null layer");
+        return;
+    }
+    if (layer->selection != MglLayerDrawList)
+    {
+        mgl_logger_info("layer is not draw list");
+        return;
+    }
+    if (!layer->layer.drawlist)
+    {
+        mgl_logger_info("layer draw list has no data");
+        return;
+    }
+    mgl_logger_info("registering think function for layer %s",layer->name);
+    mgl_callback_copy(&layer->layer.drawlist->think,cb);
+}
+
+void mgl_layer_draw_list_register_preprocess_function(MglLayer * layer,MglCallback cb)
+{
+    if (!layer)
+    {
+        mgl_logger_info("provided null layer");
+        return;
+    }
+    if (layer->selection != MglLayerDrawList)
+    {
+        mgl_logger_info("layer is not draw list");
+        return;
+    }
+    if (!layer->layer.drawlist)
+    {
+        mgl_logger_info("layer draw list has no data");
+        return;
+    }
+    mgl_logger_info("registering preprocess function for layer %s",layer->name);
+    mgl_callback_copy(&layer->layer.drawlist->preprocess,cb);
+}
+
+void mgl_layer_draw_list_register_postprocess_function(MglLayer * layer,MglCallback cb)
+{
+    if (!layer)
+    {
+        mgl_logger_info("provided null layer");
+        return;
+    }
+    if (layer->selection != MglLayerDrawList)
+    {
+        mgl_logger_info("layer is not draw list");
+        return;
+    }
+    if (!layer->layer.drawlist)
+    {
+        mgl_logger_info("layer draw list has no data");
+        return;
+    }
+    mgl_logger_info("registering postprocess function for layer %s",layer->name);
+    mgl_callback_copy(&layer->layer.drawlist->postprocess,cb);
+}
+
 MglTileMap *mgl_layer_get_tile_map(MglLayer * layer)
 {
     if (!layer)return NULL;

@@ -102,7 +102,7 @@ int main(int argc,char *argv[])
     
     /*setup entity layer*/
     level = mgl_level_load("../test_data/maps/testmap.def");
-    mgl_entity_register_layer_draw(level,"entityLayer");
+    mgl_entity_register_layer_callbacks(level,"entityLayer");
     
 
     ent = spawn_mech(mgl_vec2d(32 * 15,32*5 + 16));

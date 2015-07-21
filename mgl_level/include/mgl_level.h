@@ -82,6 +82,10 @@ MglLayer *mgl_level_get_layer_by_name(MglLevel *level,MglLine name);
  *  The user data will be a provided though the context.data
  */
 void mgl_level_register_list_draw_function(MglLevel *level,MglLine name, MglCallback draw);
+void mgl_level_register_list_think_function(MglLevel *level,MglLine name, MglCallback draw);
+void mgl_level_register_list_update_function(MglLevel *level,MglLine name, MglCallback draw);
+void mgl_level_register_list_preprocess_function(MglLevel *level,MglLine name, MglCallback draw);
+void mgl_level_register_list_postprocess_function(MglLevel *level,MglLine name, MglCallback draw);
 
 /**
  * @brief add a draw item to the level layer.  This should be the same type of data in the rest of the layer, though no type checking will be done

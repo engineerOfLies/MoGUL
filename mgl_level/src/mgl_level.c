@@ -216,7 +216,7 @@ void mgl_level_register_list_preprocess_function(MglLevel *level,MglLine name, M
     mgl_layer_draw_list_register_preprocess_function(layer,preprocess);
 }
 
-void mgl_level_register_list_posprocess_function(MglLevel *level,MglLine name, MglCallback postprocess)
+void mgl_level_register_list_postprocess_function(MglLevel *level,MglLine name, MglCallback postprocess)
 {
     MglLayer *layer;
     layer = mgl_level_get_layer_by_name(level,name);

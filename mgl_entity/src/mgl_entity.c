@@ -45,6 +45,10 @@ void mgl_entity_delete(void *data);
 
 void mgl_entity_draw_to_parallax_layer(MglEntity *ent,MglParallax *par,MglUint layer,MglCamera *cam);
 void mgl_entity_think(MglEntity *ent);
+void mgl_entity_pre_physics(MglEntity *ent);
+void mgl_entity_post_physics(MglEntity *ent);
+void mgl_entity_update_physics(MglEntity *ent);
+
 
 void mgl_entity_init(
     MglUint maxEntities,
@@ -261,6 +265,60 @@ MglBool mgl_entity_validate(void *data)
     return MglTrue;
 }
 
+void mgl_entity_update_layer_entities(void *data,void *context)
+{
+    MglLayer *layer;
+    MglEntity *ent;
+    GList *it;
+    if (!context) return;
+    layer = (MglLayer *)context;
+    if (mgl_layer_get_type(layer) != MglLayerDrawList)return;
+    
+    for (it = layer->layer.drawlist->list;it != NULL;it = it->next)
+    {
+        if (!it->data)continue;
+        if (!mgl_entity_validate(it->data))continue;
+        ent = (MglEntity *)it->data;
+        mgl_entity_update(ent);
+    }
+}
+
+void mgl_entity_preprocess_layer_entities(void *data,void *context)
+{
+    MglLayer *layer;
+    MglEntity *ent;
+    GList *it;
+    if (!context) return;
+    layer = (MglLayer *)context;
+    if (mgl_layer_get_type(layer) != MglLayerDrawList)return;
+    
+    for (it = layer->layer.drawlist->list;it != NULL;it = it->next)
+    {
+        if (!it->data)continue;
+        if (!mgl_entity_validate(it->data))continue;
+        ent = (MglEntity *)it->data;
+        mgl_entity_pre_physics(ent);
+    }
+}
+
+void mgl_entity_postprocess_layer_entities(void *data,void *context)
+{
+    MglLayer *layer;
+    MglEntity *ent;
+    GList *it;
+    if (!context) return;
+    layer = (MglLayer *)context;
+    if (mgl_layer_get_type(layer) != MglLayerDrawList)return;
+    
+    for (it = layer->layer.drawlist->list;it != NULL;it = it->next)
+    {
+        if (!it->data)continue;
+        if (!mgl_entity_validate(it->data))continue;
+        ent = (MglEntity *)it->data;
+        mgl_entity_post_physics(ent);
+    }
+}
+
 void mgl_entity_think_layer_entities(void *data,void *context)
 {
     MglLayer *layer;
@@ -414,6 +472,19 @@ void mgl_entity_think_all()
     }
 }
 
+void mgl_entity_pre_physics(MglEntity *ent)
+{
+    if (ent->body != NULL)
+    {
+        if (ent->pre_physics.function != NULL)
+        {
+            ent->pre_physics.function(ent->pre_physics.data,ent);
+        }
+        cpBodySetPos(ent->body, cpv(ent->position.x,ent->position.y));
+        cpBodySetVel(ent->body, cpv(ent->velocity.x,ent->velocity.y));
+    }
+}
+
 void mgl_entity_pre_physics_all()
 {
     MglEntity *ent;
@@ -423,14 +494,22 @@ void mgl_entity_pre_physics_all()
         ent = mgl_resource_get_next_data(__mgl_entity_resource_manager,ent)
     )
     {
-        if (ent->body != NULL)
+        mgl_entity_pre_physics(ent);
+    }
+}
+
+void mgl_entity_post_physics(MglEntity *ent)
+{
+    cpVect vect;
+    if (ent->body != NULL)
+    {
+        vect = cpBodyGetPos(ent->body);
+        mgl_vec2d_set(ent->position,vect.x,vect.y);
+        vect = cpBodyGetVel(ent->body);
+        mgl_vec2d_set(ent->velocity,vect.x,vect.y);
+        if (ent->post_physics.function != NULL)
         {
-            if (ent->pre_physics.function != NULL)
-            {
-                ent->pre_physics.function(ent->pre_physics.data,ent);
-            }
-            cpBodySetPos(ent->body, cpv(ent->position.x,ent->position.y));
-            cpBodySetVel(ent->body, cpv(ent->velocity.x,ent->velocity.y));
+            ent->post_physics.function(ent->post_physics.data,ent);
         }
     }
 }
@@ -438,24 +517,13 @@ void mgl_entity_pre_physics_all()
 void mgl_entity_post_physics_all()
 {
     MglEntity *ent;
-    cpVect vect;
     for (
         ent = mgl_resource_get_next_data(__mgl_entity_resource_manager,NULL);
         ent != NULL;
         ent = mgl_resource_get_next_data(__mgl_entity_resource_manager,ent)
     )
     {
-        if (ent->body != NULL)
-        {
-            vect = cpBodyGetPos(ent->body);
-            mgl_vec2d_set(ent->position,vect.x,vect.y);
-            vect = cpBodyGetVel(ent->body);
-            mgl_vec2d_set(ent->velocity,vect.x,vect.y);
-            if (ent->post_physics.function != NULL)
-            {
-                ent->post_physics.function(ent->post_physics.data,ent);
-            }
-        }
+        mgl_entity_post_physics(ent);
     }
 }
 
