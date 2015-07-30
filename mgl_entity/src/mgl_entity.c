@@ -1,39 +1,9 @@
+#include "mgl_ent_def.h"
 #include "mgl_entity.h"
 #include "mgl_resource.h"
 #include "mgl_logger.h"
 #include "mgl_level.h"
 #include <chipmunk/chipmunk.h>
-
-struct MglEntity_S
-{
-    MglVec2D position;
-    MglVec2D velocity;
-    MglVec2D acceleration;
-    MglVec2D scale;
-    MglFloat rotation;
-    MglVec2D flip;
-    MglColor color;
-    
-    MglActor *actor;
-    
-    void    * data;         /**<custom data pointer*/
-    MglDict * dict;         /**<custom data definition dictionary*/
-    
-    MglCallback draw;
-    MglCallback think;
-    MglCallback update;
-    MglCallback touch;
-    MglCallback damage;
-    MglCallback pre_physics;
-    MglCallback post_physics;
-    
-    MglTileMap *map;        /**<the map that this entity is a part of*/
-    
-    cpSpace *space;         /**<the physics space that this entity is a part of*/
-    cpShape *shape;         /**<the collision shape for this entity*/
-    cpBody *body;           /**<the collision body for this entity*/
-};
-
 
 static MglResourceManager * __mgl_entity_resource_manager = NULL;
 static MglBool              __mgl_entity_use_custom_data = MglFalse;

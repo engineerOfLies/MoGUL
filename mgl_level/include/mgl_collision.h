@@ -25,6 +25,7 @@
 #include "mgl_vector.h"
 #include "mgl_dict.h"
 #include "mgl_callback.h"
+#include <chipmunk/chipmunk.h>
 
 /**
  * @brief the Mgl Collision Object is a data structure describing the "other" object in a collision.
@@ -74,5 +75,12 @@ MglCollision *mgl_collision_new();
  * @param collision a pointer to your collision pointer
  */
 void mgl_collision_free(MglCollision **collision);
+
+/**
+ * @brief get the chipmunk space from the collision space
+ * @param collision the collision space to query
+ * @return NULL on error or the chipmunk space pointer
+ */
+cpSpace *mgl_collision_get_space(MglCollision *collision);
 
 #endif

@@ -229,4 +229,12 @@ MglTileMap *mgl_level_get_layer_tilemap_by_name(MglLevel *level,MglLine name)
     layer = mgl_level_get_layer_by_name(level,name);
     return mgl_layer_get_tile_map(layer);
 }
+
+MglCollision *mgl_level_get_layer_collision_by_name(MglLevel *level,MglLine name)
+{
+    MglLayer *layer;
+    layer = mgl_level_get_layer_by_name(level,name);
+    return mgl_layer_get_collision(layer);
+}
+
 /*eol@eof*/

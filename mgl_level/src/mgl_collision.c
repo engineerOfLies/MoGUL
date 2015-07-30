@@ -150,6 +150,12 @@ MglBool mgl_collision_load_resource(char *filename,void *data)
     return MglTrue;
 }
 
+cpSpace *mgl_collision_get_space(MglCollision *collision)
+{
+    if (!collision)return NULL;
+    return collision->space;
+}
+
 void mgl_collision_update(MglCollision *collision)
 {
     MglFloat step;

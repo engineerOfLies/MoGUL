@@ -520,4 +520,11 @@ MglTileMap *mgl_layer_get_tile_map(MglLayer * layer)
     if (layer->selection != MglLayerTiles)return NULL;
     return layer->layer.map;
 }
+
+MglCollision *mgl_layer_get_collision(MglLayer * layer)
+{
+    if (!layer)return NULL;
+    if (layer->selection != MglLayerCollision)return NULL;
+    return layer->layer.collision;
+}
 /*eol@eof*/

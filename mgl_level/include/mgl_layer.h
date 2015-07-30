@@ -201,4 +201,11 @@ void mgl_layer_draw_list_register_postprocess_function(MglLayer *layer,MglCallba
  */
 MglTileMap *mgl_layer_get_tile_map(MglLayer * layer);
 
+/**
+ * @brief get the collision space of the layer specified
+ * @param layer the layer to query
+ * @return NULL on error or the layer is not a collision space, a collision pointer otherwise
+ */
+MglCollision *mgl_layer_get_collision(MglLayer * layer);
+
 #endif

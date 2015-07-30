@@ -98,9 +98,17 @@ void mgl_level_append_draw_item_to_layer(MglLevel *level,MglLine layername,void 
 
 /**
  * @brief get the tilemap associated with the level layer
- * @param level the level to set the layer information for
- * @param name the name of the layer to set the callback for
+ * @param level the level to get the layer information for
+ * @param name the name of the layer to get the tilemap from
  * @return NULL on error or not a tilemap layer or not found.  The tilemap pointer otherwise
  */
 MglTileMap *mgl_level_get_layer_tilemap_by_name(MglLevel *level,MglLine name);
+
+/**
+ * @brief get the collision space associated with the level layer
+ * @param level the level to get the layer information for
+ * @param name the name of the layer to get the collision space from
+ * @return NULL on error or not a collision layer or not found.  The collision space pointer otherwise
+ */
+MglCollision *mgl_level_get_layer_collision_by_name(MglLevel *level,MglLine name);
 #endif

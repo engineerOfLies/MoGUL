@@ -1,5 +1,6 @@
 #include "mgl_level.h"
 #include "mgl_entity.h"
+#include "mgl_collision_ent.h"
 #include "mgl_audio.h"
 #include "mgl_logger.h"
 #include "mgl_config.h"
@@ -64,7 +65,7 @@ MglEntity *spawn_mech(MglVec2D position)
         NULL,
         NULL,
         NULL);
-    
+    mgl_entity_make_cirlce_shape(ent,10, 24,mgl_vec2d(24,24));
     return ent;
 }
 
@@ -108,6 +109,7 @@ int main(int argc,char *argv[])
     ent = spawn_mech(mgl_vec2d(32 * 15,32*5 + 16));
     mgl_entity_assign_tilemap(ent,mgl_level_get_layer_tilemap_by_name(level,"tileLayer"));
     mgl_level_append_draw_item_to_layer(level,"entityLayer",ent);
+    mgl_entity_add_to_collision_space(ent, mgl_level_get_layer_collision_by_name(level,"collisionLayer"));
     
     fprintf(stdout,"mgl_entity_test begin\n");
     while (!done)
