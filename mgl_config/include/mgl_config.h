@@ -2,7 +2,7 @@
 #define __MGL_CONFIG__
 
 /**
- * mgl_dict
+ * mgl_config
  * @license The MIT License (MIT)
    @copyright Copyright (c) 2015 EngineerOfLies
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -62,5 +62,6 @@ MglDict *mgl_config_get_dictionary(MglConfig *config);
  * @return a pointer to the config file's object data as a dictionary if found in the top level
  */
 MglDict *mgl_config_get_object_dictionary(MglConfig *config,MglLine obj);
+
 
 #endif

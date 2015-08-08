@@ -3,7 +3,7 @@
 #include "mgl_logger.h"
 #include "mgl_yaml_parse.h"
 #include "mgl_json_parse.h"
-
+#include "mgl_save.h"
 
 struct MglConfig_S
 {
@@ -48,9 +48,20 @@ void mgl_config_free(MglConfig **config)
 MglBool mgl_config_load_from_file(char *filename,void *data)
 {
   MglConfig *config;
-  MglDict *dict;
+  MglDict *dict = NULL;
+  char *string = NULL;
   config = (MglConfig *)data;
-  dict = mgl_json_parse(filename);
+  
+  string = mgl_save_binary_load(filename);  
+  if (string != NULL)
+  {
+      dict = mgl_json_parse_string(string);
+      free(string);
+  }
+  if (!dict)
+  {
+    dict = mgl_json_parse(filename);
+  }
   if (!dict)
   {
     dict = mgl_yaml_parse(filename);
@@ -81,4 +92,5 @@ MglDict *mgl_config_get_object_dictionary(MglConfig *config,MglLine obj)
     if (!config)return NULL;
     return mgl_dict_get_hash_value(mgl_config_get_dictionary(config),obj);
 }
+
 /*eol@eof*/
