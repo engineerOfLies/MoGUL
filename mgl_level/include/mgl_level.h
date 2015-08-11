@@ -111,4 +111,13 @@ MglTileMap *mgl_level_get_layer_tilemap_by_name(MglLevel *level,MglLine name);
  * @return NULL on error or not a collision layer or not found.  The collision space pointer otherwise
  */
 MglCollision *mgl_level_get_layer_collision_by_name(MglLevel *level,MglLine name);
+
+/**
+ * @brief add the tilemap solid data into the collision layer
+ * @param tileLayer the tilemap to add
+ * @param layerName the collision layer that the tile data should be added to
+ * @param level the level that contains it all
+ */
+void mgl_tilemap_add_to_collision(MglLine tileLayer,MglLine layerName,MglLevel *level);
+
 #endif

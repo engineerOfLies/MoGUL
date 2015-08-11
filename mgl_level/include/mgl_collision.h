@@ -83,4 +83,8 @@ void mgl_collision_free(MglCollision **collision);
  */
 cpSpace *mgl_collision_get_space(MglCollision *collision);
 
+void mgl_collision_add_static_edge(MglCollision *collision,MglVec2D p1,MglVec2D p2);
+void mgl_collision_add_static_rect(MglCollision *collision,MglRect rect);
+void mgl_collision_add_static_cirlce(MglCollision *collision,MglVec2D center,MglFloat radius);
+
 #endif

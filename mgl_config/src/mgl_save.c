@@ -134,7 +134,7 @@ char *mgl_save_binary_load(char *filepath)
     if (header.key != MGLSAVEKEY)
     {
         /*NOT an MGL binary file*/
-        mgl_logger_info("file %s is not an MGL Save File",filepath);
+        mgl_logger_debug("file %s is not an MGL Save File",filepath);
         fclose(file);
         return NULL;
     }

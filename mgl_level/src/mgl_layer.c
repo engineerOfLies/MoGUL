@@ -524,7 +524,11 @@ MglTileMap *mgl_layer_get_tile_map(MglLayer * layer)
 MglCollision *mgl_layer_get_collision(MglLayer * layer)
 {
     if (!layer)return NULL;
-    if (layer->selection != MglLayerCollision)return NULL;
+    if (layer->selection != MglLayerCollision)
+    {
+        mgl_logger_warn("layer is not a collision layer");
+        return NULL;
+    }
     return layer->layer.collision;
 }
 /*eol@eof*/

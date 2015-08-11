@@ -18,7 +18,6 @@ void mgl_entity_make_static_body(MglEntity *ent)
             mgl_logger_warn("body cannot be converted to static until it has been added to a space");
             return;
         }
-//        cpSpaceConvertBodyToStatic(space, ent->body);
     }
     ent->body = cpBodyNewStatic();
 }
@@ -37,7 +36,6 @@ void mgl_entity_make_collision_body(MglEntity *ent,MglFloat mass,MglFloat inerti
                 mgl_logger_warn("body cannot be converted to dynamic until it has been added to a space");
                 return;
             }
-  //          cpSpaceConvertBodyToDynamic(space, ent->body, mass, inertia);
             return;
         }
         cpBodySetMass(ent->body, mass);

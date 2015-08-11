@@ -202,11 +202,6 @@ void mgl_entity_update(MglEntity *ent)
     {
         ent->update.function(ent->update.data,ent);
     }
-    else
-    {
-        mgl_vec2d_add(ent->position,ent->position,ent->velocity);
-        mgl_vec2d_add(ent->velocity,ent->acceleration,ent->velocity);
-    }
     if (ent->actor)
     {
         mgl_actor_next_frame(ent->actor);

@@ -5,6 +5,7 @@
 #include "mgl_config.h"
 #include "mgl_resource.h"
 #include "mgl_logger.h"
+#include "mgl_level.h"
 #include <glib.h>
 
 
@@ -418,5 +419,35 @@ MglInt mgl_tilemap_get_tile_index_by_position(MglTileMap *map,MglVec2D position)
         }
     }
     return map->tileMap[(int)((tilepos.y * map->mapWidth)+tilepos.x)];
+}
+
+void mgl_tilemap_add_to_collision(MglLine tileLayer,MglLine layerName,MglLevel *level)
+{
+    MglCollision *collision;
+    MglUint i,j;
+    MglVec2D size;
+    MglTileMap *tilemap;
+    
+    tilemap = mgl_level_get_layer_tilemap_by_name(level,tileLayer);
+    
+    if (!tilemap)return;
+    if (!tilemap->tileMap)return;
+    if (!tilemap->tileSet)return;
+
+    collision = mgl_level_get_layer_collision_by_name(level,layerName);
+    if (!collision)return;
+
+    mgl_tileset_get_tile_size(tilemap->tileSet, &size);
+    
+    for (j = 0;j < tilemap->mapHeight;j++)
+    {
+        for (i = 0;i < tilemap->mapWidth;i++)
+        {
+            if (mgl_tilemap_get_tile_solid_by_position(tilemap,mgl_vec2d(i,j)))
+            {
+                mgl_collision_add_static_rect(collision,mgl_rect(i*size.x,j*size.y,size.x,size.y));
+            }
+        }
+    }
 }
 /*eol@eof*/

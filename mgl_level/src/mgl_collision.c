@@ -160,14 +160,97 @@ void mgl_collision_update(MglCollision *collision)
 {
     MglFloat step;
     MglUint i;
-    if (!collision)return;
-    if (!collision->space)return;
-    if (!collision->iterations)return;
+    if (!collision)
+    {
+        mgl_logger_warn("NULL collision provided");
+        return;
+    }
+    if (!collision->space)
+    {
+        mgl_logger_warn("no space in collision layer");
+        return;
+    }
+    if (!collision->iterations)
+    {
+        mgl_logger_warn("collision space has no update iterations specified");
+        return;
+    }
     step = 1/(MglFloat)collision->iterations;
     for (i = 0; i < collision->iterations; i++)
     {
+        mgl_logger_warn("physics...");
         cpSpaceStep(collision->space, step);
     }
+}
+
+void mgl_collision_add_static_edge(MglCollision *collision,MglVec2D p1,MglVec2D p2)
+{
+    cpSpace *space;
+    cpBody *body;
+    cpShape *shape;
+    if (!collision)
+    {
+        mgl_logger_error("no collision layer provided");
+        return;
+    }
+    space = mgl_collision_get_space(collision);
+    if (!space)
+    {
+        mgl_logger_error("collision layer %s has no space",collision->name);
+        return;
+    }
+    body = cpSpaceGetStaticBody(space);
+    if (!body)
+    {
+        mgl_logger_error("collision layer %s space has no static body",collision->name);
+        return;
+    }
+    shape = cpSegmentShapeNew(body, cpv(p1.x,p1.y), cpv(p2.x,p2.y), 0.5);
+    if (!shape)
+    {
+        mgl_logger_error("failed to make edge for collision space %s",collision->name);
+        return;
+    }
+    cpSpaceAddStaticShape(space,shape);
+}
+
+void mgl_collision_add_static_rect(MglCollision *collision,MglRect rect)
+{
+    mgl_collision_add_static_edge(collision,mgl_vec2d(rect.x,rect.y),mgl_vec2d(rect.x + rect.w,rect.y));
+    mgl_collision_add_static_edge(collision,mgl_vec2d(rect.x+rect.w,rect.y),mgl_vec2d(rect.x + rect.w,rect.y+rect.h));
+    mgl_collision_add_static_edge(collision,mgl_vec2d(rect.x,rect.y),mgl_vec2d(rect.x,rect.y + rect.h));
+    mgl_collision_add_static_edge(collision,mgl_vec2d(rect.x,rect.y + rect.h),mgl_vec2d(rect.x + rect.w,rect.y + rect.h));
+}
+
+void mgl_collision_add_static_cirlce(MglCollision *collision,MglVec2D center,MglFloat radius)
+{
+    cpSpace *space;
+    cpBody *body;
+    cpShape *shape;
+    if (!collision)
+    {
+        mgl_logger_error("no collision layer provided");
+        return;
+    }
+    space = mgl_collision_get_space(collision);
+    if (!space)
+    {
+        mgl_logger_error("collision layer %s has no space",collision->name);
+        return;
+    }
+    body = cpSpaceGetStaticBody(space);
+    if (!body)
+    {
+        mgl_logger_error("collision layer %s space has no static body",collision->name);
+        return;
+    }
+    shape = cpCircleShapeNew(body, radius, cpv(center.x,center.y));
+    if (!shape)
+    {
+        mgl_logger_error("failed to make edge for collision space %s",collision->name);
+        return;
+    }
+    cpSpaceAddStaticShape(space,shape);
 }
 
 

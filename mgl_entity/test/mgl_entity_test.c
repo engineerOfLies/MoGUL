@@ -79,7 +79,8 @@ int main(int argc,char *argv[])
     MglVec2D pos = {0,0};
     MglLevel *level;
     MglEntity *ent;
-    
+    MglCollision * collision;
+
     if ((argc == 2) && (strcmp(argv[1],"-h")==0))
     {
         fprintf(stdout,"usage:\n");
@@ -104,12 +105,14 @@ int main(int argc,char *argv[])
     /*setup entity layer*/
     level = mgl_level_load("../test_data/maps/testmap.def");
     mgl_entity_register_layer_callbacks(level,"entityLayer");
-    
+    mgl_tilemap_add_to_collision("tileLayer","collisionLayer",level);
+    collision = mgl_level_get_layer_collision_by_name(level,"collisionLayer");
 
     ent = spawn_mech(mgl_vec2d(32 * 15,32*5 + 16));
     mgl_entity_assign_tilemap(ent,mgl_level_get_layer_tilemap_by_name(level,"tileLayer"));
     mgl_level_append_draw_item_to_layer(level,"entityLayer",ent);
     mgl_entity_add_to_collision_space(ent, mgl_level_get_layer_collision_by_name(level,"collisionLayer"));
+    
     
     fprintf(stdout,"mgl_entity_test begin\n");
     while (!done)
@@ -117,6 +120,10 @@ int main(int argc,char *argv[])
         /* system updating */
         mgl_entity_think_all();
         mgl_entity_update_all();
+        mgl_entity_pre_physics_all();
+        mgl_collision_update(collision);
+        mgl_entity_post_physics_all();
+
         pos = mgl_camera_get_position(cam);
         
         /*drawing*/
