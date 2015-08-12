@@ -45,13 +45,13 @@ void mgl_entity_make_collision_body(MglEntity *ent,MglFloat mass,MglFloat inerti
     ent->body = cpBodyNew(mass, inertia);
 }
 
-void mgl_entity_make_cirlce_shape(MglEntity *ent,MglFloat m, MglFloat r,MglVec2D offset)
+void mgl_entity_make_circle_shape(MglEntity *ent,MglFloat m, MglFloat r,MglVec2D offset)
 {
     MglFloat i;
     if (!ent)return;
     i = cpMomentForCircle(m, r, 0, cpv(offset.x,offset.y));
     mgl_entity_make_collision_body(ent,m,i);
-    cpCircleShapeNew(ent->body, r, cpv(offset.x,offset.y));
+    ent->shape = cpCircleShapeNew(ent->body, r, cpv(offset.x,offset.y));
 }
 
 void mgl_entity_add_to_collision_space(MglEntity *ent, MglCollision *collision)

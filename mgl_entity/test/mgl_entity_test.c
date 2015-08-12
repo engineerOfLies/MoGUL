@@ -52,11 +52,12 @@ MglEntity *spawn_mech(MglVec2D position)
     MglCallback think = mgl_callback(mecha_think,NULL);
     ent = mgl_entity_new();
     if (!ent)return NULL;
+    mgl_entity_set_name(ent,"mech");
     actor = mgl_actor_load("../test_data/actors/mecha.actor");
     mgl_actor_set_action(actor,"walk_right");
     mgl_entity_set_actor(ent, actor);
     mgl_entity_set_position(ent,position);
-    mgl_entity_set_velocity(ent,mgl_vec2d(1,0));
+    mgl_entity_set_velocity(ent,mgl_vec2d(3,0));
     mgl_entity_set_callbacks(
         ent,
         &think,
@@ -65,7 +66,7 @@ MglEntity *spawn_mech(MglVec2D position)
         NULL,
         NULL,
         NULL);
-    mgl_entity_make_cirlce_shape(ent,10, 24,mgl_vec2d(24,24));
+    mgl_entity_make_circle_shape(ent,0.0000001, 22,mgl_vec2d(24,24));
     return ent;
 }
 
@@ -163,7 +164,7 @@ void init_all()
 {
     mgl_logger_init();
     mgl_logger_set_stdout_echo(MglTrue);
-    mgl_logger_set_threshold(MGL_LOG_ALL);
+    mgl_logger_set_threshold(MGL_LOG_ALL & ~MGL_LOG_DEBUG);
     mgl_config_init();
     if (mgl_graphics_init_by_config("../test_data/graphics.def") != 0)
     {

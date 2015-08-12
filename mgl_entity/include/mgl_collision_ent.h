@@ -58,7 +58,7 @@ void mgl_entity_make_collision_body(MglEntity *ent,MglFloat mass,MglFloat inerti
  * @param r the radius of the circle
  * @param offset the positional offset of the center of the cirlce from the entity's position
  */
-void mgl_entity_make_cirlce_shape(MglEntity *ent,MglFloat m, MglFloat r,MglVec2D offset);
+void mgl_entity_make_circle_shape(MglEntity *ent,MglFloat m, MglFloat r,MglVec2D offset);
 
 /**
  * @brief assigns the collision entity to the collision space.

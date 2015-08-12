@@ -103,6 +103,12 @@ MglVec2D mgl_entity_get_position(MglEntity *ent)
     return ent->position;
 }
 
+void mgl_entity_set_name(MglEntity *ent,char *name)
+{
+    if ((!ent) || (!name))return;
+    mgl_line_cpy(ent->name,name);
+}
+
 void mgl_entity_set_position(MglEntity *ent,MglVec2D position)
 {
     if (!ent)return;
@@ -470,8 +476,6 @@ void mgl_entity_post_physics(MglEntity *ent)
     {
         vect = cpBodyGetPos(ent->body);
         mgl_vec2d_set(ent->position,vect.x,vect.y);
-        vect = cpBodyGetVel(ent->body);
-        mgl_vec2d_set(ent->velocity,vect.x,vect.y);
         if (ent->post_physics.function != NULL)
         {
             ent->post_physics.function(ent->post_physics.data,ent);

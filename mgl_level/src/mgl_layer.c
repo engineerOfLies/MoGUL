@@ -51,12 +51,14 @@ MglLayer *mgl_layer_load_from_def(MglDict *def)
     MglParallax *par;
     MglTileMap *map;
     MglLine name;
+    MglLine filename;
     MglUint     selection = MglLayerNone;
     MglBool     useParallax = MglFalse;
     MglUint     bglayer = 0;
     MglColor color = {255,255,255,255};
     MglLayer *layer = NULL;
     MglDrawList *list= NULL;
+    MglCollision *collision = NULL;
     if (!def)return NULL;
 
     mgl_dict_get_hash_value_as_uint(&bglayer,def,"bglayer");
@@ -96,7 +98,24 @@ MglLayer *mgl_layer_load_from_def(MglDict *def)
     }
     else if (mgl_line_cmp(layerType,"collision")==0)
     {
+        layer = mgl_layer_new();
+        if (!layer)return NULL;
         selection = MglLayerCollision;
+        if (mgl_dict_get_hash_value_as_line(filename, def,"spaceConfig"))
+        {
+            collision = mgl_collision_load_from_file(filename);
+            mgl_logger_debug("collision space returned");
+        }
+        else
+        {
+            collision = mgl_collision_load_from_def(mgl_dict_get_hash_value(def,"space"));
+        }
+        layer->layer.collision = collision;
+        layer->selection = selection;
+        layer->useParallax = useParallax;
+        layer->bglayer = bglayer;
+        mgl_line_cpy(layer->name,name);
+        return layer;
     }
     else if (mgl_line_cmp(layerType,"drawlist")==0)
     {

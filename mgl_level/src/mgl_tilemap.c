@@ -27,6 +27,7 @@ static MglBool              __mgl_tilemap_cache_surface = MglFalse;
 void mgl_tilemap_close();
 MglBool mgl_tilemap_load_resource(char *filename,void *data);
 void mgl_tilemap_delete(void *data);
+MglInt mgl_tilemap_get_tile_index_by_tile_position(MglTileMap *map,MglVec2D tilepos);
 
 void mgl_tilemap_init(
     MglUint maxMaps,
@@ -393,6 +394,21 @@ MglBool mgl_tilemap_get_tile_solid_by_position(MglTileMap *map,MglVec2D position
     return mgl_tileset_tile_solid(map->tileSet,index - 1);
 }
 
+MglBool mgl_tilemap_get_tile_solid_by_tile_position(MglTileMap *map,MglVec2D position)
+{
+    MglInt index;
+    index = mgl_tilemap_get_tile_index_by_tile_position(map,position);
+    if (index == -1)
+    {
+        return MglTrue;
+    }
+    if (!index)
+    {
+        return MglFalse;
+    }
+    return mgl_tileset_tile_solid(map->tileSet,index - 1);
+}
+
 MglInt mgl_tilemap_get_tile_index_by_position(MglTileMap *map,MglVec2D position)
 {
     MglVec2D tilepos;
@@ -403,8 +419,17 @@ MglInt mgl_tilemap_get_tile_index_by_position(MglTileMap *map,MglVec2D position)
     if ((tilesize.x == 0) || (tilesize.y == 0))return -1;
     tilepos.x = (int)(position.x / tilesize.x);
     tilepos.y = (int)(position.y / tilesize.y);
+    return mgl_tilemap_get_tile_index_by_tile_position(map,tilepos);
+}
+
+MglInt mgl_tilemap_get_tile_index_by_tile_position(MglTileMap *map,MglVec2D tilepos)
+{
+    if (!map)return -1;
+    if (!map->tileSet)return -1;
+    mgl_logger_debug("checking tile position (%f,%f)",tilepos.x,tilepos.y);
     if ((tilepos.x < 0) || (tilepos.y < 0) || (tilepos.x >= map->mapWidth) || (tilepos.y >= map->mapHeight))
     {
+        mgl_logger_debug("tile (%f,%f) is out of range of tilemap",tilepos.x,tilepos.y);
         return -1;
     }
     while (map->tileMap[(int)((tilepos.y * map->mapWidth)+tilepos.x)] < 0)
@@ -421,6 +446,7 @@ MglInt mgl_tilemap_get_tile_index_by_position(MglTileMap *map,MglVec2D position)
     return map->tileMap[(int)((tilepos.y * map->mapWidth)+tilepos.x)];
 }
 
+
 void mgl_tilemap_add_to_collision(MglLine tileLayer,MglLine layerName,MglLevel *level)
 {
     MglCollision *collision;
@@ -428,24 +454,45 @@ void mgl_tilemap_add_to_collision(MglLine tileLayer,MglLine layerName,MglLevel *
     MglVec2D size;
     MglTileMap *tilemap;
     
+    mgl_logger_debug("adding tilemap %s to collision %s",tileLayer,layerName);
     tilemap = mgl_level_get_layer_tilemap_by_name(level,tileLayer);
     
-    if (!tilemap)return;
-    if (!tilemap->tileMap)return;
-    if (!tilemap->tileSet)return;
+    if (!tilemap)
+    {
+        mgl_logger_debug("no tilemap named %s in this level",tileLayer);
+        return;
+    }
+    if (!tilemap->tileMap)
+    {
+        mgl_logger_debug("no tilemap data associated with this layer");
+        return;
+    }
+    if (!tilemap->tileSet)
+    {
+        mgl_logger_debug("no tileset data associated with this layer");
+        return;
+    }
 
     collision = mgl_level_get_layer_collision_by_name(level,layerName);
-    if (!collision)return;
+    if (!collision)
+    {
+        mgl_logger_debug("no collision named %s in this level",layerName);
+        return;
+    }
 
     mgl_tileset_get_tile_size(tilemap->tileSet, &size);
+
+    mgl_logger_debug("tilemap has tile size of (%f,%f)",size.x,size.y);
+    mgl_logger_debug("tilemap has map size of (%i,%i)",tilemap->mapWidth,tilemap->mapHeight);
     
     for (j = 0;j < tilemap->mapHeight;j++)
     {
         for (i = 0;i < tilemap->mapWidth;i++)
         {
-            if (mgl_tilemap_get_tile_solid_by_position(tilemap,mgl_vec2d(i,j)))
+            if (mgl_tilemap_get_tile_solid_by_tile_position(tilemap,mgl_vec2d(i,j)))
             {
                 mgl_collision_add_static_rect(collision,mgl_rect(i*size.x,j*size.y,size.x,size.y));
+                mgl_logger_debug("tile %i,%i is SOLID",i,j);
             }
         }
     }

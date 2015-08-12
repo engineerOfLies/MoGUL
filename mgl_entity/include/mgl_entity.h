@@ -136,6 +136,13 @@ void mgl_entity_set_position(MglEntity *ent,MglVec2D position);
 MglVec2D mgl_entity_get_position(MglEntity *ent);
 
 /**
+ * @brief set the name for the entity
+ * @param ent the entity to set
+ * @param name the new name to set for the entity
+ */
+void mgl_entity_set_name(MglEntity *ent,char *name);
+
+/**
  * @brief set the velocity for the entity
  * NOTE this should not be called during the physics simulation  ie: touch / damage function
  * @param ent the entity to set

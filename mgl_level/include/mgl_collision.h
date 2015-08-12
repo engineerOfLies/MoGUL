@@ -66,6 +66,13 @@ void mgl_collision_update(MglCollision *collision);
 MglCollision * mgl_collision_load_from_def(MglDict *def);
 
 /**
+ * @brief load a collision space context from config file
+ * @param filename the config file to load
+ * @return NULL on error or a collision pointer otherwise
+ */
+MglCollision * mgl_collision_load_from_file(char *filename);
+
+/**
  * @brief allocate an empty collision context
  */
 MglCollision *mgl_collision_new();

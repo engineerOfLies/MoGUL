@@ -100,6 +100,7 @@ MglTileInfo *mgl_tileset_load_info_from_dict(MglDict *def)
     {
         mgl_vec2d_set(tileInfo->scale,1,1);
     }
+    mgl_dict_get_hash_value_as_bool(&tileInfo->solid,def,"solid");
     if (!mgl_dict_get_hash_value_as_vec2d(&tileInfo->footprint, def, "footprint"))
     {
         mgl_vec2d_set(tileInfo->footprint,1,1);

@@ -103,11 +103,21 @@ MglInt mgl_tilemap_get_tile_index_by_position(MglTileMap *map,MglVec2D position)
 
 /**
  * @brief Check if the position in the tilemap is considered solid.
+ * NOTE: this should be absolute position, not tile number
  * @param map the tilemap to query
  * @param position the position to check
  * @return MglTrue if the tile is solid or if the tile is off the map, MglFalse if there is no tile or the tile is not solid
  */
 MglBool mgl_tilemap_get_tile_solid_by_position(MglTileMap *map,MglVec2D position);
+
+/**
+ * @brief Check if the tile position in the tilemap is considered solid.
+ * NOTE: this should be the tile number, not absolute position
+ * @param map the tilemap to query
+ * @param position the position to check
+ * @return MglTrue if the tile is solid or if the tile is off the map, MglFalse if there is no tile or the tile is not solid
+ */
+MglBool mgl_tilemap_get_tile_solid_by_tile_position(MglTileMap *map,MglVec2D position);
 
 /**
  * @brief get the data definition dictionary associated with the tile a the map position

@@ -47,7 +47,8 @@
                 "layerType" : "collision",
                 "name":"collisionLayer",
                 "useParallax" : "false",
-                "bglayer": "3"
+                "bglayer": "3",
+                "spaceConfig" : "../test_data/maps/collision.def"
             },
             {
                 "layerType" : "parallax",

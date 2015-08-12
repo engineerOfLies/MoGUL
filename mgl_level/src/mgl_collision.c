@@ -24,6 +24,7 @@ static MglResourceManager * __mgl_collision_resource_manager = NULL;
 void mgl_collision_close();
 MglBool mgl_collision_load_resource(char *filename,void *data);
 void mgl_collision_delete(void *data);
+MglCollision *mgl_collision_load_from_dict(MglCollision *collision,MglDict *def);
 
 void mgl_collision_init(
     MglUint maxSpaces)
@@ -67,11 +68,22 @@ void mgl_collision_free(MglCollision **collision)
     mgl_resource_free_element(__mgl_collision_resource_manager,(void **)collision);
 }
 
+MglCollision * mgl_collision_load_from_file(char *filename)
+{
+    MglConfig *conf;
+    mgl_logger_warn("loading config...");
+    conf = mgl_config_load(filename);
+    mgl_logger_warn("verifying config was loaded...");
+    if (!conf)return NULL;
+    mgl_logger_warn("getting collision data from config dictionary...");
+    return mgl_collision_load_from_def(mgl_config_get_object_dictionary(conf,"space"));
+}
+
 MglCollision * mgl_collision_load_from_def(MglDict *def)
 {
     MglCollision *collision = NULL;
     if (!def)return NULL;
-    /*TODO*/
+    collision = mgl_collision_load_from_dict(NULL,def);
     return collision;
 }
 
@@ -81,6 +93,7 @@ MglCollision *mgl_collision_load_from_dict(MglCollision *collision,MglDict *def)
     cpVect gravity;
     if (!def)
     {
+        mgl_logger_warn("NULL dictionary provided");
         return NULL;
     }
     space = cpSpaceNew();
@@ -91,9 +104,11 @@ MglCollision *mgl_collision_load_from_dict(MglCollision *collision,MglDict *def)
         collision = mgl_resource_new_element(__mgl_collision_resource_manager);
         if (!collision)
         {
+            cpSpaceFree(space);
             return NULL;
         }
     }
+    mgl_logger_debug("building collision space");
     collision->space = space;
     if (mgl_dict_get_hash_value_as_uint(&collision->iterations,def,"iterations"))
     {
@@ -137,7 +152,7 @@ MglCollision *mgl_collision_load_from_dict(MglCollision *collision,MglDict *def)
         collision->gravity.x = gravity.x;
         collision->gravity.y = gravity.y;
     }
-    
+    mgl_logger_debug("collision space built");
     return collision;
 }
 
@@ -162,7 +177,6 @@ void mgl_collision_update(MglCollision *collision)
     MglUint i;
     if (!collision)
     {
-        mgl_logger_warn("NULL collision provided");
         return;
     }
     if (!collision->space)
@@ -178,7 +192,6 @@ void mgl_collision_update(MglCollision *collision)
     step = 1/(MglFloat)collision->iterations;
     for (i = 0; i < collision->iterations; i++)
     {
-        mgl_logger_warn("physics...");
         cpSpaceStep(collision->space, step);
     }
 }
@@ -216,6 +229,7 @@ void mgl_collision_add_static_edge(MglCollision *collision,MglVec2D p1,MglVec2D 
 
 void mgl_collision_add_static_rect(MglCollision *collision,MglRect rect)
 {
+    mgl_logger_debug("adding rect: %i,%i,%i,%i",rect.x,rect.y,rect.w,rect.h);
     mgl_collision_add_static_edge(collision,mgl_vec2d(rect.x,rect.y),mgl_vec2d(rect.x + rect.w,rect.y));
     mgl_collision_add_static_edge(collision,mgl_vec2d(rect.x+rect.w,rect.y),mgl_vec2d(rect.x + rect.w,rect.y+rect.h));
     mgl_collision_add_static_edge(collision,mgl_vec2d(rect.x,rect.y),mgl_vec2d(rect.x,rect.y + rect.h));

@@ -27,6 +27,7 @@ void mgl_level_init(
     MglCamera *defaultCamera
                    )
 {
+    mgl_collision_init(10);
     __mgl_level_resource_manager = mgl_resource_manager_init(
         "mgl level",
         maxLevels,

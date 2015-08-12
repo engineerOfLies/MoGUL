@@ -16,11 +16,11 @@ MglDict *mgl_json_parse_string(char *string)
     MglDict *data;
     json_t *json;
     json_error_t jer;
-    fprintf(stdout,"mgl_json_parse: being json parse\n");
+    mgl_logger_debug("begin json parse");
     json = json_loads(string,0,&jer);
     if (json == NULL)
     {
-        mgl_logger_info("mgl_json_parse: failed to load file %s as json\n", string);
+        mgl_logger_debug("mgl_json_parse: failed to load file %s as json\n", string);
         mgl_json_log_error(&jer);
         return NULL;
     }
@@ -28,7 +28,7 @@ MglDict *mgl_json_parse_string(char *string)
     json_decref(json); 
     if (data == NULL)
     {
-        mgl_logger_info("mgl_json_parse: failed to parse file %s as json\n", string);
+        mgl_logger_debug("mgl_json_parse: failed to parse file %s as json\n", string);
         mgl_json_log_error(&jer);
     }
     return data;
@@ -39,11 +39,11 @@ MglDict *mgl_json_parse(char *filename)
   MglDict *data;
   json_t *json;
   json_error_t jer;
-  fprintf(stdout,"mgl_json_parse: being json parse\n");
+  mgl_logger_debug("begin json parse");
   json = json_load_file(filename,0,&jer);
   if (json == NULL)
   {
-    mgl_logger_info("mgl_json_parse: failed to load file %s as json\n", filename);
+    mgl_logger_debug("mgl_json_parse: failed to load file %s as json\n", filename);
     mgl_json_log_error(&jer);
     return NULL;
   }
@@ -51,7 +51,7 @@ MglDict *mgl_json_parse(char *filename)
   json_decref(json); 
   if (data == NULL)
   {
-    mgl_logger_info("mgl_json_parse: failed to parse file %s as json\n", filename);
+    mgl_logger_debug("mgl_json_parse: failed to parse file %s as json\n", filename);
     mgl_json_log_error(&jer);
   }
   return data;
@@ -87,7 +87,7 @@ MglDict *mgl_json_convert(json_t *json)
   {
     return NULL;
   }
-  mgl_logger_info("failed to convert object\n");
+  mgl_logger_debug("failed to convert object\n");
   return NULL;
 }
 
