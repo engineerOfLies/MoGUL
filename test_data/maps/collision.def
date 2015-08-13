@@ -2,9 +2,9 @@
     "space" :
     {
         "iterations" : 100,
-        "//bias" : "commented out, use default",
-        "//slop" : "1",
+        "//bias" : "0.0000000000000000000000001",
+        "slop" : "0.00001",
         "//damping": "0.00000001",
-        "gravity": "0, 0.01"
+        "gravity": "0, 0.1"
     }
 }

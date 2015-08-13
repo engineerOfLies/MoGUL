@@ -26,7 +26,7 @@ void mecha_think(void *data,void *context)
     if (!ent)return;
     position = mgl_entity_get_position(ent);
     actor = mgl_entity_get_actor(ent);
-    if (position.x > (32 * 22))
+    if (position.x > (32 * 16))
     {
         mgl_entity_set_velocity(ent,mgl_vec2d(-2,0));
         mgl_actor_set_action(
@@ -34,7 +34,7 @@ void mecha_think(void *data,void *context)
             "walk_left"
         );
     }
-    if (position.x < (32 * 14))
+    if (position.x < (32 * 4))
     {
         mgl_entity_set_velocity(ent,mgl_vec2d(2,0));
         mgl_actor_set_action(
@@ -45,7 +45,7 @@ void mecha_think(void *data,void *context)
 
 }
 
-MglEntity *spawn_mech(MglVec2D position)
+MglEntity *spawn_mech(MglVec2D position,MglLevel *level, MglLine collision, MglLine entity, MglLine tiles)
 {
     MglEntity * ent;
     MglActor *actor;
@@ -64,21 +64,25 @@ MglEntity *spawn_mech(MglVec2D position)
         NULL,
         NULL,
         NULL);
-    mgl_entity_make_circle_shape(ent,10, 22,mgl_vec2d(24,24));
+    mgl_entity_make_circle_shape(ent,100, 14,mgl_vec2d(14,14));
     mgl_entity_set_position(ent,position);
+    mgl_entity_set_draw_offset(ent,mgl_vec2d(14,14));
+    
+    mgl_entity_assign_tilemap(ent,mgl_level_get_layer_tilemap_by_name(level,tiles));
+    mgl_level_append_draw_item_to_layer(level,entity,ent);
+    mgl_entity_add_to_collision_space(ent, mgl_level_get_layer_collision_by_name(level,collision));
     return ent;
 }
 
 int main(int argc,char *argv[])
 {
-    int done = 0;
+    int done = 0,i;
     const Uint8 *keys = NULL;
     MglCamera *cam;
     MglParallax *par;
     MglUint bgw,bgh;
     MglVec2D pos = {0,0};
     MglLevel *level;
-    MglEntity *ent;
     MglCollision * collision;
 
     if ((argc == 2) && (strcmp(argv[1],"-h")==0))
@@ -108,10 +112,10 @@ int main(int argc,char *argv[])
     mgl_tilemap_add_to_collision("tileLayer","collisionLayer",level);
     collision = mgl_level_get_layer_collision_by_name(level,"collisionLayer");
 
-    ent = spawn_mech(mgl_vec2d(32 * 15,32*4 + 16));
-    mgl_entity_assign_tilemap(ent,mgl_level_get_layer_tilemap_by_name(level,"tileLayer"));
-    mgl_level_append_draw_item_to_layer(level,"entityLayer",ent);
-    mgl_entity_add_to_collision_space(ent, mgl_level_get_layer_collision_by_name(level,"collisionLayer"));
+    for (i = 0; i < 10; i++)
+    {
+        spawn_mech(mgl_vec2d(32 * (10 + i),32*4 + 16),level,"collisionLayer","entityLayer","tileLayer");
+    }
     
     /*mgl_entity_set_velocity(ent,mgl_vec2d(2,0));*/
     

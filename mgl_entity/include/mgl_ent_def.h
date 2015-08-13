@@ -17,6 +17,7 @@ struct MglEntity_S
 {
     MglLine  name;
     MglVec2D position;
+    MglVec2D drawOffset;
     MglVec2D velocity;
     MglVec2D acceleration;
     MglVec2D scale;

@@ -115,6 +115,12 @@ void mgl_entity_set_position(MglEntity *ent,MglVec2D position)
     mgl_vec2d_copy(ent->position,position);
 }
 
+void mgl_entity_set_draw_offset(MglEntity *ent,MglVec2D offset)
+{
+    if (!ent)return;
+    mgl_vec2d_copy(ent->drawOffset,offset);
+}
+
 MglVec2D mgl_entity_get_velocity(MglEntity *ent)
 {
     MglVec2D velocity = {0,0};
@@ -364,7 +370,7 @@ void mgl_entity_draw_to_parallax_layer(MglEntity *ent,MglParallax *par,MglUint l
                     mgl_parallax_layer_adjust_position(
                         par,
                         layer,
-                        mgl_camera_get_adjusted_position(cam,ent->position)),
+                        mgl_camera_get_adjusted_position(cam,mgl_vec2d(ent->position.x + ent->drawOffset.x,ent->position.y + ent->drawOffset.y))),
                     ent->rotation,
                     &ent->scale,
                     &ent->flip,
@@ -374,7 +380,7 @@ void mgl_entity_draw_to_parallax_layer(MglEntity *ent,MglParallax *par,MglUint l
             {
                 mgl_actor_draw(
                     ent->actor,
-                    mgl_camera_get_adjusted_position(cam,ent->position),
+                    mgl_camera_get_adjusted_position(cam,mgl_vec2d(ent->position.x + ent->drawOffset.x,ent->position.y + ent->drawOffset.y)),
                     ent->rotation,
                     &ent->scale,
                     &ent->flip,
@@ -385,7 +391,7 @@ void mgl_entity_draw_to_parallax_layer(MglEntity *ent,MglParallax *par,MglUint l
         {
             mgl_actor_draw(
                 ent->actor,
-                ent->position,
+                mgl_vec2d(ent->position.x + ent->drawOffset.x,ent->position.y + ent->drawOffset.y),
                 ent->rotation,
                 &ent->scale,
                 &ent->flip,

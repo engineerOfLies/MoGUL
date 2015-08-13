@@ -129,6 +129,13 @@ void mgl_entity_set_actor(MglEntity *ent, MglActor *actor);
 void mgl_entity_set_position(MglEntity *ent,MglVec2D position);
 
 /**
+ * @brief set the draw offset for the entity
+ * @param ent the entity to set
+ * @param offset the new offset to draw the entity relative to its position
+ */
+void mgl_entity_set_draw_offset(MglEntity *ent,MglVec2D offset);
+
+/**
  * @brief get the position of the entity
  * @param ent the entity to query
  * @return the position of the entity.  Returns (0,0) if provided a non-entity

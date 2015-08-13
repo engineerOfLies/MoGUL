@@ -243,16 +243,16 @@ void mgl_collision_add_static_edge(MglCollision *collision,MglVec2D p1,MglVec2D 
         mgl_logger_error("collision layer %s has no space",collision->name);
         return;
     }
-    shape = cpSegmentShapeNew(cpSpaceGetStaticBody(space), cpv(p1.x,p1.y), cpv(p2.x,p2.y), 10);
+    shape = cpSegmentShapeNew(cpSpaceGetStaticBody(space), cpv(p1.x,p1.y), cpv(p2.x,p2.y), 0.5);
     if (!shape)
     {
         mgl_logger_error("failed to make edge for collision space %s",collision->name);
         return;
     }
-    cpShapeSetLayers(shape,1);
+    cpShapeSetLayers(shape,CP_ALL_LAYERS);
     cpShapeSetGroup(shape,CP_NO_GROUP);    
     cpShapeSetCollisionType(shape, 1);
-    shape->e = 0;
+    cpShapeSetElasticity(shape,0);
     shape->u = 0;
     
     if (!cpSpaceAddShape(space,shape))

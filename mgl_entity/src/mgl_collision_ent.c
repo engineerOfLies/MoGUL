@@ -56,6 +56,9 @@ void mgl_entity_make_circle_shape(MglEntity *ent,MglFloat m, MglFloat r,MglVec2D
     cpShapeSetGroup(ent->shape,CP_NO_GROUP);
     cpShapeSetLayers(ent->shape,CP_ALL_LAYERS);
     cpShapeSetCollisionType(ent->shape, 2);
+    cpShapeSetElasticity(ent->shape,0);
+    cpBodySetAngVelLimit(ent->body,0);
+    ent->shape->u = 0;
     mgl_logger_error("entity collision layer: %i",cpShapeGetLayers(ent->shape));
     mgl_logger_error("entity collision group: %i",cpShapeGetGroup(ent->shape));
     mgl_logger_error("entity collision type: %i",cpShapeGetCollisionType(ent->shape));
