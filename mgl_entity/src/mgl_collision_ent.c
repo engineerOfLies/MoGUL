@@ -42,6 +42,7 @@ void mgl_entity_make_collision_body(MglEntity *ent,MglFloat mass,MglFloat inerti
         cpBodySetMoment(ent->body, inertia);
         return;
     }
+    mgl_logger_debug("setting mass(%f) and inertia(%f) for entity %s",mass,inertia,ent->name);
     ent->body = cpBodyNew(mass, inertia);
 }
 
@@ -49,9 +50,16 @@ void mgl_entity_make_circle_shape(MglEntity *ent,MglFloat m, MglFloat r,MglVec2D
 {
     MglFloat i;
     if (!ent)return;
-    i = cpMomentForCircle(m, r, 0, cpv(offset.x,offset.y));
+    i = cpMomentForCircle(m, 0, r, cpv(offset.x,offset.y));
     mgl_entity_make_collision_body(ent,m,i);
     ent->shape = cpCircleShapeNew(ent->body, r, cpv(offset.x,offset.y));
+    cpShapeSetGroup(ent->shape,CP_NO_GROUP);
+    cpShapeSetLayers(ent->shape,CP_ALL_LAYERS);
+    cpShapeSetCollisionType(ent->shape, 2);
+    mgl_logger_error("entity collision layer: %i",cpShapeGetLayers(ent->shape));
+    mgl_logger_error("entity collision group: %i",cpShapeGetGroup(ent->shape));
+    mgl_logger_error("entity collision type: %i",cpShapeGetCollisionType(ent->shape));
+    cpShapeSetUserData(ent->shape, (const cpDataPointer)ent);
 }
 
 void mgl_entity_add_to_collision_space(MglEntity *ent, MglCollision *collision)
@@ -71,6 +79,7 @@ void mgl_entity_add_to_collision_space(MglEntity *ent, MglCollision *collision)
         return;
     }
     cpSpaceAddBody(space, ent->body);
+    cpSpaceAddShape(space,ent->shape);
 }
 
 /*eol@eof*/

@@ -1,10 +1,10 @@
 {
     "space" :
     {
-        "iterations" : 10,
+        "iterations" : 100,
         "//bias" : "commented out, use default",
-        "//slop" : "0.0",
-        "damping": "0.000001",
-        "gravity": "0, 1"
+        "//slop" : "1",
+        "//damping": "0.00000001",
+        "gravity": "0, 0.01"
     }
 }

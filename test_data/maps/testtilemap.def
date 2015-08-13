@@ -41,6 +41,7 @@
                 }
             ]
         },
+        "useBounds" : "true",
         "mapWidth" : "38",
         "mapHeight" : "23",
         "tileMap" : 

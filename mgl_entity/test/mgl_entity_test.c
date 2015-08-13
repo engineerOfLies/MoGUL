@@ -26,9 +26,9 @@ void mecha_think(void *data,void *context)
     if (!ent)return;
     position = mgl_entity_get_position(ent);
     actor = mgl_entity_get_actor(ent);
-    if (position.x > (32 * 32))
+    if (position.x > (32 * 22))
     {
-        mgl_entity_set_velocity(ent,mgl_vec2d(-1,0));
+        mgl_entity_set_velocity(ent,mgl_vec2d(-2,0));
         mgl_actor_set_action(
             actor,
             "walk_left"
@@ -36,7 +36,7 @@ void mecha_think(void *data,void *context)
     }
     if (position.x < (32 * 14))
     {
-        mgl_entity_set_velocity(ent,mgl_vec2d(1,0));
+        mgl_entity_set_velocity(ent,mgl_vec2d(2,0));
         mgl_actor_set_action(
             actor,
             "walk_right"
@@ -56,8 +56,6 @@ MglEntity *spawn_mech(MglVec2D position)
     actor = mgl_actor_load("../test_data/actors/mecha.actor");
     mgl_actor_set_action(actor,"walk_right");
     mgl_entity_set_actor(ent, actor);
-    mgl_entity_set_position(ent,position);
-    mgl_entity_set_velocity(ent,mgl_vec2d(3,0));
     mgl_entity_set_callbacks(
         ent,
         &think,
@@ -66,7 +64,8 @@ MglEntity *spawn_mech(MglVec2D position)
         NULL,
         NULL,
         NULL);
-    mgl_entity_make_circle_shape(ent,0.0000001, 22,mgl_vec2d(24,24));
+    mgl_entity_make_circle_shape(ent,10, 22,mgl_vec2d(24,24));
+    mgl_entity_set_position(ent,position);
     return ent;
 }
 
@@ -109,11 +108,12 @@ int main(int argc,char *argv[])
     mgl_tilemap_add_to_collision("tileLayer","collisionLayer",level);
     collision = mgl_level_get_layer_collision_by_name(level,"collisionLayer");
 
-    ent = spawn_mech(mgl_vec2d(32 * 15,32*5 + 16));
+    ent = spawn_mech(mgl_vec2d(32 * 15,32*4 + 16));
     mgl_entity_assign_tilemap(ent,mgl_level_get_layer_tilemap_by_name(level,"tileLayer"));
     mgl_level_append_draw_item_to_layer(level,"entityLayer",ent);
     mgl_entity_add_to_collision_space(ent, mgl_level_get_layer_collision_by_name(level,"collisionLayer"));
     
+    /*mgl_entity_set_velocity(ent,mgl_vec2d(2,0));*/
     
     fprintf(stdout,"mgl_entity_test begin\n");
     while (!done)

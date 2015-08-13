@@ -13,6 +13,7 @@
 struct MglTileMap_S
 {
     MglTileSet *tileSet;    /**<the tile set to use for this map*/
+    MglBool     useBounds;  /**<if true, use the size of the map in collision bounds*/
     MglUint mapWidth;       /**<number of tiles horizontally*/
     MglUint mapHeight;      /**<number of tiles vertically*/
     SDL_Surface *surface;   /**<precached surface*/
@@ -274,6 +275,7 @@ MglTileMap *mgl_tilemap_load_from_dict(MglTileMap *tilemap,MglDict *def)
     tilemap->mapWidth = mapWidth;
     tilemap->tileSet = tileSet;
     tilemap->tileMap = tileData;
+    mgl_dict_get_hash_value_as_bool(&tilemap->useBounds,def,"useBounds");
     count = mgl_dict_get_list_count(map);
     if (count != tilemap->mapHeight)
     {
@@ -426,7 +428,6 @@ MglInt mgl_tilemap_get_tile_index_by_tile_position(MglTileMap *map,MglVec2D tile
 {
     if (!map)return -1;
     if (!map->tileSet)return -1;
-    mgl_logger_debug("checking tile position (%f,%f)",tilepos.x,tilepos.y);
     if ((tilepos.x < 0) || (tilepos.y < 0) || (tilepos.x >= map->mapWidth) || (tilepos.y >= map->mapHeight))
     {
         mgl_logger_debug("tile (%f,%f) is out of range of tilemap",tilepos.x,tilepos.y);
@@ -454,7 +455,6 @@ void mgl_tilemap_add_to_collision(MglLine tileLayer,MglLine layerName,MglLevel *
     MglVec2D size;
     MglTileMap *tilemap;
     
-    mgl_logger_debug("adding tilemap %s to collision %s",tileLayer,layerName);
     tilemap = mgl_level_get_layer_tilemap_by_name(level,tileLayer);
     
     if (!tilemap)
@@ -492,9 +492,12 @@ void mgl_tilemap_add_to_collision(MglLine tileLayer,MglLine layerName,MglLevel *
             if (mgl_tilemap_get_tile_solid_by_tile_position(tilemap,mgl_vec2d(i,j)))
             {
                 mgl_collision_add_static_rect(collision,mgl_rect(i*size.x,j*size.y,size.x,size.y));
-                mgl_logger_debug("tile %i,%i is SOLID",i,j);
             }
         }
+    }
+    if (tilemap->useBounds)
+    {
+        mgl_collision_add_static_rect(collision,mgl_rect(0,0,size.x * tilemap->mapWidth,size.y * tilemap->mapHeight));
     }
 }
 /*eol@eof*/

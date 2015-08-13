@@ -126,6 +126,11 @@ void mgl_entity_set_velocity(MglEntity *ent,MglVec2D velocity)
 {
     if (!ent)return;
     mgl_vec2d_copy(ent->velocity,velocity);
+    if (ent->body)
+    {
+        mgl_logger_info("setting velocity for %s to %f,%f",ent->name,velocity.x,velocity.y);
+        cpBodySetVel(ent->body, cpv(ent->velocity.x,ent->velocity.y));
+    }
 }
 
 MglActor *mgl_entity_get_actor(MglEntity *ent)
@@ -452,7 +457,6 @@ void mgl_entity_pre_physics(MglEntity *ent)
             ent->pre_physics.function(ent->pre_physics.data,ent);
         }
         cpBodySetPos(ent->body, cpv(ent->position.x,ent->position.y));
-        cpBodySetVel(ent->body, cpv(ent->velocity.x,ent->velocity.y));
     }
 }
 
@@ -476,6 +480,7 @@ void mgl_entity_post_physics(MglEntity *ent)
     {
         vect = cpBodyGetPos(ent->body);
         mgl_vec2d_set(ent->position,vect.x,vect.y);
+        vect = cpBodyGetVel(ent->body);
         if (ent->post_physics.function != NULL)
         {
             ent->post_physics.function(ent->post_physics.data,ent);

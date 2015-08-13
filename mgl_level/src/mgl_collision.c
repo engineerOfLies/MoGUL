@@ -25,6 +25,9 @@ void mgl_collision_close();
 MglBool mgl_collision_load_resource(char *filename,void *data);
 void mgl_collision_delete(void *data);
 MglCollision *mgl_collision_load_from_dict(MglCollision *collision,MglDict *def);
+int touchany(cpArbiter *arb, struct cpSpace *space, void *data);
+int touch2to2(cpArbiter *arb, struct cpSpace *space, void *data);
+int touch1to2(cpArbiter *arb, struct cpSpace *space, void *data);
 
 void mgl_collision_init(
     MglUint maxSpaces)
@@ -152,6 +155,35 @@ MglCollision *mgl_collision_load_from_dict(MglCollision *collision,MglDict *def)
         collision->gravity.x = gravity.x;
         collision->gravity.y = gravity.y;
     }
+    /*
+    cpSpaceSetDefaultCollisionHandler(
+        space,
+        touchany,
+        NULL,
+        NULL,
+        NULL,
+        NULL
+    );
+    
+    cpSpaceAddCollisionHandler(
+        space,
+        2,2,
+        touch2to2,
+        NULL,
+        NULL,
+        NULL,
+        NULL
+    );
+    cpSpaceAddCollisionHandler(
+        space,
+        2,1,
+        touch1to2,
+        NULL,
+        NULL,
+        NULL,
+        NULL
+    );
+    */
     mgl_logger_debug("collision space built");
     return collision;
 }
@@ -199,7 +231,6 @@ void mgl_collision_update(MglCollision *collision)
 void mgl_collision_add_static_edge(MglCollision *collision,MglVec2D p1,MglVec2D p2)
 {
     cpSpace *space;
-    cpBody *body;
     cpShape *shape;
     if (!collision)
     {
@@ -212,19 +243,22 @@ void mgl_collision_add_static_edge(MglCollision *collision,MglVec2D p1,MglVec2D 
         mgl_logger_error("collision layer %s has no space",collision->name);
         return;
     }
-    body = cpSpaceGetStaticBody(space);
-    if (!body)
-    {
-        mgl_logger_error("collision layer %s space has no static body",collision->name);
-        return;
-    }
-    shape = cpSegmentShapeNew(body, cpv(p1.x,p1.y), cpv(p2.x,p2.y), 0.5);
+    shape = cpSegmentShapeNew(cpSpaceGetStaticBody(space), cpv(p1.x,p1.y), cpv(p2.x,p2.y), 10);
     if (!shape)
     {
         mgl_logger_error("failed to make edge for collision space %s",collision->name);
         return;
     }
-    cpSpaceAddStaticShape(space,shape);
+    cpShapeSetLayers(shape,1);
+    cpShapeSetGroup(shape,CP_NO_GROUP);    
+    cpShapeSetCollisionType(shape, 1);
+    shape->e = 0;
+    shape->u = 0;
+    
+    if (!cpSpaceAddShape(space,shape))
+    {
+        mgl_logger_warn("failed to add edge shape to space");
+    }
 }
 
 void mgl_collision_add_static_rect(MglCollision *collision,MglRect rect)
@@ -264,8 +298,31 @@ void mgl_collision_add_static_cirlce(MglCollision *collision,MglVec2D center,Mgl
         mgl_logger_error("failed to make edge for collision space %s",collision->name);
         return;
     }
-    cpSpaceAddStaticShape(space,shape);
+    if (!cpSpaceAddShape(space,shape))
+    {
+        mgl_logger_warn("failed to add circle shape to space");
+    }
 }
 
+
+int touch1to2(cpArbiter *arb, struct cpSpace *space, void *data)
+{
+    CP_ARBITER_GET_SHAPES(arb, b, a);
+    mgl_logger_debug("touch 1 to 2\n");
+    return 1;
+}
+
+int touch2to2(cpArbiter *arb, struct cpSpace *space, void *data)
+{
+    CP_ARBITER_GET_SHAPES(arb, a, b);
+    mgl_logger_debug("touch 2 to 2\n");
+    return 1;
+}
+
+int touchany(cpArbiter *arb, struct cpSpace *space, void *data)
+{
+    mgl_logger_debug("touch ?????\n");
+    return 1;
+}
 
 /*eol@eof*/
